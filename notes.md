@@ -1,5 +1,9 @@
 # notes
 
+
+## day 2
+bit happier with this code. Elixir's pattern matching and good string library made this a lot less painful than it might be in other languages. probably a cleverer way to do the xor stuff at the end of the function for the second part.
+
 ## day 1
 
 i think this code is kinda awful but oh well, that's the point of this exercise. found another solution in elixir and picked up a few ideas.

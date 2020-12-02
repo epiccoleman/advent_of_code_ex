@@ -9,7 +9,7 @@ defmodule Mix.Tasks.Day do
     response = IO.gets "Create files for Day #{day_number}? [Y/n]"
 
     if response =~ ~r{[yY]} or response =~ ~r[^\n$] do
-      write_day_module("01")
+      write_day_module(day_number)
     else
       IO.puts "Not creating files..."
     end
