@@ -25,7 +25,7 @@
         else
           nil
         end
-      end) |> IO.inspect()
+      end)
       |> Enum.reject(&is_nil/1)
       |> hd
     end

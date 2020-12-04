@@ -1,6 +1,16 @@
 # notes
 
 
+## day 3
+reasonably happy with this one. figuring out how to translate the sorta typical 2d array reading and writing into elixir was interesting. Ultimately I think I chose a good approach that avoided having to do anything too weird.
+
+I feel good also about how I handled the sled path stuff, it's cool to define it lazily with a stream and then use take_while to get the relevant pieces.
+
+https://elixirforum.com/t/how-to-make-proper-two-dimensional-data-structures-in-elixir/872
+https://blog.danielberkompas.com/2016/04/23/multidimensional-arrays-in-elixir/
+
+
+
 ## day 2
 bit happier with this code. Elixir's pattern matching and good string library made this a lot less painful than it might be in other languages. probably a cleverer way to do the xor stuff at the end of the function for the second part.
 
