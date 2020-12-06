@@ -1,6 +1,12 @@
 # notes
 
 
+## day 5
+man elixir made this one easy, really happy with this solution.
+
+## day 4
+this seems reasonably good, except maybe in one place, which is the hgt_valid? function. not sure of a prettier way to handle that mess of a requirement though.
+
 ## day 3
 reasonably happy with this one. figuring out how to translate the sorta typical 2d array reading and writing into elixir was interesting. Ultimately I think I chose a good approach that avoided having to do anything too weird.
 
