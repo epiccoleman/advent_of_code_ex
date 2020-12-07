@@ -1,6 +1,9 @@
 # notes
 
 
+## day 6
+once again elixir made life easy, there was basically nothing i needed to do here that wasn't part of the standard library. whole thing is like 20 lines of code, feel great about this one.
+
 ## day 5
 man elixir made this one easy, really happy with this solution.
 
