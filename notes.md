@@ -1,6 +1,9 @@
 # notes
 
 
+## day 8
+not sure if this code is _good_ but by god it works and that's something. I'm happy to have come up with a solution for part 2 which didn't require me to trace any assembly! fun little problem to kinda brute force that out.
+
 ## day 7
 having a good graph lib saved me here. friggin' recursion, man. at the end of writing it it makes such perfect sense but figuring out how to express it can be rough. took 2 or 3 runs at it before i figured out what i needed for part 2. overall happy with the code though at the end, the majority of code that had to be written was the string processing code and elixir makes that kind of stuff so easy.
 
