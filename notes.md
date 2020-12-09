@@ -1,6 +1,9 @@
 # notes
 
 
+## day 7
+having a good graph lib saved me here. friggin' recursion, man. at the end of writing it it makes such perfect sense but figuring out how to express it can be rough. took 2 or 3 runs at it before i figured out what i needed for part 2. overall happy with the code though at the end, the majority of code that had to be written was the string processing code and elixir makes that kind of stuff so easy.
+
 ## day 6
 once again elixir made life easy, there was basically nothing i needed to do here that wasn't part of the standard library. whole thing is like 20 lines of code, feel great about this one.
 
