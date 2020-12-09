@@ -1,5 +1,11 @@
 # notes
 
+## day 9
+pretty happy that I could reuse day 1 code for the first part. Enum module and some nice pattern matching made the rest easy.
+
+Part 2 is a little trickier, gonna try to brute force it. One observation - I will not need to chunk_every any higher than 617, because that's the line where the target number occurs, and everything after it appears to be larger (though they are not necessarily in ascending order).
+
+welp, brute force worked. took a few seconds to run but ah well, good enough.
 
 ## day 8
 not sure if this code is _good_ but by god it works and that's something. I'm happy to have come up with a solution for part 2 which didn't require me to trace any assembly! fun little problem to kinda brute force that out.
