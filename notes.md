@@ -1,5 +1,10 @@
 # notes
 
+## day 10
+this one was tough. spent a lot more time than was necessary on the first part. it's funny because looking back i was so close to realizing that i could just sort the input.
+
+i'm not sure i would have gotten the second part if not for a math tip from a friend - the key phrase of which was "you only have options when there's a difference of one". this was the key realization - anywhere in the chain of differences where there's a 3, there was only one choice to make there. likewise there was only one choice if [ 1 ]. But if you have a few 1 differences in a row you have more options, and these multiplicatively affect the total possible orderings.
+
 ## day 9
 pretty happy that I could reuse day 1 code for the first part. Enum module and some nice pattern matching made the rest easy.
 
