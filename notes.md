@@ -1,5 +1,9 @@
 # notes
 
+## day 11
+this one took more effort than i thought it would from reading the description, but it turns out that there are some nice things about using a map instead of a 2d array. one neat thing was no writing bounds checking code, just check if the tuple key is in the map. curious about efficiency of something like that though. anyway i'm happy with this overall, it's a bit verbose and there are definitely some optimizations to be made but hey, it works.
+
+
 ## day 10
 this one was tough. spent a lot more time than was necessary on the first part. it's funny because looking back i was so close to realizing that i could just sort the input.
 
