@@ -1,5 +1,8 @@
 # notes
 
+## day 13
+holy shit goddamn that was a rough one, extremely happy to be able to call it done. i think there's some weirdness in the code but if i look at it any longer my brain will melt. i hope day 14 is a straightforward one. woof.
+
 ## day 12
 pretty straightforward one, probably could have dried it a bit but oh well. good enough!
 
