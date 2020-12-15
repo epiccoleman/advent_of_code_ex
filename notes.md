@@ -1,5 +1,10 @@
 # notes
 
+## day 15
+bit of a pain, this one. the major optimization trick is that you only need to store the last time that the number was said. i don't love this code, probably be utterly incomprehensible to me a few days from now. the algorithm in part2 runs substantially faster than the part1 one, and the major time sink is the part where we generate a map with all 30000000 indices, because we need some default value ...
+
+as I wrote that I realized we didn't need to initialize all the indices since we started writing the turn that _last_ was spoken at the end of the loop. taking that initialization out got me to around 20 seconds. For the brute force solution, i'm happy with this. there's probably some math bullshit i could have done but close enough.
+
 ## day 14
 not too bad, and i have to say i think the recursive solution for finding the different memory locations is a pretty good one. feel like maybe i'm getting a hair better at recursion so that's nice. maybe some slop in the code, but whatever, onward and upward
 
