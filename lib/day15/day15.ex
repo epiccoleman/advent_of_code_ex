@@ -44,8 +44,6 @@
 
       start_last_spoken = List.last(input)
       start_state = %{seen_nums: start_seen, last_spoken: start_last_spoken}
-      IO.inspect(start_state)
-
 
       Enum.reduce(start_turn..end_turn, start_state,
         fn turn_number, %{seen_nums: seen, last_spoken: last} ->
@@ -64,6 +62,7 @@
       end)
     end
 
+    # This ended up being way slower than the map version, but keeping it for posterity
     def part_2_list(input, end_turn) do
       start_turn = length(input) + 1
       seen_nums = List.duplicate(0, end_turn)
