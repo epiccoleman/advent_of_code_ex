@@ -1,5 +1,8 @@
 # notes
 
+## day 14
+not too bad, and i have to say i think the recursive solution for finding the different memory locations is a pretty good one. feel like maybe i'm getting a hair better at recursion so that's nice. maybe some slop in the code, but whatever, onward and upward
+
 ## day 13
 holy shit goddamn that was a rough one, extremely happy to be able to call it done. i think there's some weirdness in the code but if i look at it any longer my brain will melt. i hope day 14 is a straightforward one. woof.
 
