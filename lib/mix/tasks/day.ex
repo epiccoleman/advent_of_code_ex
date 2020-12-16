@@ -45,20 +45,20 @@ defmodule Mix.Tasks.Day do
 
     #create test dir
     File.mkdir!(day_test_dir)
-    #day_test_module_path = "#{day_test_dir}/#{day_name}.ex"
     File.write!(
       day_test_module_path,
       """
       defmodule #{day_module_name}Test do
         use ExUnit.Case
+        import #{day_module_name}
 
         test "Part 1" do
-          input = FileUtils.get_file_as_integers("#{day_test_dir}/input.txt")
+          input = FileUtils.get_file_as_integers("test/#{day_name}/input.txt")
           assert #{day_module_name}.part_1(input) == 0
         end
 
         test "Part 2" do
-          input = FileUtils.get_file_as_integers("#{day_test_dir}/input.txt")
+          input = FileUtils.get_file_as_integers("test/#{day_name}/input.txt")
           assert #{day_module_name}.part_2(input) == 0
         end
       end
