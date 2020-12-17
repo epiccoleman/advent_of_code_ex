@@ -139,30 +139,33 @@
       end)
     end
 
-    # def process_of_elimination(possibles) do
-      # idk, i did it manually
+    def determine_field_names(possibles, result \\ %{}) do
+      if Enum.empty?(possibles) do
+        result
+      else
+        # find the field name with one possibility.
+        [{i, name}] = Enum.filter(possibles, fn {_, set} ->
+          MapSet.size(set) == 1
+        end)
+        |> Enum.map(fn {i, set} -> {i, hd(MapSet.to_list(set))} end)
 
-    # 0: zone
-    # 6: arrival station
-    # 12: row
-    # 10: route
-    # 8: price
-    # 3: train
-    # 1: departure time
-    # 13: departure_location
-    # 5: departure track
-    # 2: departure platform
-    # 15: departure date
-    # 19: departure station
-    # 9: wagon
-    # 7: seat
-    # 14: class
-    # 4: arrival track
-    # 18: duration
-    # 17: arrival platform
-    # 16: arrival location
-    # 11: type
-    # end
+        # whittle down possibles by removing the known one we just found:
+        new_possibles =
+          possibles
+          |> remove_option(name)
+          |> Enum.filter(fn {_, set} -> MapSet.size(set) > 0 end)
+
+        new_result = result |> Map.put(name, i)
+
+        # do it again
+        determine_field_names(new_possibles, new_result)
+      end
+    end
+
+    def get_field_from_my_ticket(my_ticket, field_name, field_names_map) do
+      field_index = field_names_map |> Map.get(field_name)
+      my_ticket |> Enum.at(field_index)
+    end
 
     def part_2(input) do
       data =
@@ -170,7 +173,32 @@
         |> process_input_data
         |> discard_bad_tickets
 
+      possibles = get_possibles(data)
+      field_names = determine_field_names(possibles)
+
+      field_names_that_start_with_departure =
+        field_names
+        |> Map.keys()
+        |> Enum.filter(&(&1 =~ ~r'departure'))
+
+      field_names_that_start_with_departure
+      |> Enum.map(fn field_name ->
+        get_field_from_my_ticket(data.my_ticket, field_name, field_names)
+      end)
+      |> Enum.reduce(&*/2)
+    end
+
+    def part_2_manual(input) do
+      data =
+        input
+        |> process_input_data
+        |> discard_bad_tickets
+
       # possibles = get_possibles(data)
+      # i used the output of get_possibles to manually process of elimination these
+
+
+
           # 1: departure time
           # 13: departure_location
           # 5: departure track

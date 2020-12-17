@@ -3,6 +3,8 @@
 ## day 16
 this one was kinda a drag. i got to the point where I could do the process of elimination manually. i think writing the code would be straightforward enough but idk, may not bother. got the right answer, anyway.
 
+next day edit: went back and wrote the process of elimination code, suprisingly straightforward. the top level algorithm for part_2 is pretty simple. determine_field_names contains some complexity too, but really pretty reasonable. made easier by the fact that at each stage of the process there is only one possibility. i had initially thought i might have to do some sort of recursive backtracking by guessing at points where things were ambiguous. apart from that though the majority of the code i wrote was for parsing the input and then extracting data from the resulting object. I wonder if better organization of that object could be done, getting the data I wanted out of it never felt as easy as it could have. overall though now that i did this programmatically i feel pretty good about it.
+
 ## day 15
 bit of a pain, this one. the major optimization trick is that you only need to store the last time that the number was said. i don't love this code, probably be utterly incomprehensible to me a few days from now. the algorithm in part2 runs substantially faster than the part1 one, and the major time sink is the part where we generate a map with all 30000000 indices, because we need some default value ...
 
