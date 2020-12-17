@@ -1,5 +1,8 @@
 # notes
 
+## day 16
+this one was kinda a drag. i got to the point where I could do the process of elimination manually. i think writing the code would be straightforward enough but idk, may not bother. got the right answer, anyway.
+
 ## day 15
 bit of a pain, this one. the major optimization trick is that you only need to store the last time that the number was said. i don't love this code, probably be utterly incomprehensible to me a few days from now. the algorithm in part2 runs substantially faster than the part1 one, and the major time sink is the part where we generate a map with all 30000000 indices, because we need some default value ...
 

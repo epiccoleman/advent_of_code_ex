@@ -1,0 +1,33 @@
+class: 0-1 or 4-19
+row: 0-5 or 8-19
+seat: 0-13 or 16-19
+
+your ticket:
+11,12,13
+
+nearby tickets:
+3,9,18
+15,1,5
+5,14,9
+
+###
+0: zone
+6: arrival station
+12: row
+10: route
+8: price
+3: train
+1: departure time
+13: departure_location
+5: departure track
+2: departure platform
+15: departure date
+19: departure station
+9: wagon
+7: seat
+14: class
+4: arrival track
+18: duration
+17: arrival platform
+16: arrival location
+11: type
