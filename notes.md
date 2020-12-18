@@ -1,5 +1,8 @@
 # notes
 
+## day 18
+https://andrealeopardi.com/posts/tokenizing-and-parsing-in-elixir-using-leex-and-yecc/
+
 ## day 17
 i liked this one, and i'm pretty happy with my code. two things that were nice here: using a map instead of trying to construct a 4d array, and having elixir's super powerful for comprehension for generating the 4d coordinates (and the 3d in the first part). because of these two things changing the code from 3d to 4d took all of 10 minutes.
 
