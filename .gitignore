@@ -26,3 +26,4 @@ aoc_2020-*.tar
 # Temporary files for e.g. tests
 /tmp
 .erl
+src/*.erl
