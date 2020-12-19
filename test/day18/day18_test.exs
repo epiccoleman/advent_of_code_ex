@@ -16,10 +16,10 @@ defmodule Day18Test do
       ["((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2", 13632]
     ]
   end
-  # test "Part 1" do
-  #   input = FileUtils.get_file_as_integers("test/day18/input.txt")
-  #   assert Day18.part_1(input) == 0
-  # end
+  test "Part 1" do
+    input = FileUtils.get_file_as_strings("test/day18/input.txt")
+    assert Day18.part_1(input) == 202553439706
+  end
 
   # test "Part 2" do
   #   input = FileUtils.get_file_as_integers("test/day18/input.txt")

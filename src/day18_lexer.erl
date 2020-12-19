@@ -370,7 +370,7 @@ yyaction(_, _, _, _) -> error.
 -compile({inline,yyaction_0/2}).
 -file("src/day18_lexer.xrl", 3).
 yyaction_0(TokenChars, TokenLine) ->
-     { token, { int, TokenLine, TokenChars } } .
+     { token, { int, TokenLine, list_to_integer (TokenChars) } } .
 
 -compile({inline,yyaction_1/2}).
 -file("src/day18_lexer.xrl", 4).
