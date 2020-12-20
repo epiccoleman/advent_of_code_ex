@@ -1,5 +1,10 @@
 # notes
 
+## day 19
+didn't feel like writing a bunch of parsing code after yesterday so I just transformed the rules in the input into proper elixir code with Vim. Brutish maybe, but hey.
+
+ugh. what a mess. thank god for recursive regex. that was the main trick, not even sure how i'd have tried to handle it if i hadn't seen some folks on reddit talking about recursive regex. thank god that elixir uses PCRE. thank god named captures are supported. thank god this puzzle is over. some of the ugliest code i've written thus far in this one.
+
 ## day 18
 Choosing to do this with leex and yecc probably didn't save me any effort, but it feels pretty cool. Couldn't have done it without these posts:
 
@@ -8,7 +13,7 @@ https://pl-rants.net/posts/leex-yecc-in-elixir/
 
 I initially took an approach where I used the parser to transform the input into a valid elixir list. this was kinda a neat way to go for the first section, writing a recursive evaluator was pretty straightforward. But the approach broke down for the second half, i didn't have a good way to change precedence.
 
-the approach outlined in the second article results in a tree structure, which looked scary at first but turns out to be really easy to write recursion for. the evaluate_tree function is much simpler imo than the evaluate function (although they really work about the same way). the nicest thing about the tree structure is that the same interpreter function works for the output of two different parsers. this was overall a pretty cool and educational problem.
+the approach outlined in the second article results in a tree structure, which looked scary at first but turns out to be really easy to write recursion for, especially with pattern matching. the evaluate_tree function is much simpler imo than the evaluate function (although they really work about the same way). the nicest thing about the tree structure is that the same interpreter function works for the output of two different parsers. this was overall a pretty cool and educational problem.
 
 ## day 17
 i liked this one, and i'm pretty happy with my code. two things that were nice here: using a map instead of trying to construct a 4d array, and having elixir's super powerful for comprehension for generating the 4d coordinates (and the 3d in the first part). because of these two things changing the code from 3d to 4d took all of 10 minutes.
