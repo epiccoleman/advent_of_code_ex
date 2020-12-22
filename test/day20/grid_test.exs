@@ -275,4 +275,60 @@ defmodule GridTest do
       "#."
     ]
   end
+
+  test "edges" do
+    grid = [
+      "#.#.",
+      "#..#",
+      "#..#",
+      "#..#"
+    ] |> from_strs
+
+    assert left_edge(grid) == ["#","#","#","#"]
+    assert right_edge(grid) == [".","#","#","#"]
+    assert top_edge(grid) == ["#",".","#","."]
+    assert bottom_edge(grid) == ["#",".",".","#"]
+  end
+
+  test "orient_edge_top" do
+    grid = [
+      "#.#.",
+      "#..#",
+      "#..#",
+      "#..#"
+    ] |> from_strs
+
+    reoriented =
+      grid
+      |> orient_edge_top(["#","#","#","."])
+      |> to_strs()
+
+    assert reoriented == [
+      "###.",
+      "...#",
+      "....",
+      "####"
+    ]
+  end
+
+  test "orient_edge_to_direction" do
+    grid = [
+      "#.#.",
+      "#..#",
+      "#..#",
+      "#..#"
+    ] |> from_strs
+
+    reoriented =
+      grid
+      |> orient_edge_to_direction(["#",".","#","."], :right)
+      |> to_strs()
+
+    assert reoriented == [
+      "####",
+      "....",
+      "...#",
+      "###."
+    ]
+  end
 end

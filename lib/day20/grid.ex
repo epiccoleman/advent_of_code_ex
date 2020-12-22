@@ -150,9 +150,40 @@ defmodule Day20.Grid do
     |> from_rows()
   end
 
-  # def trim_edges(%Grid{grid_map: grid_map, x_max: x_max, y_max: y_max}) do
-  def trim_edges(grid) do
+  def rotate180(grid) do
+    grid
+    |> rotate()
+    |> rotate()
+  end
 
+  def rotate270(grid) do
+    grid
+    |> rotate()
+    |> rotate()
+    |> rotate()
+  end
+
+  def get_edge(grid, direction) do
+
+  end
+
+  def left_edge(grid) do
+    col(grid, 0)
+  end
+
+  def right_edge(grid) do
+    col(grid, grid.x_max)
+  end
+
+  def top_edge(grid) do
+    row(grid, 0)
+  end
+
+  def bottom_edge(grid) do
+    row(grid, grid.y_max)
+  end
+
+  def trim_edges(grid) do
     new_rows =
       Grid.rows(grid)
       |> List.delete_at(grid.y_max)
@@ -160,5 +191,43 @@ defmodule Day20.Grid do
       |> Enum.map(fn row -> row |> List.delete_at(grid.x_max) |> List.delete_at(0) end)
 
     Grid.from_rows(new_rows)
+  end
+
+  def orient_edge_top(grid, edge) do
+    grid
+    |> all_orientations()
+    |> Enum.find(fn grid -> top_edge(grid) == edge end)
+  end
+
+  def orient_edge_to_direction(grid, edge, direction) do
+    edge_fn = case direction do
+      :top -> &top_edge/1
+      :bottom -> &bottom_edge/1
+      :right -> &right_edge/1
+      :left -> &left_edge/1
+    end
+
+    grid
+    |> all_orientations()
+    |> Enum.find(fn grid -> edge_fn.(grid) == edge end)
+  end
+
+  def all_orientations(grid) do
+    # only 8 of these are unique but I cbf to figure out which right now
+    MapSet.new([
+      grid,
+      rotate(grid),
+      rotate180(grid),
+      rotate270(grid),
+      flip_vert(grid),
+      rotate(flip_vert(grid)),
+      rotate180(flip_vert(grid)),
+      rotate270(flip_vert(grid)),
+      flip_horiz(grid),
+      rotate(flip_horiz(grid)),
+      rotate180(flip_horiz(grid)),
+      rotate270(flip_horiz(grid)),
+    ])
+    |> MapSet.to_list()
   end
 end
