@@ -1,6 +1,12 @@
   defmodule Day20 do
     alias Day20.Grid
 
+    @monster_grid [
+      "..................#..",
+      "#....##....##....###.",
+      ".#..#..#..#..#..#...."
+    ] |> Grid.from_strs()
+
     def input_str_to_map_entry(input_str) do
       # takes a string like this:
       # "Tile 3469:\n.##..#.#.#\n##..#...##\n...#..##.#\n....#.#..#\n#..#.##...\n.#.##.#.##\n..#.#.....\n..###.#..#\n#.##.#...#\n....#...##"
@@ -63,60 +69,21 @@
       |> Enum.filter(fn {_id, neighbors} -> length(neighbors) == 2 end)
     end
 
-    def assemble_image(tile_map) do
-      neighbor_map = neighbor_map(tile_map)
-      corners = corners(neighbor_map)
+    def get_neighbor_in_direction(tile_map, tile_id, neighbor_map, direction) do
+      edge_fn = case direction do
+        :top -> &Grid.top_edge/1
+        :bottom -> &Grid.bottom_edge/1
+        :right -> &Grid.right_edge/1
+        :left -> &Grid.left_edge/1
+      end
 
-      {start_corner_id, _neighbors} = corners |> hd
-      new_corner = reorient_start_corner(tile_map, start_corner_id, neighbor_map)
-
-      ready_tile_map = Map.put(tile_map, start_corner_id, new_corner)
-
-      tile_layout = %{} |> Map.put({0, 0}, start_corner_id)
-
-
-      # hard coding image size for now
-      img_size = ceil(:math.sqrt(Enum.count(tile_map)) - 1)
-
-      layout_state = Enum.reduce(1..img_size, %{layout: tile_layout, map: ready_tile_map}, fn n, state ->
-        id_of_left_neighbor = state.layout[{n-1, 0}]
-        edge_to_match = Grid.right_edge(state.map[id_of_left_neighbor])
-        right_neighbor_id = get_neighbor_in_direction(state.map, id_of_left_neighbor, neighbor_map, :right)
-        right_neighbor_grid = Map.get(state.map, right_neighbor_id)
-        reoriented = Grid.orient_edge_to_direction(right_neighbor_grid, edge_to_match, :left)
-
-        new_layout = state.layout |> Map.put({n, 0}, right_neighbor_id)
-        new_map = state.map |> Map.put(right_neighbor_id, reoriented)
-
-        %{layout: new_layout, map: new_map}
-      end)
-
-      layout_state = Enum.reduce(1..img_size, layout_state, fn n, state ->
-        id_of_top_neighbor = state.layout[{0, n-1}]
-        edge_to_match = Grid.bottom_edge(state.map[id_of_top_neighbor])
-        bottom_neighbor_id = get_neighbor_in_direction(state.map, id_of_top_neighbor, neighbor_map, :bottom)
-        bottom_neighbor_grid = Map.get(state.map, bottom_neighbor_id)
-        reoriented = Grid.orient_edge_to_direction(bottom_neighbor_grid, edge_to_match, :top)
-
-        new_layout = state.layout |> Map.put({0, n}, bottom_neighbor_id)
-        new_map = state.map |> Map.put(bottom_neighbor_id, reoriented)
-
-        %{layout: new_layout, map: new_map}
-      end)
-
-      Enum.reduce(1..img_size, layout_state, fn y, state_outer ->
-        Enum.reduce(1..img_size, state_outer, fn x, state ->
-          id_of_left_neighbor = state.layout[{x-1, y}]
-          edge_to_match = Grid.right_edge(state.map[id_of_left_neighbor])
-          right_neighbor_id = get_neighbor_in_direction(state.map, id_of_left_neighbor, neighbor_map, :right)
-          right_neighbor_grid = Map.get(state.map, right_neighbor_id)
-          reoriented = Grid.orient_edge_to_direction(right_neighbor_grid, edge_to_match, :left)
-
-          new_layout = state.layout |> Map.put({x, y}, right_neighbor_id)
-          new_map = state.map |> Map.put(right_neighbor_id, reoriented)
-
-          %{layout: new_layout, map: new_map}
-        end)
+      grid = tile_map[tile_id]
+      search_edge = edge_fn.(grid)
+      possible_neighbors = neighbor_map[tile_id]
+      possible_neighbors
+      |> Enum.find(fn neighbor_id ->
+       neighbor_edges = enumerate_possible_edges(tile_map[neighbor_id])
+       search_edge in neighbor_edges
       end)
     end
 
@@ -138,27 +105,121 @@
       new_grid
     end
 
-    def get_neighbor_in_direction(tile_map, tile_id, neighbor_map, direction) do
-      edge_fn = case direction do
-        :top -> &Grid.top_edge/1
-        :bottom -> &Grid.bottom_edge/1
-        :right -> &Grid.right_edge/1
-        :left -> &Grid.left_edge/1
-      end
+    def assemble_image(tile_map) do
+      neighbor_map = neighbor_map(tile_map)
+      corners = corners(neighbor_map)
 
-      grid = tile_map[tile_id]
-      search_edge = edge_fn.(grid)
-      possible_neighbors = neighbor_map[tile_id]
-      possible_neighbors
-      |> Enum.find(fn neighbor_id ->
-       neighbor_edges = enumerate_possible_edges(tile_map[neighbor_id])
-       search_edge in neighbor_edges
+      {start_corner_id, _neighbors} = corners |> hd
+      new_corner = reorient_start_corner(tile_map, start_corner_id, neighbor_map)
+
+      ready_tile_map = Map.put(tile_map, start_corner_id, new_corner)
+
+      tile_layout = %{} |> Map.put({0, 0}, start_corner_id)
+
+
+      img_size = ceil(:math.sqrt(Enum.count(tile_map)) - 1)
+
+      # first populate the top row
+      layout_state = Enum.reduce(1..img_size, %{layout: tile_layout, map: ready_tile_map}, fn n, state ->
+        id_of_left_neighbor = state.layout[{n-1, 0}]
+        edge_to_match = Grid.right_edge(state.map[id_of_left_neighbor])
+        right_neighbor_id = get_neighbor_in_direction(state.map, id_of_left_neighbor, neighbor_map, :right)
+        right_neighbor_grid = Map.get(state.map, right_neighbor_id)
+        reoriented = Grid.orient_edge_to_direction(right_neighbor_grid, edge_to_match, :left)
+
+        new_layout = state.layout |> Map.put({n, 0}, right_neighbor_id)
+        new_map = state.map |> Map.put(right_neighbor_id, reoriented)
+
+        %{layout: new_layout, map: new_map}
+      end)
+
+      # next use the same logic to populate the left column
+      layout_state = Enum.reduce(1..img_size, layout_state, fn n, state ->
+        id_of_top_neighbor = state.layout[{0, n-1}]
+        edge_to_match = Grid.bottom_edge(state.map[id_of_top_neighbor])
+        bottom_neighbor_id = get_neighbor_in_direction(state.map, id_of_top_neighbor, neighbor_map, :bottom)
+        bottom_neighbor_grid = Map.get(state.map, bottom_neighbor_id)
+        reoriented = Grid.orient_edge_to_direction(bottom_neighbor_grid, edge_to_match, :top)
+
+        new_layout = state.layout |> Map.put({0, n}, bottom_neighbor_id)
+        new_map = state.map |> Map.put(bottom_neighbor_id, reoriented)
+
+        %{layout: new_layout, map: new_map}
+      end)
+
+      # now go down the y axis and fill in each row
+      Enum.reduce(1..img_size, layout_state, fn y, state_outer ->
+        Enum.reduce(1..img_size, state_outer, fn x, state ->
+          id_of_left_neighbor = state.layout[{x-1, y}]
+          edge_to_match = Grid.right_edge(state.map[id_of_left_neighbor])
+          right_neighbor_id = get_neighbor_in_direction(state.map, id_of_left_neighbor, neighbor_map, :right)
+          right_neighbor_grid = Map.get(state.map, right_neighbor_id)
+          reoriented = Grid.orient_edge_to_direction(right_neighbor_grid, edge_to_match, :left)
+
+          new_layout = state.layout |> Map.put({x, y}, right_neighbor_id)
+          new_map = state.map |> Map.put(right_neighbor_id, reoriented)
+
+          %{layout: new_layout, map: new_map, img_size: img_size}
+        end)
       end)
     end
 
+    def monster_at_location?(grid, {x, y}) do
+      monster_positions =
+        @monster_grid.grid_map
+        |> Enum.filter(fn {_pos, c} -> c == "#" end)
+        |> Enum.map(fn {pos, _} -> pos end)
+
+
+      Enum.all?(monster_positions, fn {offset_x, offset_y} ->
+        Grid.at(grid, {x + offset_x, y + offset_y}) == "#"
+      end)
+    end
+
+    def trim_tiles(tile_map) do
+        tile_map
+        |> Enum.map(fn {id, grid} -> {id, Grid.trim_edges(grid)} end)
+        |> Enum.into(%{})
+    end
+
+    def process_image_for_monster_detection(%{layout: img_layout, map: tile_map, img_size: img_size} = _image) do
+      # trim the edges of all the tiles, then stitch them together
+      trimmed_tiles = trim_tiles(tile_map)
+
+        #  need all the rows, fuckin headache
+      Enum.reduce(0..img_size, [], fn y, tl_rows_acc ->
+        # all tiles for this row
+        new_rows = Enum.map(0..img_size, fn x ->
+            id = img_layout[{x, y}]
+            Map.get(trimmed_tiles, id)
+          end)
+        |> Enum.reduce([], fn tile, acc ->
+          Grid.append_grid(acc, tile)
+        end)
+        |> Grid.rows()
+
+        tl_rows_acc ++ new_rows
+      end)
+      |> Grid.from_rows()
+    end
+
     def detect_monsters(image_grid) do
+      for x <- 0..(image_grid.x_max - @monster_grid.x_max),
+          y <- 0..(image_grid.y_max - @monster_grid.y_max) do
+            if monster_at_location?(image_grid, {x,y}) do
+              {x,y}
+            end
+      end
+      |> Enum.reject(&is_nil/1)
+    end
 
-
+      # for each of the possible orientations of the image, slide the monster detector around
+    def detect_monsters_all(image_grid)do
+      image_grid
+      |> Grid.all_orientations()
+      |> Enum.map(&detect_monsters/1)
+      |> Enum.reject(&Enum.empty?/1)
+      |> List.flatten()
     end
 
     def part_1(input) do
@@ -170,8 +231,21 @@
     end
 
     def part_2(input) do
-      input
-      # assemble the image
-      #
+      image = input
+      |> input_to_map()
+      |> assemble_image()
+      |> process_image_for_monster_detection()
+
+      monster_count =
+        image
+        |> detect_monsters_all()
+        |> Enum.count()
+
+      tiles_in_a_monster = @monster_grid.grid_map |> Enum.count(fn {_pos, c} -> c == "#" end)
+      total_monster_tiles = tiles_in_a_monster * monster_count
+
+      hash_tiles = image.grid_map |> Enum.count(fn {_pos, c} -> c == "#" end)
+
+      hash_tiles - total_monster_tiles
     end
   end

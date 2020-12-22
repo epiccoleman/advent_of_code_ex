@@ -1,5 +1,13 @@
 # notes
 
+## day 20
+well, i feel pretty proud to have figured this out but damn was this a huge problem. how people can code something like this within an hour or two after the puzzle is released is beyond me. this thing just had a way of spawning off sub problems. I wrote almost 1000 lines of code between test and implementation to figure this out.
+
+it's one of those problems where the statement of what you have to do is easy. find the tiles that have matching edges, lay them out into an image, then scan them for a pattern. but man there's a lot of pieces involved in that seemingly straightforward task.
+
+i'm well beyond worry about whether the code is good. and after tackling this one i _hope_ the last 5 will feel a little less daunting. 5 more to go.
+
+
 ## day 19
 didn't feel like writing a bunch of parsing code after yesterday so I just transformed the rules in the input into proper elixir code with Vim. Brutish maybe, but hey.
 

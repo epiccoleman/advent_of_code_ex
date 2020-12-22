@@ -212,6 +212,21 @@ defmodule Day20.Grid do
     |> Enum.find(fn grid -> edge_fn.(grid) == edge end)
   end
 
+  def append_grid([], other) do
+    other
+  end
+
+  def append_grid(grid, other) do
+    rows_g = rows(grid)
+    rows_o = rows(other)
+    y_max = length(rows_g) - 1
+
+    for y <- 0..y_max  do
+      Enum.at(rows_g, y) ++ Enum.at(rows_o, y)
+    end
+    |> from_rows()
+  end
+
   def all_orientations(grid) do
     # only 8 of these are unique but I cbf to figure out which right now
     MapSet.new([

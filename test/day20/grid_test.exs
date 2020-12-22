@@ -15,7 +15,7 @@ defmodule GridTest do
     {:ok, grid: grid, strs: strs}
   end
 
-  test "from_rows", state do
+  test "from_rows" do
     grid = from_rows([
       ["#", ".", "."],
       [".", "#", "."],
@@ -36,7 +36,7 @@ defmodule GridTest do
     }
   end
 
-  test "from_cols_simpler", state do
+  test "from_cols_simpler" do
     grid = from_cols([
       ["#", "."],
       ["#", "."],
@@ -56,7 +56,7 @@ defmodule GridTest do
     }
   end
 
-  test "from_cols", state do
+  test "from_cols" do
     grid = from_cols([
       ["#", ".", "."],
       ["#", "#", "."],
@@ -103,17 +103,7 @@ defmodule GridTest do
     assert state[:strs] == new_strs
   end
 
-  # test "from_vertical_strs" do
-
-  # end
-
-  # test "to_vertical_strs" do
-
-  # end
-
   test "at", state do
-    grid = state[:grid]
-
     assert at(state.grid, {0, 0}) == "#"
     assert at(state.grid, {0, 1}) == "."
     assert at(state.grid, {2, 2}) == "#"
@@ -166,7 +156,7 @@ defmodule GridTest do
   # #..
   # .#.
   # ..#
-  test "flip_vert", state do
+  test "flip_vert" do
     grid = [
       "##.",
       ".#.",
@@ -184,7 +174,7 @@ defmodule GridTest do
     ]
   end
 
-  test "rotate_90_simple", state do
+  test "rotate_90_simple" do
     grid = [
       "**",
       ".."
@@ -257,7 +247,7 @@ defmodule GridTest do
     ]
   end
 
-  test "trim_edges", state do
+  test "trim_edges" do
     grid = [
       "####",
       "#.##",
@@ -329,6 +319,24 @@ defmodule GridTest do
       "....",
       "...#",
       "###."
+    ]
+  end
+
+  test "append_grid" do
+    grid = [
+      "#.#.",
+      "#..#",
+      "#..#",
+      "#..#"
+    ] |> from_strs
+
+    appended = append_grid(grid, grid) |> to_strs()
+
+    assert appended == [
+      "#.#.#.#.",
+      "#..##..#",
+      "#..##..#",
+      "#..##..#"
     ]
   end
 end
