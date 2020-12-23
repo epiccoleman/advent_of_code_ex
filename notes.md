@@ -1,5 +1,10 @@
 # notes
 
+## day 22
+after the amount of time day 20 took i wanted to get a quick win in today (HA!). this one looked a bit easier than day 21.
+
+for the most part this was fairly easy - the conditions of the recursive function were laid out well enough in the puzzle. there was one minor detail which took some digging to find - where i was slicing the deck for the subgames, i was initially doing 0..card_num. you need to do 0..card_num-1 if you want card_num cards. that's a pretty picky little detail so i don't feel bad for getting hung up on it. apart from that i think it's fair to say i've gotten better at writing recursion, both these functions were pretty simple enough to write.
+
 ## day 20
 well, i feel pretty proud to have figured this out but damn was this a huge problem. how people can code something like this within an hour or two after the puzzle is released is beyond me. this thing just had a way of spawning off sub problems. I wrote almost 1000 lines of code between test and implementation to figure this out.
 
