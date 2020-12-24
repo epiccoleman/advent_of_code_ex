@@ -62,10 +62,10 @@
         result
       else
         # find the field name with one possibility.
-        [{allergen, ingredient}] = Enum.filter(possibles, fn {_, set} ->
+        {allergen, ingredient} = Enum.filter(possibles, fn {_, set} ->
           MapSet.size(set) == 1
         end)
-        |> Enum.map(fn {allergen, ingredient_set} -> {allergen, hd(MapSet.to_list(ingredient_set))} end)
+        |> Enum.map(fn {allergen, ingredient_set} -> {allergen, hd(MapSet.to_list(ingredient_set))} end) |> hd
 
         # whittle down possibles by removing the known one we just found:
         new_possibles =
@@ -105,5 +105,6 @@
       |> parse_input()
       |> all_possible_ingredients_for_all_allergens()
       |> determine_allergens()
+      |> Enum.reduce("", fn {_, ingredient}, acc -> acc <> ingredient <> "," end)
     end
   end

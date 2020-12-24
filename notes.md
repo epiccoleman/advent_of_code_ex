@@ -1,5 +1,8 @@
 # notes
 
+## day 21
+well that wasn't nearly as bad as I thought it would be, pretty straightforward process of elimination kinda problem. once i had the code necessary to solve part 1, all that was left was to tweak the process of elimination function from day 16.
+
 ## day 22
 after the amount of time day 20 took i wanted to get a quick win in today (HA!). this one looked a bit easier than day 21.
 
