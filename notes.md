@@ -1,5 +1,17 @@
 # notes
 
+## day 23
+almost there.
+
+i probably should have guessed that this one would do some kinda thing to make my fairly naive part 1 solution obsolete. i wrote the functions for performing each cycle in a bit of a brutish way, just rotating the list around so that the current and destination cups were at the front. this made insertion logic easier at the cost of being completely untenable for a million element list - quick math estimated a 2 week runtime for the 10 million cycles. obviously not gonna work.
+
+the sorta first thing that came to mind is a circular linked list, but that only solves the problem of the case where you're trying to pull and add elements at the end of the list. doesn't really solve the access time problem. i had to dig around on reddit to get the hint i needed - use a map where each key points to it's next neighbor. this makes both removal of the three cups and the reinsertion logic actually really simple.
+
+another thing - dont print the entire list on every cycle. slows things down.
+
+## day 24
+pretty happy with this one, [this article](https://www.redblobgames.com/grids/hexagons/) from redblob games made the whole thing fairly straightforward. i opted to go with the cubic coordinates approach which seems to be the easiest to manage with a map. o ran into an issue early on with an extra line in the input that was causing an extra flip. in part 2, due to the update rules, you potentially need to simulate cells which are not yet in the map. my first approach to this was just to expand the grid outward in all directions. however this runs into problems due to exponential growth. the trick was to realize that only black cells and their neighbors could potentially update, which allowed me to eschew the grid expansion logic and just work through the comparatively much shorter list of black cells. this version of the alg runs in a reasonable time.
+
 ## day 21
 well that wasn't nearly as bad as I thought it would be, pretty straightforward process of elimination kinda problem. once i had the code necessary to solve part 1, all that was left was to tweak the process of elimination function from day 16.
 
