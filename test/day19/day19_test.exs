@@ -1,6 +1,5 @@
 defmodule Day19Test do
   use ExUnit.Case
-  import Checkov
   import Day19
 
 # 0: 4 1 5
@@ -29,11 +28,11 @@ defmodule Day19Test do
 
   test "Part 1" do
     input = FileUtils.get_file_as_strings("test/day19/input.txt")
-    assert Day19.part_1(input) == 176
+    assert part_1(input) == 176
   end
 
   test "Part 2" do
     input = FileUtils.get_file_as_strings("test/day19/input.txt")
-    assert Day19.part_2(input) == 352
+    assert part_2(input) == 352
   end
 end

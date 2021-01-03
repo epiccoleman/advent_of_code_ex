@@ -50,7 +50,6 @@
     def part_2(input) do
       rule_strs = Day19.Rules.rule_strs
 
-      rule_0 = Map.get(rule_strs, 0)
       rule_42 = expand_rule_str(Map.get(rule_strs, 42), rule_strs)
       rule_31 = expand_rule_str(Map.get(rule_strs, 31), rule_strs)
 
@@ -67,6 +66,5 @@
       input
       |> Enum.filter(&(&1 =~ bigass_regex))
       |> Enum.count()
-
     end
   end

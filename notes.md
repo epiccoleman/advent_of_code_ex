@@ -1,5 +1,12 @@
 # notes
 
+## day 25
+we've got it!
+
+this was a pretty cool if straightforward problem. i expected to have to get clever, nice surprise that it could be easily bruteforced. the surprise for part 2 was also nice :)
+
+one neat thing is i got to use the idiom for an 'infinite loop' - running Enum.reduce_while with Stream.iterate as the input.
+
 ## day 23
 almost there.
 
