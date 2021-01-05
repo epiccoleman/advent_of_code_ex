@@ -19,6 +19,11 @@ erl_crash.dump
 # Also ignore archive artifacts (built via "mix archive.build").
 *.ez
 
+# Ignore package tarball (built via "mix hex.build").
+aoc_2020-*.tar
+
 
 # Temporary files for e.g. tests
 /tmp
+.erl
+src/*.erl
