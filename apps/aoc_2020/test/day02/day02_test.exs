@@ -1,6 +1,7 @@
 defmodule Day02Test do
   use ExUnit.Case
   import Checkov
+  alias AOCUtils.FileUtils
 
  data_test "#password_valid?" do
     assert Day02.password_valid?(entry) == result

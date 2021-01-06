@@ -1,5 +1,7 @@
 defmodule Day21Test do
   use ExUnit.Case
+  alias AOCUtils.FileUtils
+
   import Day21
 
   test "Part 1" do

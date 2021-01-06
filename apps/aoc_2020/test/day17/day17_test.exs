@@ -1,5 +1,7 @@
 defmodule Day17Test do
   use ExUnit.Case
+  alias AOCUtils.FileUtils
+
   import Day17
 
   test "enumerate_cube_neighbors" do

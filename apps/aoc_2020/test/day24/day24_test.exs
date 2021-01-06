@@ -1,7 +1,9 @@
 defmodule Day24Test do
   use ExUnit.Case
-  import Day24
+  alias AOCUtils.FileUtils
   import Checkov
+
+  import Day24
 
   test "sample simple" do
     input = [

@@ -1,5 +1,6 @@
 defmodule Day11Test do
   use ExUnit.Case
+
   import Day11
 
   test "to_seat_map" do

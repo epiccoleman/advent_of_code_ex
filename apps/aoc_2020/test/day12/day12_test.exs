@@ -1,6 +1,9 @@
 defmodule Day12Test do
   use ExUnit.Case
+  alias AOCUtils.FileUtils
   import Checkov
+
+
   import Day12
   alias Day12.BoatState
 

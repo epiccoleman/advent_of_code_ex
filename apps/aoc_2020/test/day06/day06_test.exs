@@ -1,5 +1,6 @@
 defmodule Day06Test do
   use ExUnit.Case
+
   import Checkov
 
   data_test "process_group_1" do

@@ -1,5 +1,6 @@
 defmodule Day09Test do
   use ExUnit.Case
+  alias AOCUtils.FileUtils
 
   test "get_pairs/2 simple" do
     input = [ 35, 20, 15, 25, 47, 40, 62 ]

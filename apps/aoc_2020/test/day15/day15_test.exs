@@ -1,5 +1,6 @@
 defmodule Day15Test do
   use ExUnit.Case
+
   import Checkov
 
   data_test "part 1 samples" do

@@ -1,5 +1,7 @@
 defmodule Day04Test do
   use ExUnit.Case
+  alias AOCUtils.FileUtils
+
   import Checkov
 
   data_test "valid_passport?" do

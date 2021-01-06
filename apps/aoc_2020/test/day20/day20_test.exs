@@ -1,5 +1,7 @@
 defmodule Day20Test do
   use ExUnit.Case
+  alias AOCUtils.FileUtils
+
   import Day20
   alias Day20.Grid
 

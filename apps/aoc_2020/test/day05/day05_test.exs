@@ -1,5 +1,7 @@
 defmodule Day05Test do
   use ExUnit.Case
+  alias AOCUtils.FileUtils
+
   import Checkov
 
   data_test "find_column" do

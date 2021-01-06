@@ -1,4 +1,4 @@
-defmodule FileUtils do
+defmodule AOCUtils.FileUtils do
   def get_file_as_strings(file_path) do
     File.read!(file_path)
     |> String.split("\n")

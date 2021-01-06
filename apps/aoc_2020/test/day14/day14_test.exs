@@ -1,5 +1,7 @@
 defmodule Day14Test do
   use ExUnit.Case
+  alias AOCUtils.FileUtils
+
   import Day14
 
   test "apply_bitmask" do

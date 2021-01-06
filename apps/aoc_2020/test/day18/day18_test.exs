@@ -1,7 +1,10 @@
 defmodule Day18Test do
   use ExUnit.Case
-  import Day18
+  alias AOCUtils.FileUtils
+
   import Checkov
+
+  import Day18
 
   data_test "evaluate" do
     assert evaluate(expression) == result

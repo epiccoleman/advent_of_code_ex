@@ -1,5 +1,7 @@
 defmodule Day13Test do
   use ExUnit.Case
+  alias AOCUtils.FileUtils
+
   import Checkov
   import Day13
 

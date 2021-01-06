@@ -33,7 +33,6 @@ defmodule Day25Test do
   end
 
   test "Part 2" do
-    input = FileUtils.get_file_as_integers("test/day25/input.txt")
-    assert Day25.part_2(input)
+    assert Day25.part_2(nil)
   end
 end

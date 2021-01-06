@@ -1,5 +1,6 @@
 defmodule Day16Test do
   use ExUnit.Case
+
   import Day16
 
   test "process_input_data" do

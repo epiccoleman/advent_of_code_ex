@@ -1,5 +1,6 @@
 defmodule Day22Test do
   use ExUnit.Case
+
   import Day22
 
   test "recursive combat terminates on small input" do
