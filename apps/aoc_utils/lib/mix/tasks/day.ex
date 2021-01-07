@@ -56,12 +56,12 @@ defmodule Mix.Tasks.Day do
 
         #test "Part 1" do
         #  input = get_file_as_integers("test/#{day_name}/input.txt")
-        #  assert #{day_module_name}.part_1(input) == 0
+        #  assert part_1(input) == 0
         #end
 
         #test "Part 2" do
         #  input = get_file_as_integers("test/#{day_name}/input.txt")
-        #  assert #{day_module_name}.part_2(input) == 0
+        #  assert part_2(input) == 0
         #end
       end
       """
