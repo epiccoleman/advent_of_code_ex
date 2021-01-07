@@ -1,2 +1,2 @@
-ExUnit.configure exclude: [long: true]
+ExUnit.configure exclude: [slow: true]
 ExUnit.start()
