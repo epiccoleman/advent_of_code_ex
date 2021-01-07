@@ -55,12 +55,12 @@ defmodule Mix.Tasks.Day do
         import #{day_module_name}
 
         #test "Part 1" do
-        #  input = get_file_as_integers("test/#{day_name}/input.txt")
+        #  input = get_file_as_strings("test/#{day_name}/input.txt")
         #  assert part_1(input) == 0
         #end
 
         #test "Part 2" do
-        #  input = get_file_as_integers("test/#{day_name}/input.txt")
+        #  input = get_file_as_strings("test/#{day_name}/input.txt")
         #  assert part_2(input) == 0
         #end
       end
