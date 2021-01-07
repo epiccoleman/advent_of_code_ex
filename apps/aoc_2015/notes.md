@@ -1,5 +1,8 @@
 # notes - AOC 2015
 
+# day 5
+guess that the nasty regex one from 2020 prepared me a bit for this, i still had to get pretty gnarly though for the recurring pair thing. gross looking pipeline but hey, it works
+
 # day 4
 another easy one, thanks to erlang for having an md5 function. I guess there's probably a clever way to do this but idk what it would be.
 
