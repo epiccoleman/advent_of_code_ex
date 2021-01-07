@@ -6,6 +6,7 @@ defmodule Mix.Tasks.Day do
   def run(args) do
     day_number = args |> hd
 
+    IO.puts "You didn't code any protection from deleting untracked code with this..."
     response = IO.gets "Create files for Day #{day_number}? [Y/n]"
 
     if response =~ ~r{[yY]} or response =~ ~r[^\n$] do
@@ -50,17 +51,18 @@ defmodule Mix.Tasks.Day do
       """
       defmodule #{day_module_name}Test do
         use ExUnit.Case
+        import AOCUtils.FileUtils
         import #{day_module_name}
 
-        test "Part 1" do
-          input = FileUtils.get_file_as_integers("test/#{day_name}/input.txt")
-          assert #{day_module_name}.part_1(input) == 0
-        end
+        #test "Part 1" do
+        #  input = get_file_as_integers("test/#{day_name}/input.txt")
+        #  assert #{day_module_name}.part_1(input) == 0
+        #end
 
-        test "Part 2" do
-          input = FileUtils.get_file_as_integers("test/#{day_name}/input.txt")
-          assert #{day_module_name}.part_2(input) == 0
-        end
+        #test "Part 2" do
+        #  input = get_file_as_integers("test/#{day_name}/input.txt")
+        #  assert #{day_module_name}.part_2(input) == 0
+        #end
       end
       """
     )
