@@ -1,10 +1,13 @@
   defmodule Day05 do
     def is_nice?(string) do # IS NICE
       contains_three_vowels?(string) and
-      contains_a_doubled_letter?(string) and
+      contains_a_doubled_letter_regex?(string) and
       not contains_banned_strings?(string)
     end
 
+    # Comparison:
+    # contains_three_vowels?              274.70
+    # contains_three_vowels_regex?        150.43 - 1.83x slower +3.01 ms
     def contains_three_vowels?(string) do
       vowel_count =
         string
@@ -13,8 +16,17 @@
 
 
       vowel_count >= 3
+    end
 
-      # alt Regex.scan(~r/[aeiou]/, string) |> Enum.count
+    def contains_three_vowels_regex?(string) do
+      Regex.scan(~r/[aeiou]/, string) |> Enum.count
+    end
+
+    # Comparison:
+    # contains_a_doubled_letter_regex?        408.50
+    # contains_a_doubled_letter?              187.00 - 2.18x slower +2.90 ms
+    def contains_a_doubled_letter_regex?(string) do
+      Regex.match?(~r/([a-z])\1+/, string)
     end
 
     def contains_a_doubled_letter?(string) do
@@ -22,8 +34,6 @@
       |> String.graphemes()
       |> Enum.chunk_every(2, 1, :discard)
       |> Enum.any?(fn [a, b] -> a == b end)
-
-      # alt: Regex.match?(~r/([a-z])\1+/, str)
     end
 
     def contains_banned_strings?(string) do
@@ -37,11 +47,11 @@
     end
 
     def has_recurring_pair?(string) do
-      candidates = string
+      string
       |> String.graphemes()
       |> Enum.with_index()
       |> Enum.chunk_every(2, 1, :discard)
-      |> Enum.reduce(%{}, fn [{a, i_0}, {b, i_1}], acc ->
+      |> Enum.reduce(%{}, fn [{a, _i_0}, {b, _i_1}], acc ->
         Map.update(acc, a<>b, 1, &(&1 + 1))
       end)
       |> Enum.filter(fn {_, count} -> count > 1 end)
