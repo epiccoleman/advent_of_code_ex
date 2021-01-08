@@ -76,11 +76,13 @@ defmodule Day20Test do
   end
 
 
+  @tag slow: true
   test "Part 1" do
     input = File.read!("test/day20/input.txt")
     assert Day20.part_1(input) == 140656720229539
   end
 
+  @tag slow: true
   test "Part 2" do
     input = File.read!("test/day20/input.txt")
     assert Day20.part_2(input) == 1885

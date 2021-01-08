@@ -13,7 +13,7 @@
       # pick a destination cup - current_cup - 1 unless that's not in held
 
       destination_cup = current_cup - 1
-      final_destination = if not destination_cup in cup_circle do
+      final_destination = if destination_cup not in cup_circle do
         # pick new one by subtracting 1 until its valid
         Enum.reduce_while(1..100_000_000, destination_cup, fn _i, acc ->
           cond do
@@ -210,8 +210,8 @@
 
       # start = start_state_from_input_2(input)
 
-      Enum.reduce(1..move_count, start, fn i, state ->
-        IO.puts(i)
+      Enum.reduce(1..move_count, start, fn _i, state ->
+        # IO.puts(i)
 
         do_a_move_2(state)
       end)

@@ -41,6 +41,7 @@ defmodule Day13Test do
     assert Day13.part_1(input) == 3246
   end
 
+  @tag slow: true
   data_test "part 2 examples" do
     assert part_2(input, 0) == result
 

@@ -266,16 +266,16 @@ defmodule Day11Test do
     assert Day11.part_2(input) == 26
   end
 
-  # these fellas run a bit long
+  @tag slow: true
+  test "Part 1" do
+    input = AOCUtils.FileUtils.get_file_as_strings("/Users/eric/src/aoc_2020/test/day11/input.txt")
+    assert Day11.part_1(input) == 2183
+  end
 
-  # test "Part 1" do
-  #   input = FileUtils.get_file_as_strings("/Users/eric/src/aoc_2020/test/day11/input.txt")
-  #   assert Day11.part_1(input) == 2183
-  # end
-
-  # @tag timeout: 120000
-  # test "Part 2" do
-  #   input = FileUtils.get_file_as_strings("/Users/eric/src/aoc_2020/test/day11/input.txt")
-  #   assert Day11.part_2(input) == 1990
-  # end
+  @tag slow: true
+  @tag timeout: 120000
+  test "Part 2" do
+    input = AOCUtils.FileUtils.get_file_as_strings("/Users/eric/src/aoc_2020/test/day11/input.txt")
+    assert Day11.part_2(input) == 1990
+  end
 end

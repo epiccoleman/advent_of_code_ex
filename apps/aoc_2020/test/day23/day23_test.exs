@@ -16,9 +16,10 @@ defmodule Day23Test do
 
   # takes about 3 minutes
 
-  # @tag timeout: :infinity
-  # test "Part 2" do
-  #   input = 589174263
-  #   assert Day23.part_2(input) == 2911418906
-  # end
+  @tag slow: true
+  @tag timeout: :infinity
+  test "Part 2" do
+    input = 589174263
+    assert Day23.part_2(input) == 2911418906
+  end
 end

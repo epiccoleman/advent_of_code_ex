@@ -16,17 +16,6 @@ defmodule Day19Test do
 # abbbab
 # aaabbb
 # aaaabbb
-  # test do
-  #   rules = %{
-  #     0 => [1, 2],
-  #     1 => "a",
-  #     2 => [[1, 3], [3, 1]],
-  #     3 => "b"
-  #   }
-
-
-  #   assert match_rule?(input_str, rule, rules)
-  # end
 
   test "Part 1" do
     input = FileUtils.get_file_as_strings("test/day19/input.txt")

@@ -32,8 +32,9 @@ defmodule Day09Test do
 
   # disabled because it takes a while
 
-  # test "Part 2" do
-  #   input = FileUtils.get_file_as_integers("/Users/eric/src/aoc_2020/test/day09/input.txt")
-  #   assert Day09.part_2(input) == 0
-  # end
+  @tag slow: true
+  test "Part 2" do
+    input = FileUtils.get_file_as_integers("/Users/eric/src/aoc_2020/test/day09/input.txt")
+    assert Day09.part_2(input) == 93396727
+  end
 end

@@ -27,6 +27,7 @@ defmodule Day25Test do
   # encryption key == transform_subject(523731, a) == transform_subject(1717001, b)
 
 
+  @tag slow: true
   test "Part 1" do
     input = [1717001, 523731]
     assert Day25.part_1(input) == 2679568

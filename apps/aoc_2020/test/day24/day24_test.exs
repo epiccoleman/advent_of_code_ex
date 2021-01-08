@@ -129,6 +129,7 @@ defmodule Day24Test do
     assert part_1(input) == 354
   end
 
+  @tag slow: true
   @tag timeout: :infinity
   test "Part 2" do
     input = FileUtils.get_file_as_strings("test/day24/input.txt")

@@ -17,6 +17,7 @@ defmodule Day08Test do
     assert Day08.part_1(input) == 1337
   end
 
+  @tag slow: true
   test "Part 2" do
     input = FileUtils.get_file_as_strings("/Users/eric/src/aoc_2020/test/day08/input.txt")
     assert Day08.part_2(input) == 1358

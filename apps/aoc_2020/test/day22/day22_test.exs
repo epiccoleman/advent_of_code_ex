@@ -24,6 +24,7 @@ defmodule Day22Test do
     assert Day22.part_1(input) == 35005
   end
 
+  @tag slow: true
   test "Part 2" do
     input = File.read!("test/day22/input.txt")
     assert Day22.part_2(input) == 32751

@@ -14,16 +14,19 @@ defmodule Day17Test do
     assert part_1(input) == 112
   end
 
+  @tag slow: true
   test "Part 1" do
     input = FileUtils.get_file_as_strings("test/day17/input.txt")
     assert Day17.part_1(input) == 317
   end
 
+  @tag slow: true
   test "part 2 small" do
     input = [".#.", "..#", "###"]
     assert part_2(input) == 848
   end
 
+  @tag slow: true
   test "Part 2" do
     input = FileUtils.get_file_as_strings("test/day17/input.txt")
     assert Day17.part_2(input) == 1692
