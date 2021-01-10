@@ -1,5 +1,8 @@
 # notes - AOC 2015
 
+# day 6
+this one was fairly straightforward. i wrote this code pretty tersely and i'm not sure i'll be able to decipher it a few days from now, but oh well. on this initial implementation it is surprisingly slow. the big piece of work is probably the multiple map updates - wonder if that could be improved.
+
 # day 5
 guess that the nasty regex one from 2020 prepared me a bit for this, i still had to get pretty gnarly though for the recurring pair thing. gross looking pipeline but hey, it works. for the rest, I was able to write either relatively simple functions or decent regex versions.
 
