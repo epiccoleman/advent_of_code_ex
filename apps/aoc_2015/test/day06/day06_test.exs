@@ -18,7 +18,7 @@ defmodule Day06Test do
 
   test "do_instruction" do
     instruction = {:on, 1..3, 1..2}
-    assert do_instruction(%{}, instruction) == %{
+    assert Day06.Part1.do_instruction(%{}, instruction) == %{
       {1,1} => :on,
       {2,1} => :on,
       {3,1} => :on,
@@ -35,7 +35,7 @@ defmodule Day06Test do
       {:toggle, 2..3, 2..2}
     ]
 
-    assert do_instructions(instructions) == %{
+    assert Day06.Part1.do_instructions(instructions) == %{
       {1,1} => :on,
       {2,1} => :on,
       {3,1} => :off,
