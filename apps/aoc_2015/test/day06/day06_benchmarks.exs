@@ -11,22 +11,28 @@ instructions = Day06.process_input(input)
 # })
 
 Benchee.run(%{
-  "Part 1 - do_instruction" => fn ->
-    Enum.reduce(instructions, %{}, &(Day06.Part1.do_instruction(&2, &1)))
+  "Part 1 - do_instruction_flow" => fn ->
+    Enum.reduce(instructions, %{}, &(Day06.Part1.do_instruction_flow(&2, &1)))
  end,
   "Part 1 - do_instruction_merge" => fn ->
     Enum.reduce(instructions, %{}, &(Day06.Part1.do_instruction_merge(&2, &1)))
+ end,
+  "Part 1 - do_instruction" => fn ->
+    Enum.reduce(instructions, %{}, &(Day06.Part1.do_instruction(&2, &1)))
  end,
 #   "Part 1 - do_instruction_merge_parallel" => fn ->
 #     Enum.map(instructions, &(Day06.Part1.do_instruction_merge_parallel(%{}, &1)))
 #  end,
 })
 
-Benchee.run(%{
-  "Part 2 - do_instruction_2" => fn ->
-    Enum.reduce(instructions, %{}, &(Day06.Part2.do_instruction_2(&2, &1)))
- end,
-  "Part 2 - do_instruction_2_merge" => fn ->
-    Enum.reduce(instructions, %{}, &(Day06.Part2.do_instruction_2_merge(&2, &1)))
- end
-})
+# Benchee.run(%{
+#   "Part 2 - do_instruction_2_flow" => fn ->
+#     Enum.reduce(instructions, %{}, &(Day06.Part1.do_instruction_2_flow(&2, &1)))
+#  end,
+#   "Part 2 - do_instruction_2" => fn ->
+#     Enum.reduce(instructions, %{}, &(Day06.Part2.do_instruction_2(&2, &1)))
+#  end,
+#   "Part 2 - do_instruction_2_merge" => fn ->
+#     Enum.reduce(instructions, %{}, &(Day06.Part2.do_instruction_2_merge(&2, &1)))
+#  end
+# })
