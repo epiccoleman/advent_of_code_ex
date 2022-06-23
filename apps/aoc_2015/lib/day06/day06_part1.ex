@@ -1,5 +1,11 @@
 defmodule Day06.Part1 do
-  import Day06, only: [get_locs_for_ranges: 2]
+  # import Day06, only: [get_locs_for_ranges: 2]
+  # currently double defined
+  def get_locs_for_ranges(x_range, y_range) do
+    for x <- x_range, y <- y_range do
+      {x, y}
+    end
+  end
 
   @doc """
     this is the top level function called by Day06, change out instruction implementation here
