@@ -14,13 +14,13 @@ defmodule Day14Test do
 
   test "Part 1" do
 
-    input = FileUtils.get_file_as_strings("/Users/eric/src/aoc_2020/test/day14/input.txt")
+    input = FileUtils.get_file_as_strings("test/day14/input.txt")
     assert Day14.part_1(input) == 10452688630537
   end
 
   @tag slow: true
   test "Part 2" do
-    input = FileUtils.get_file_as_strings("/Users/eric/src/aoc_2020/test/day14/input.txt")
+    input = FileUtils.get_file_as_strings("test/day14/input.txt")
     assert Day14.part_2(input) == 2881082759597
   end
 end

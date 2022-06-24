@@ -26,12 +26,12 @@ defmodule Day06Test do
   end
 
   test "Part 1" do
-    input = File.read!("/Users/eric/src/aoc_2020/test/day06/input.txt") |> String.split("\n\n")
+    input = File.read!("test/day06/input.txt") |> String.split("\n\n")
     assert Day06.part_1(input) == 6763
   end
 
   test "Part 2" do
-    input = File.read!("/Users/eric/src/aoc_2020/test/day06/input.txt") |> String.split("\n\n")
+    input = File.read!("test/day06/input.txt") |> String.split("\n\n")
     assert Day06.part_2(input) == 3512
   end
 end

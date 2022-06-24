@@ -43,12 +43,12 @@ defmodule Day05Test do
   end
 
   test "Part 1" do
-    input = FileUtils.get_file_as_strings("/Users/eric/src/aoc_2020/test/day05/input.txt")
+    input = FileUtils.get_file_as_strings("test/day05/input.txt")
     assert Day05.part_1(input) == 922
   end
 
   test "Part 2" do
-    input = FileUtils.get_file_as_strings("/Users/eric/src/aoc_2020/test/day05/input.txt")
+    input = FileUtils.get_file_as_strings("test/day05/input.txt")
     assert Day05.part_2(input) == 747
   end
 end

@@ -26,7 +26,7 @@ defmodule Day09Test do
   end
 
   test "Part 1" do
-    input = FileUtils.get_file_as_integers("/Users/eric/src/aoc_2020/test/day09/input.txt")
+    input = FileUtils.get_file_as_integers("test/day09/input.txt")
     assert Day09.part_1(input) == 731031916
   end
 
@@ -34,7 +34,7 @@ defmodule Day09Test do
 
   @tag slow: true
   test "Part 2" do
-    input = FileUtils.get_file_as_integers("/Users/eric/src/aoc_2020/test/day09/input.txt")
+    input = FileUtils.get_file_as_integers("test/day09/input.txt")
     assert Day09.part_2(input) == 93396727
   end
 end

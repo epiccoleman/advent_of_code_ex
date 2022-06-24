@@ -37,7 +37,7 @@ defmodule Day13Test do
   end
 
   test "Part 1" do
-    input = FileUtils.get_file_as_strings("/Users/eric/src/aoc_2020/test/day13/input.txt")
+    input = FileUtils.get_file_as_strings("test/day13/input.txt")
     assert Day13.part_1(input) == 3246
   end
 
@@ -71,7 +71,7 @@ defmodule Day13Test do
 
   # @tag timeout: 3600000
   test "Part 2" do
-    input = FileUtils.get_file_as_strings("/Users/eric/src/aoc_2020/test/day13/input.txt") |> List.last
+    input = FileUtils.get_file_as_strings("test/day13/input.txt") |> List.last
     assert Day13.part_2_smart(input) == 1010182346291467
   end
 end

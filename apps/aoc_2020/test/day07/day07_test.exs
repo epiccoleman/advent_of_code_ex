@@ -41,7 +41,7 @@ defmodule Day07Test do
   end
 
   test "Part 1" do
-    input = FileUtils.get_file_as_strings("/Users/eric/src/aoc_2020/test/day07/input.txt")
+    input = FileUtils.get_file_as_strings("test/day07/input.txt")
     assert Day07.part_1(input) == 296
   end
 
@@ -73,7 +73,7 @@ defmodule Day07Test do
   end
 
   test "Part 2" do
-    input = FileUtils.get_file_as_strings("/Users/eric/src/aoc_2020/test/day07/input.txt")
+    input = FileUtils.get_file_as_strings("test/day07/input.txt")
     assert Day07.part_2(input) == 9339
   end
 end
