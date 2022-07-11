@@ -3,19 +3,29 @@ defmodule AdventOfCodeEx.MixProject do
 
   def project do
     [
-      apps_path: "apps",
+      app: :aoc_ex,
       version: "0.1.0",
+      elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
   end
 
-  # Dependencies listed here are available only for this
-  # project and cannot be accessed from applications inside
-  # the apps folder.
-  #
-  # Run "mix help deps" for examples and options.
+  # Run "mix help compile.app" to learn about applications.
+  def application do
+    [
+      extra_applications: [:logger, :crypto]
+    ]
+  end
+
+  # Run "mix help deps" to learn about dependencies.
   defp deps do
-    []
+    [
+      {:checkov, "~> 1.0.0", only: :test},
+      {:libgraph, "~> 0.13.3"},
+      {:benchee, "~> 1.1"},
+      # {:dep_from_hexpm, "~> 0.3.0"},
+      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+    ]
   end
 end
