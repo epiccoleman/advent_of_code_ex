@@ -1,12 +1,17 @@
 ## notes - 2021
 
-## day 1 and day 2
-man i missed elixir.
+## day 5
+overall happy with my solution, although I'm curious as to whether there's some good math solution that would have been more elegant than my brutish solution of literally enumerating all the points and then counting the intersections. there are 500 lines, so even if you have to compare them all to each other that only comes out to 250000 comparisons. On the other hand, that might have made it a little harder to count the intersections since you'd have to watch out not to double count them. felt kinda 'clever' in a way just end-running around the math so good enough for me.
 
-## day 3
-there is some definite slop here. this is an annoying puzzle for elixir :). One thing that might be helpful is to treat the inputs as integers, and then use Integer.digits and Integer.undigits to convert. This would get rid of some of the annoying string conversion logic and probably make everything a bit cleaner. Oh - but one problem with that, is you lose the padding. probably by the time you deal with that it's a wash between the two approaches. idk.
+i played around with some new stuff in this one too around documentation - it's pretty cool to call `h` on your own function in the repl and see a big boy style doc get printed out. instead of writing unit tests for my functions i implemented them as doc tests. these are honestly just ok imo, it's a really neat concept but a bit clunky. it would be rad to have something like checkov in there so you could cut out some of the repetition, but overall i think it's a neat tool.
 
 ## day 4
 I give my solution a solid B- , there are some parts that are a bit ugly. I'm happy overall, there are probably a few things that could have been expressed more cleanly in the game logic. My initial idea was to basically replicate the 2d grid module I built for 2020 day 20. And, as a matter of fact, I originally wrote that module with the idea that it could be reused for other puzzles. It turns out that the Grid module should probably have been called something like "2DCharacterGrid" or similar - it wasn't sufficiently adaptable to handle a grid of numbers instead. But honestly, that was kind of a red herring anyway, because it turns out that the 2D array style access really wasn't necessary for this problem. Once I settled on using the Bingo numbers as the keys in the "Board" map, writing the code for marking numbers and detecting Bingos was easy. Also got to write some mild recursion - it's kinda crazy to me how natural that feels now. I remember _really_ struggling to wrap my head around recursive functions way back in the college days. Turns out I just needed practice (and 10 years).
 
 One other thing with this problem is that it feels like a natural one to try out an "actor model" approach. You could have a "bingo caller" actor and then a bunch of "players" with boards that receive messages with each number. Then when one detects a bingo it could send out a message to the "caller" (i.e. it could yell "BINGO!"), and then the caller could score it and spit out the result. One minor disadvantage of AOC is that you don't really _need_ to do anything like that, and the in-memory list approach is easier to code, but it could be a fun learning opportunity. Maybe I'll come back and revisit eventually.
+
+## day 3
+there is some definite slop here. this is an annoying puzzle for elixir :). One thing that might be helpful is to treat the inputs as integers, and then use Integer.digits and Integer.undigits to convert. This would get rid of some of the annoying string conversion logic and probably make everything a bit cleaner. Oh - but one problem with that, is you lose the padding. probably by the time you deal with that it's a wash between the two approaches. idk.
+
+## day 1 and day 2
+man i missed elixir.
