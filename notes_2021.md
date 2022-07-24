@@ -1,5 +1,10 @@
 ## notes - 2021
 
+## day 6
+man, and i thought i was getting clever thinking about ways to memoize the calculation or to do data analysis to get the growth rate. i had to browse reddit for a hint. the trick is _not_ that you don't need to "simulate" the fish per se, it's just that you don't need each fish to be an individual item in a list. you just need to keep track of _how many_ fish are in each state, which is easy enough to do with a map (although i saw some clever uses of array rotation to do the job as well!)
+
+this is a good problem to demonstrate that choosing the right data structure makes all the difference. I ran a benchmark and the original list-based solution is literally 17000 times slower than the map based solution.
+
 ## day 5
 overall happy with my solution, although I'm curious as to whether there's some good math solution that would have been more elegant than my brutish solution of literally enumerating all the points and then counting the intersections. there are 500 lines, so even if you have to compare them all to each other that only comes out to 250000 comparisons. On the other hand, that might have made it a little harder to count the intersections since you'd have to watch out not to double count them. felt kinda 'clever' in a way just end-running around the math so good enough for me.
 
