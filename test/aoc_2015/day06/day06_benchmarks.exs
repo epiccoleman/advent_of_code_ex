@@ -1,4 +1,4 @@
-input = AOCUtils.FileUtils.get_file_as_strings("./test/aoc_2015/day06/input.txt")
+input = AocUtils.FileUtils.get_file_as_strings("./test/aoc_2015/day06/input.txt")
 instructions = Aoc2015.Day06.process_input(input)
 
 # Benchee.run(%{

@@ -1,7 +1,7 @@
 defmodule Aoc2020.Day02Test do
   use ExUnit.Case
   import Checkov
-  alias AOCUtils.FileUtils
+  alias AocUtils.FileUtils
   alias Aoc2020.Day02
 
  data_test "#password_valid?" do

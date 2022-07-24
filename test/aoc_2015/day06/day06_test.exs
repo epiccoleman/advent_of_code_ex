@@ -1,6 +1,6 @@
 defmodule Aoc2015.Day06Test do
   use ExUnit.Case
-  import AOCUtils.FileUtils
+  import AocUtils.FileUtils
   alias Aoc2015.Day06
 
   test "process_input" do

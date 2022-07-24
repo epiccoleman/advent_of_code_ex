@@ -1,6 +1,6 @@
 defmodule Aoc2021.Day01Test do
   use ExUnit.Case
-  import AOCUtils.FileUtils
+  import AocUtils.FileUtils
   import Aoc2021.Day01
 
   test "Part 1" do

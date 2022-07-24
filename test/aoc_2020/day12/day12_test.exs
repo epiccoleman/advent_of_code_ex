@@ -1,6 +1,6 @@
 defmodule Aoc2020.Day12Test do
   use ExUnit.Case
-  alias AOCUtils.FileUtils
+  alias AocUtils.FileUtils
   import Checkov
 
 

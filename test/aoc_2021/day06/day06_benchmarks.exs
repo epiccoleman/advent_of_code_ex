@@ -1,4 +1,4 @@
-input = AOCUtils.FileUtils.get_file_as_integers("./test/aoc_2021/day06/input.txt")
+input = AocUtils.FileUtils.get_file_as_integers("./test/aoc_2021/day06/input.txt")
 
 #the smart version is obviously faster but I'm curious how much so
 Benchee.run(%{

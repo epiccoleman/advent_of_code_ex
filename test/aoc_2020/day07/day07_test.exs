@@ -1,6 +1,6 @@
 defmodule Aoc2020.Day07Test do
   use ExUnit.Case
-  alias AOCUtils.FileUtils
+  alias AocUtils.FileUtils
 
   test "process line" do
     g = Graph.new()

@@ -1,6 +1,6 @@
 defmodule Aoc2020.Day10Test do
   use ExUnit.Case
-  alias AOCUtils.FileUtils
+  alias AocUtils.FileUtils
 
   test "Part 1" do
     input = FileUtils.get_file_as_integers("./test/aoc_2020/day10/input.txt")

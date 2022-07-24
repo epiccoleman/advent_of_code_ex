@@ -15,12 +15,12 @@ defmodule Aoc2020.Day01Test do
   end
 
   test "Part 1" do
-    input = AOCUtils.FileUtils.get_file_as_integers("./test/aoc_2020/day01/input.txt")
+    input = AocUtils.FileUtils.get_file_as_integers("./test/aoc_2020/day01/input.txt")
     assert Day01.part_1(input) == 969024
   end
 
   test "Part 2" do
-    input = AOCUtils.FileUtils.get_file_as_integers("./test/aoc_2020/day01/input.txt")
+    input = AocUtils.FileUtils.get_file_as_integers("./test/aoc_2020/day01/input.txt")
     assert Day01.part_2(input) == 230057040
   end
 end

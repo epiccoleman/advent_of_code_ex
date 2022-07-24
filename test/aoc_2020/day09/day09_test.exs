@@ -1,6 +1,6 @@
 defmodule Aoc2020.Day09Test do
   use ExUnit.Case
-  alias AOCUtils.FileUtils
+  alias AocUtils.FileUtils
   alias Aoc2020.Day09
 
 

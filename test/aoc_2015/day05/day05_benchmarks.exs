@@ -1,4 +1,4 @@
-input = AOCUtils.FileUtils.get_file_as_strings("./test/aoc_2015/day05/input.txt")
+input = AocUtils.FileUtils.get_file_as_strings("./test/aoc_2015/day05/input.txt")
 
 #contains_three_vowels
 Benchee.run(%{

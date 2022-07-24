@@ -1,6 +1,6 @@
 defmodule Aoc2021.Day03Test do
   use ExUnit.Case
-  import AOCUtils.FileUtils
+  import AocUtils.FileUtils
   import Aoc2021.Day03
 
   @test_input [ "00100", "11110", "10110", "10111", "10101", "01111",

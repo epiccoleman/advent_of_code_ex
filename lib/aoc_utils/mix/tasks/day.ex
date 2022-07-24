@@ -52,7 +52,7 @@ defmodule Mix.Tasks.Day do
       """
       defmodule #{day_module_name}Test do
         use ExUnit.Case
-        import AOCUtils.FileUtils
+        import AocUtils.FileUtils
         import #{day_module_name}
 
         #test "Part 1" do

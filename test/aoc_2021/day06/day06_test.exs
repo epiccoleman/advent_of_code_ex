@@ -1,7 +1,7 @@
 defmodule Aoc2021.Day06Test do
   use ExUnit.Case
   import Checkov
-  import AOCUtils.FileUtils
+  import AocUtils.FileUtils
   import Aoc2021.Day06
 
   data_test "simulate_lanternfish_reproduction" do

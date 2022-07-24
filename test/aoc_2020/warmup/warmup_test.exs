@@ -1,7 +1,7 @@
 # 3390830
 defmodule WarmupTest do
   use ExUnit.Case
-  alias AOCUtils.FileUtils
+  alias AocUtils.FileUtils
   import Checkov
 
   data_test "#calculate_fuel_requirement" do

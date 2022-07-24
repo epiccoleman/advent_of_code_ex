@@ -268,14 +268,14 @@ defmodule Aoc2020.Day11Test do
 
   @tag slow: true
   test "Part 1" do
-    input = AOCUtils.FileUtils.get_file_as_strings("./test/aoc_2020/day11/input.txt")
+    input = AocUtils.FileUtils.get_file_as_strings("./test/aoc_2020/day11/input.txt")
     assert Day11.part_1(input) == 2183
   end
 
   @tag slow: true
   @tag timeout: 120000
   test "Part 2" do
-    input = AOCUtils.FileUtils.get_file_as_strings("./test/aoc_2020/day11/input.txt")
+    input = AocUtils.FileUtils.get_file_as_strings("./test/aoc_2020/day11/input.txt")
     assert Day11.part_2(input) == 1990
   end
 end

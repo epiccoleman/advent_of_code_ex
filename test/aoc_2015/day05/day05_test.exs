@@ -1,6 +1,6 @@
 defmodule Aoc2015.Day05Test do
   use ExUnit.Case
-  import AOCUtils.FileUtils
+  import AocUtils.FileUtils
   alias Aoc2015.Day05
 
   test "Part 1" do

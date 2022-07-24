@@ -1,6 +1,6 @@
 defmodule Aoc2020.Day03Test do
   use ExUnit.Case
-  alias AOCUtils.FileUtils
+  alias AocUtils.FileUtils
 
   alias Day03.TreeMap
 

@@ -1,6 +1,6 @@
 defmodule FileUtilsTest do
   use ExUnit.Case
-  import AOCUtils.FileUtils
+  import AocUtils.FileUtils
 
   test "#get_file_as_strings" do
     assert get_file_as_strings("./test/aoc_utils/test_input.txt") == ["123", "456", "789"]
