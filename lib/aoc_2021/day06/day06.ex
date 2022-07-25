@@ -124,15 +124,8 @@
       end)
     end
 
-    # copy pasted, we should extract this to utils probably
-    def count_occurences(list) do
-      Enum.reduce(list, %{}, fn item, counts ->
-        Map.update(counts, item, 1, fn count -> count + 1 end)
-      end)
-    end
-
     def simulate_lanternfish_reproduction_smart(fish_list, t) do
-      fish_counts = count_occurences(fish_list)
+      fish_counts = AocUtils.MiscUtils.count_list_elements(fish_list)
 
       # gotta make sure that all the numbers are initialized, otherwise you get math errors.
       # probably a cleverer way to do it but this will do

@@ -68,14 +68,7 @@
 
     Consider all of the lines. At how many points do at least two lines overlap?
     """
-
     alias Aoc2021.Day05.Line
-
-    def count_occurences(list) do
-      Enum.reduce(list, %{}, fn item, counts ->
-        Map.update(counts, item, 1, fn count -> count + 1 end)
-      end)
-    end
 
     def part_1(input) do
       input
@@ -83,7 +76,7 @@
       |> Enum.filter(&Line.is_straight?/1)
       |> Enum.map(&Line.enumerate_points/1)
       |> List.flatten()
-      |> count_occurences()
+      |> AocUtils.MiscUtils.count_list_elements()
       |> Enum.count(fn {_k, v} -> v > 1 end)
     end
 
@@ -92,7 +85,7 @@
       |> Enum.map(&Line.from_str/1)
       |> Enum.map(&Line.enumerate_points/1)
       |> List.flatten()
-      |> count_occurences()
+      |> AocUtils.MiscUtils.count_list_elements()
       |> Enum.count(fn {_k, v} -> v > 1 end)
     end
   end
