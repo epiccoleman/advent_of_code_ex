@@ -63,7 +63,6 @@ defmodule AocUtils.SiteUtils do
 
   defp init_httpoison() do
     # this is necessary for calling httpoison funcs from a mix task
-
     Application.ensure_all_started(:httpoison)
   end
 
