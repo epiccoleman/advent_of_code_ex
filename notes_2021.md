@@ -1,5 +1,15 @@
 ## notes - 2021
 
+## day 7
+pretty straightforward - it's good to remember that computers can do simple math very very quickly. a few million subtractions and multiplications is nothing to even think twice about.
+
+kinda cool to learn about triangular numbers: https://math.stackexchange.com/questions/60578/what-is-the-term-for-a-factorial-type-operation-but-with-summation-instead-of-p - i think I had been exposed to this before but
+I doubt i'd have been able to derive the formula on my own with my current crummy math skills.
+
+Just for funz, it's apparently possible to embed some light latex in GH flavored markdown - the formula for calculating the
+nth triangular number is $$(n^2 + 1) / 2$$. Turns out it's a little cleaner to just write $$n(n+1) / 2$$ when it comes to expressing that in Elixir - you can either have `(n * (n + 1)) / 2` or `(:math.pow(n, 2) + 1) / 2`. First looks nicer so there you are.
+
+
 ## day 6
 man, and i thought i was getting clever thinking about ways to memoize the calculation or to do data analysis to get the growth rate. i had to browse reddit for a hint. the trick is _not_ that you don't need to "simulate" the fish per se, it's just that you don't need each fish to be an individual item in a list. you just need to keep track of _how many_ fish are in each state, which is easy enough to do with a map (although i saw some clever uses of array rotation to do the job as well!)
 
