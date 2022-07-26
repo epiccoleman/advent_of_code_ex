@@ -5,19 +5,19 @@ defmodule Mix.Tasks.Day do
   @impl Mix.Task
   def run([number, year | args ]) do
 
-    day_number = String.pad_leading(number, 2, "0")
-
     IO.puts "You didn't code any protection from deleting untracked code with this..."
-    response = IO.gets "Create files for AOC #{year} Day #{day_number}? [Y/n]"
+    response = IO.gets "Create files for AOC #{year} Day #{number}? [Y/n]"
 
     if response =~ ~r{[yY]} or response =~ ~r[^\n$] do
-      write_day_module(day_number, year)
+      write_day_module(number, year)
     else
       IO.puts "Not creating files..."
     end
   end
 
-  def write_day_module(day_number, year) do
+  def write_day_module(day, year) do
+    day_number = String.pad_leading(day, 2, "0")
+
     aoc_year = "aoc_#{year}"
     day_name = "day#{day_number}"
     day_module_name = "Aoc#{year}.Day#{day_number}"
@@ -68,6 +68,7 @@ defmodule Mix.Tasks.Day do
       """
     )
 
-    File.write!("#{day_test_dir}/input.txt", "0")
+    puzzle_input = AocUtils.SiteUtils.get_puzzle_input(day, year)
+    File.write!("#{day_test_dir}/input.txt", puzzle_input)
   end
 end
