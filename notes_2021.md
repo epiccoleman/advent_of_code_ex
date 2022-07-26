@@ -7,7 +7,16 @@ kinda cool to learn about triangular numbers: https://math.stackexchange.com/que
 I doubt i'd have been able to derive the formula on my own with my current crummy math skills.
 
 Just for funz, it's apparently possible to embed some light latex in GH flavored markdown - the formula for calculating the
-nth triangular number is $$(n^2 + 1) / 2$$. Turns out it's a little cleaner to just write $$n(n+1) / 2$$ when it comes to expressing that in Elixir - you can either have `(n * (n + 1)) / 2` or `(:math.pow(n, 2) + 1) / 2`. First looks nicer so there you are.
+nth triangular number is this: $$\frac{n^2 + 1}{2}$$ Turns out it's a little cleaner to just write it as: $$\frac{n(n+1)}{2}$$ (which even _I_ can see is equivalent) when it comes to expressing that in Elixir - you can either have
+```
+(n * (n + 1)) / 2
+```
+or
+```
+(:math.pow(n, 2) + 1) / 2
+```
+
+First looks nicer to me, so there it is.
 
 
 ## day 6
