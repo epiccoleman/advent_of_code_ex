@@ -24,6 +24,16 @@ man, and i thought i was getting clever thinking about ways to memoize the calcu
 
 this is a good problem to demonstrate that choosing the right data structure makes all the difference. I ran a benchmark and the original list-based solution is literally 17000 times slower than the map based solution.
 
+I went back and extended the benchmarking suite, running the simulation with different numbers of iterations. Even with only 10 the map-based code is almost 10x faster than the list based solution. As you scale the input, the difference between the two approaches grows by something like an order of magnitude per 10-20 iterations.
+
+Also for fun, I ran the map version with some larger inputs. Even with 10,000 iterations, it only takes 2 ms to run.
+
+smart lanternfish sim 256         53.67 μs
+smart lanternfish sim 1000        178.38 μs
+smart lanternfish sim 10000       1885.77 μs
+
+If we assume that the list-based version follows the same pattern I saw of increasing the difference by roughly an order of magnitude per 10 iterations, then we have something like a runtime of 2e+1000 ms for the list based version. By some very rough math this would take 3.3e+290 years to run the 10000 iterations.
+
 ## day 5
 overall happy with my solution, although I'm curious as to whether there's some good math solution that would have been more elegant than my brutish solution of literally enumerating all the points and then counting the intersections. there are 500 lines, so even if you have to compare them all to each other that only comes out to 250000 comparisons. On the other hand, that might have made it a little harder to count the intersections since you'd have to watch out not to double count them. felt kinda 'clever' in a way just end-running around the math so good enough for me.
 
