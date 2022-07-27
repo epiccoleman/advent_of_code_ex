@@ -1,5 +1,10 @@
 ## notes - 2021
 
+## day 8
+this was a cool one. figuring out _what_ code to write was harder than figuring out _how_ to write the code.
+the function that does the deduction, but i don't see a lot of reason to try to break it down. wrote more prose than code
+just in the process of thinking it through.
+
 ## day 7
 pretty straightforward - it's good to remember that computers can do simple math very very quickly. a few million subtractions and multiplications is nothing to even think twice about.
 
