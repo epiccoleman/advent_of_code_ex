@@ -99,7 +99,7 @@
          (get_neighbor_in_direction(modified_tile_map, start_corner_id, neighbor_map, :right) != nil and
          get_neighbor_in_direction(modified_tile_map, start_corner_id, neighbor_map, :bottom) != nil)}
       end)
-      |> Enum.filter(fn {grid, had_right_and_down_neighbors?} -> had_right_and_down_neighbors? end)
+      |> Enum.filter(fn {_grid, had_right_and_down_neighbors?} -> had_right_and_down_neighbors? end)
       |> hd() # there can be more than one, we can pick whatever
 
       new_grid
