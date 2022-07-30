@@ -1,7 +1,6 @@
 defmodule GridTest do
   use ExUnit.Case
-  # import Day20
-  import Day20.Grid
+  import AocUtils.Grid2D
 
   setup_all do
     strs = [

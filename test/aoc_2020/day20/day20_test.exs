@@ -3,7 +3,7 @@ defmodule Aoc2020.Day20Test do
   alias AocUtils.FileUtils
 
   import Day20
-  alias Day20.Grid
+  alias AocUtils.Grid2D, as: Grid
 
   test "get_neighbor_in_direction" do
     input = File.read!("./test/aoc_2020/day20/test_input.txt")
@@ -70,7 +70,7 @@ defmodule Aoc2020.Day20Test do
   end
 
   test "detect_monsters sample" do
-    grid = FileUtils.get_file_as_strings("./test/aoc_2020/day20/monsters.txt") |> Day20.Grid.from_strs
+    grid = FileUtils.get_file_as_strings("./test/aoc_2020/day20/monsters.txt") |> Grid.from_strs
 
     assert detect_monsters(grid) |> Enum.count == 2
   end

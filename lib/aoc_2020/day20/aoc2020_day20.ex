@@ -1,5 +1,5 @@
   defmodule Day20 do
-    alias Day20.Grid
+    alias AocUtils.Grid2D, as: Grid
 
     @monster_grid [
       "..................#..",
