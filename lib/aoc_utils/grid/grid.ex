@@ -331,4 +331,31 @@ defmodule AocUtils.Grid2D do
     |> MapSet.to_list()
   end
 
+  @doc """
+  Given a grid and a location, returns a list of adjacent cells. For right now this only returns neighbors which are
+  adjacent in "straight" directions (i.e. diagonal neighbors are not returned).
+  """
+  def neighbors(grid, loc) do
+    neighbor_locs(grid, loc)
+    |> Enum.map(fn loc ->
+      at(grid, loc)
+    end)
+  end
+
+  def neighbor_locs(grid, {x, y}) do
+    neighbor_offsets = [
+      {1, 0},
+      {-1, 0},
+      {0, 1},
+      {0, -1},
+    ]
+
+    neighbor_offsets
+    |> Enum.map(fn {x_offset, y_offset} ->
+      {x + x_offset, y + y_offset}
+    end)
+    |> Enum.filter(fn loc ->
+      Map.has_key?(grid.grid_map, loc)
+    end)
+  end
 end

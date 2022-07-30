@@ -28,6 +28,9 @@ defmodule AocUtils.SiteUtils do
 
     session_token = load_session_token()
 
+    # this should probably use HTTPoison.get instead, and handle the error case. the common failure
+    # mode I expect would be when my session token expires... i'm not sure how long the lifetime on those
+    # tokens is.
     HTTPoison.get!(
       puzzle_input_url(day, year),
       [

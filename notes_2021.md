@@ -1,9 +1,11 @@
 ## notes - 2021
 
+## day 9
+this was cool, because it gave me an opportunity to pull the Grid class from 2020-20 out to Utils. There are a few things I'd like to improve in that module. For one, I think it would be pretty cool to make it implement Enumerable. This would eliminate a ton of boilerplate in both the module implementation and uses of Grid. Also, i'd like to get better with guard functions so that I could just have a `new` function that correctly chooses a way to construct the grid based on the type of the input. There are also a few functions in there which are not generically useful, and a few which assume sensible usage instead of having error handling to enforce it. My code for the traversal of the Grid that is used in this problem is a bit funky and required some annoying debugging. I kinda slapped a recursive function together without doing the usual structure, which makes tracing through it a bit confusing. I guess it's a sort of a breadth-first search so maybe I should have reviewed the canonical algorithm for that? But I've spent a good amount of time on this one so I'm going to move on.
+
 ## day 8
 this was a cool one. figuring out _what_ code to write was harder than figuring out _how_ to write the code.
-the function that does the deduction, but i don't see a lot of reason to try to break it down. wrote more prose than code
-just in the process of thinking it through.
+the function that does the deduction is quite long, but i don't see a lot of reason to try to break it down. wrote more prose than code just in the process of thinking it through.
 
 ## day 7
 pretty straightforward - it's good to remember that computers can do simple math very very quickly. a few million subtractions and multiplications is nothing to even think twice about.
