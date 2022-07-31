@@ -175,8 +175,6 @@
     end
 
     def process_line({line, _remaining_chars, stack}) do
-      # not actually sure what to return after status?
-      # might actually just want line, don't think it matters for part 1 though
       {:incomplete, line, stack}
     end
 
@@ -197,6 +195,14 @@
         chunk_closing_char = @closing_chars[stack_char]
         acc <> chunk_closing_char
       end)
+    end
+
+
+    @doc """
+    Calculates the score for a completion string. Will break if you pass it invalid characters. Don't do that.
+    """
+    def score_completion_str("") do
+      0
     end
 
     def score_completion_str(completion_str) do
@@ -220,8 +226,8 @@
         input
         |> Enum.map(&process_line/1)
         |> Enum.map(&get_completion_str/1)
-        |> Enum.reject(&(&1 == ""))
         |> Enum.map(&score_completion_str/1)
+        |> Enum.reject(&(&1 == 0)) #0s are scores for either complete lines or corrupt strings, and not of interest.
         |> Enum.sort()
 
       middle_score_index = floor(length(scores) / 2)
