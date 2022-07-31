@@ -1,5 +1,9 @@
 ## notes - 2021
 
+## day 10
+i guess the secret sauce here is just knowing that a stack is the right data structure for the job. i always enjoy writing
+recursive functions with pattern matching. overall pretty happy with this solution!
+
 ## day 9
 this was cool, because it gave me an opportunity to pull the Grid class from 2020-20 out to Utils. There are a few things I'd like to improve in that module. For one, I think it would be pretty cool to make it implement Enumerable. This would eliminate a ton of boilerplate in both the module implementation and uses of Grid. Also, i'd like to get better with guard functions so that I could just have a `new` function that correctly chooses a way to construct the grid based on the type of the input. There are also a few functions in there which are not generically useful, and a few which assume sensible usage instead of having error handling to enforce it. My code for the traversal of the Grid that is used in this problem is a bit funky and required some annoying debugging. I kinda slapped a recursive function together without doing the usual structure, which makes tracing through it a bit confusing. I guess it's a sort of a breadth-first search so maybe I should have reviewed the canonical algorithm for that? But I've spent a good amount of time on this one so I'm going to move on.
 
