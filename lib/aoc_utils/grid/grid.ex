@@ -21,6 +21,25 @@ defmodule AocUtils.Grid2D do
   defstruct grid_map: %{}, x_max: 0, y_max: 0
 
   @doc """
+  Produces a new Grid2D from a list of values.
+
+  Grids can be constructed from a few different types of inputs:
+    * A list of lists of values. This is the most flexible method of constructing a Grid2D, allowing the caller
+      to index arbitrary types of values. The lists in the list must expected to be of equal length.
+    * A list of strings (binaries). This is provided as a convenient method of constructing a Grid2D when the values
+      in each cell will be a single character. The given strings are split apart into characters with String.graphemes/1.
+    * A list of {key, value} tuples. The keys must be {x,y} coordinate pairs. This is meant primarily
+      to be used to convert the results calls to functions in Enum (which rely on the Grid's implementation of the
+      Enumerable protocol) back to Grid2Ds.
+
+    Alright, all that is neat in principle, but is a lie. For now this only accepts a list of values, and just
+    delegates to from_rows.
+  """
+  def new(list) when is_list(list) do
+    from_rows(list)
+  end
+
+  @doc """
   Produces a grid from a list of strings. Each string in the list represents a row of the grid, and
   each character in the strings represents a single grid cell.
 
@@ -100,7 +119,8 @@ defmodule AocUtils.Grid2D do
   @doc """
   Converts a Grid to a list of strings, where each string is the concatentation of the
   values in a row of the Grid. Not usable for grids with numberic values in their cells,
-  really only useful for debugging the 2020 Day 20 code, so don't use this.
+  really only useful for debugging the 2020 Day 20 code and as a convenience method for testing.
+  In general, you probably shouldn't use this outside those two use cases.
   """
   def to_strs(grid) do
     rows(grid)
@@ -128,7 +148,7 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Returns the row at the given x value as a list of cell values.
+  Returns the col at the given x value as a list of cell values.
   """
   def col(grid, x) do
     cols(grid)
@@ -148,15 +168,6 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Prints as a Grid all mashed together - not particularly useful outside of Aoc 2020 Day 20 debugging.
-  Don't use.
-  """
-  def print(grid) do
-    to_strs(grid)
-    |> Enum.map(&IO.puts/1)
-  end
-
-  @doc """
   Returns the value of the Grid cell at the given coordinates.
   """
   def at(grid, {x, y}) do
@@ -167,129 +178,47 @@ defmodule AocUtils.Grid2D do
     at(grid, {x, y})
   end
 
-  ## transforms
-
   @doc """
-  Given a Grid, returns that grid with values flipped (mirrored) horizontally.
+  Given a grid and a location, returns a list of adjacent cell values bordering the location on its edges
+  (i.e. _not_ on corners, so this does not include values from cells which are diagonally adjacent).
   """
-  def flip_horiz(grid) do
-    grid
-    |> rows
-    |> Enum.map(&Enum.reverse/1)
-    |> from_rows()
+  def edge_neighbors(grid, loc) do
+    edge_neighbor_locs(grid, loc)
+    |> Enum.map(fn loc ->
+      at(grid, loc)
+    end)
   end
 
   @doc """
-  Given a Grid, returns that grid with values flipped (mirrored) vertically.
+  Given a grid and a location, returns the list of locations bordering that cell on its edges (i.e. _not_ on corners, so this
+  does not include locations which are diagonally adjacent).
   """
-  def flip_vert(grid) do
-    grid
-    |> cols
-    |> Enum.map(&Enum.reverse/1)
-    |> from_cols()
+  def edge_neighbor_locs(grid, {x, y}) do
+    neighbor_offsets = [
+      {1, 0},
+      {-1, 0},
+      {0, 1},
+      {0, -1},
+    ]
+
+    neighbor_offsets
+    |> Enum.map(fn {x_offset, y_offset} ->
+      {x + x_offset, y + y_offset}
+    end)
+    |> Enum.filter(fn loc ->
+      Map.has_key?(grid.grid_map, loc)
+    end)
   end
 
   @doc """
-  Given a Grid, rotates it by 90 degrees.
+  Given a Grid2D, converts it to a list of {{x,y}, val} tuples.
+
+  Note that in so doing, the x_max and y_max fields are lost, and must be recomputed to construct a
+  new Grid2D.
   """
-  def rotate(grid) do
-    grid
-    |> flip_vert()
-    |> cols
-    |> from_rows()
+  def to_list(grid) do
+    :maps.to_list(grid.grid_map)
   end
-
-  @doc """
-  Given a Grid, rotates it by 180 degrees.
-  """
-  def rotate180(grid) do
-    grid
-    |> rotate()
-    |> rotate()
-  end
-
-  @doc """
-  Given a Grid, rotates it by 270 degrees.
-  """
-  def rotate270(grid) do
-    grid
-    |> rotate()
-    |> rotate()
-    |> rotate()
-  end
-
-  @doc """
-  Returns the column at the leftmost edge of the grid, as a list of cell values.
-  """
-  def left_edge(grid) do
-    col(grid, 0)
-  end
-
-  @doc """
-  Returns the column at the rightmost edge of the grid, as a list of cell values.
-  """
-  def right_edge(grid) do
-    col(grid, grid.x_max)
-  end
-
-  @doc """
-  Returns the topmost row of the grid as a list of cell values.
-  """
-  def top_edge(grid) do
-    row(grid, 0)
-  end
-
-  @doc """
-  Returns the lowest row of the grid as a list of cell values.
-  """
-  def bottom_edge(grid) do
-    row(grid, grid.y_max)
-  end
-
-  @doc """
-  Removes all the cells on the edges of the grid.
-  """
-  def trim_edges(grid) do
-    new_rows =
-      Grid2D.rows(grid)
-      |> List.delete_at(grid.y_max)
-      |> List.delete_at(0)
-      |> Enum.map(fn row -> row |> List.delete_at(grid.x_max) |> List.delete_at(0) end)
-
-    Grid2D.from_rows(new_rows)
-  end
-
-  @doc """
-  Given a grid, and a list of values representing one edge of the grid, reorients the grid so that that edge is
-  on the top.
-
-  Returns nil if the given edge is not found in the grid, so use this carefully.
-  """
-  def orient_edge_top(grid, edge) do
-    grid
-    |> all_orientations()
-    |> Enum.find(fn grid -> top_edge(grid) == edge end)
-  end
-
-  @doc """
-  Given a grid, and a list of values representing one edge of the grid, and a direction,
-  reorients the grid so that that given edge is on the given side.
-
-  Returns nil if the given edge is not found in the grid, so use this carefully.
-  """
-  def orient_edge_to_direction(grid, edge, direction) do
-    edge_fn = case direction do
-      :top -> &top_edge/1
-      :bottom -> &bottom_edge/1
-      :right -> &right_edge/1
-      :left -> &left_edge/1
-    end
-
-    grid
-    |> all_orientations()
-    |> Enum.find(fn grid -> edge_fn.(grid) == edge end)
-  end
-
 
   @doc """
   Given two grids of equal size, sticks the second grid onto the right edge of the first grid.
@@ -310,52 +239,59 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Returns a MapSet containing all possible rotations and mirrorings of the given Grid.
+  Prints as a Grid all mashed together - not particularly useful outside of Aoc 2020 Day 20 debugging.
+  Don't use.
   """
-  def all_orientations(grid) do
-    # only 8 of these are unique but I cbf to figure out which right now, so we'll let MapSet do the work.
-    MapSet.new([
-      grid,
-      rotate(grid),
-      rotate180(grid),
-      rotate270(grid),
-      flip_vert(grid),
-      rotate(flip_vert(grid)),
-      rotate180(flip_vert(grid)),
-      rotate270(flip_vert(grid)),
-      flip_horiz(grid),
-      rotate(flip_horiz(grid)),
-      rotate180(flip_horiz(grid)),
-      rotate270(flip_horiz(grid)),
-    ])
-    |> MapSet.to_list()
+  def print(grid) do
+    to_strs(grid)
+    |> Enum.map(&IO.puts/1)
   end
 
-  @doc """
-  Given a grid and a location, returns a list of adjacent cells. For right now this only returns neighbors which are
-  adjacent in "straight" directions (i.e. diagonal neighbors are not returned).
-  """
-  def neighbors(grid, loc) do
-    neighbor_locs(grid, loc)
-    |> Enum.map(fn loc ->
-      at(grid, loc)
-    end)
-  end
+  ## Edge access / manipulation
+  defdelegate left_edge(grid), to: Grid2D.Edges
+  defdelegate right_edge(grid), to: Grid2D.Edges
+  defdelegate top_edge(grid), to: Grid2D.Edges
+  defdelegate bottom_edge(grid), to: Grid2D.Edges
+  defdelegate trim_edges(grid), to: Grid2D.Edges
 
-  def neighbor_locs(grid, {x, y}) do
-    neighbor_offsets = [
-      {1, 0},
-      {-1, 0},
-      {0, 1},
-      {0, -1},
-    ]
+  ## Transformation functions
+  defdelegate all_orientations(grid), to: Grid2D.Transformations
+  defdelegate orient_edge_top(grid, edge), to: Grid2D.Transformations
+  defdelegate orient_edge_to_direction(grid, edge, direction), to: Grid2D.Transformations
+  defdelegate flip_horiz(grid), to: Grid2D.Transformations
+  defdelegate flip_vert(grid), to: Grid2D.Transformations
+  defdelegate rotate(grid), to: Grid2D.Transformations
+  defdelegate rotate180(grid), to: Grid2D.Transformations
+  defdelegate rotate270(grid), to: Grid2D.Transformations
 
-    neighbor_offsets
-    |> Enum.map(fn {x_offset, y_offset} ->
-      {x + x_offset, y + y_offset}
-    end)
-    |> Enum.filter(fn loc ->
-      Map.has_key?(grid.grid_map, loc)
-    end)
+  ## Protocol impls
+  # SOON
+
+  # from a quick grep through the Elixir source, it looks like Map implements the following protocols:
+  # Enumerable
+  # Collectable
+  # Size
+  # Inspect
+  # Iex.Info
+
+  defimpl Enumerable, for: Grid2D do
+    def count(grid) do
+      {:ok, map_size(grid.grid_map)}
+    end
+
+    def member?(grid, {key, value}) do
+      {:ok, match?(%{^key => ^value}, grid.grid_map)}
+      # {:error, __MODULE__}
+    end
+
+    def slice(_grid) do
+      # size = map_size(grid.grid_map)
+      # {:ok, size, &Grid2D.to_list/1}
+      {:error, __MODULE__}
+    end
+
+    def reduce(grid, acc, fun) do
+      Enumerable.List.reduce(Grid2D.to_list(grid), acc, fun)
+    end
   end
 end

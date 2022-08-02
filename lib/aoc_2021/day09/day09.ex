@@ -88,7 +88,7 @@
     """
     def find_low_points(%Grid{grid_map: grid_map} = grid) do
       Enum.filter(grid_map, fn {{x, y}, height} ->
-        Grid.neighbors(grid, {x, y})
+        Grid.edge_neighbors(grid, {x, y})
         |> Enum.all?(fn neighbor_height ->
           neighbor_height > height
         end)
@@ -102,7 +102,7 @@
     def locations_to_search(grid, location, location_we_came_from \\ nil) do
       height_we_came_from = Grid.at(grid, location)
 
-      Grid.neighbor_locs(grid, location)
+      Grid.edge_neighbor_locs(grid, location)
       |> Enum.filter(fn location ->
         # these are the locations that we want to use for the next 'iteration' in the search.
         # we only want to search

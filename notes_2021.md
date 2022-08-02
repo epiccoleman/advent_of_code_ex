@@ -1,5 +1,31 @@
 ## notes - 2021
 
+## digression - protocols
+I mentioned before that i was interested in implementing Enumerable for the Grid2D module, so I've spent some time digging into what it would take to do this. I started by reading the code that implements `Enumerable` for the `Map` struct, as this is basically the same thing I want to be able to do.
+
+I am still a little confused about some of the Enumerable protocol, but the basic structure of what the `Map` impl does makes sense - essentially, it converts a map to a list and falls back to the list implementation of `reduce`. (the other three functions in the `Enumerable` protocol are slightly less interesting because you can just return `{:error, __MODULE__}` and let Elixir fall back to default implementations of those three that utilize `reduce`, which is good enough for me).
+
+I was confused for a bit because I didn't understand why it wasn't necessary to convert the list back to a map as part of the reduce impl. But a little playing at the REPL helped me make some sense of it. I had forgotten that when you call an Enum function on a Map, you always get a list back. If you want a Map, your map function needs to return `{key, new_value}` pairs, and then you can pass that list of tuples to `Enum.into(%{})` or, maybe more clearly, to `Map.new`.
+
+`Enum.into()` requires that the struct being passed implements `Collectable`, so if you want to use that then you need to look into that protocol, and the moduledoc for `Collectable` has a helpful `Why Collectable?` heading which has some philosophical discussion that was enlightening:
+
+> In order to support a wide range of values, the functions provided by the Enumerable protocol do not keep shape.  For example, passing a map to Enum.map/2 always returns a list.
+> This design is intentional. Enumerable was designed to support infinite collections, resources and other structures with fixed shape. For example, it doesn't make sense to insert values into a Range, as it has a fixed shape where only the range limits and step are stored.
+
+> The Collectable module was designed to fill the gap left by the Enumerable protocol. Collectable.into/1 can be seen as the opposite of Enumerable.reduce/3.
+
+So at the outset, we're already starting to get to a place where it's questionable whether it's really worthwhile to even bother with implementing `Enumerable` - after all, the whole goal here was to reduce the boilerplate code that pulls `grid_map` out of the grid to operate on it, and then reinserts it. There will always be some of this boilerplate, just like there is with `Map`s, just due to the nature of `Enumerable`'s design. If this was code for a client I might not bother since it's largely just gold-plating really.
+
+But this isn't code for a client, so we'll joyfully continue down a somewhat pointless path for the sake of learning!
+
+Now the question is, implement `Collectable`? Or, better yet, much like how `Map`s work, we are starting to need that `new` function that I bounced off of earlier. But again, just for learning, let's just do both, and learn both about implementing protocols and also whatever guard clause magic is necessary for `Grid2D.new` to just work with a variety of different forms.
+
+Off the top of my head, the forms we'd want to support would be something like lists of {k,v} tuples, lists of lists (like `from_rows`), and lists of strings (like `from_strs`). One thing that jumps out is that implementing the tuples thing might not necessarily make sense, since the grid is expecting to have a certain shape. Is it necessary that a grid be rectangular though? I'd have to think about that one... one issue is that all the transformation functions wouldn't work on irregularly shaped grids. And also there's no use case for that. Idk.
+
+After thinking about it for a while, maybe instead of worrying about guard clause magic, I should just write some functions to check the type of a list and use a cond in the new function.
+
+Also this was of some use in figuring out the Enumerable stuff: https://blog.brettbeatty.com/elixir/custom_data_structures/enumerable
+
 ## day 10
 i guess the secret sauce here is just knowing that a stack is the right data structure for the job. i always enjoy writing
 recursive functions with pattern matching. overall pretty happy with this solution!

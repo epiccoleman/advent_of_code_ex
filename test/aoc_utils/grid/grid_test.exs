@@ -339,7 +339,7 @@ defmodule GridTest do
     ]
   end
 
-  test "neighbors" do
+  test "edge_neighbors" do
     grid = [
       [1, 2, 3],
       [4, 5, 6],
@@ -347,12 +347,12 @@ defmodule GridTest do
     ] |> from_rows
 
     expected_neighbors = [2, 4, 6, 8]
-    actual_neighbors = neighbors(grid, {1, 1}) |> Enum.sort
+    actual_neighbors = edge_neighbors(grid, {1, 1}) |> Enum.sort
 
     assert actual_neighbors == expected_neighbors
   end
 
-  test "neighbors when cell is on edge" do
+  test "edge_neighbors when cell is on edge" do
     grid = [
       [1, 2, 3],
       [4, 5, 6],
@@ -360,7 +360,7 @@ defmodule GridTest do
     ] |> from_rows
 
     expected_neighbors = [6, 8]
-    actual_neighbors = neighbors(grid, {2, 2}) |> Enum.sort
+    actual_neighbors = edge_neighbors(grid, {2, 2}) |> Enum.sort
 
     assert actual_neighbors == expected_neighbors
   end
