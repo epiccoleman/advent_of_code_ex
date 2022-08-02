@@ -1,6 +1,9 @@
 defmodule GridTest do
   use ExUnit.Case
+
   import AocUtils.Grid2D
+
+  alias AocUtils.Grid2D.GridAccessError
 
   setup_all do
     strs = [
@@ -12,6 +15,39 @@ defmodule GridTest do
     grid = from_strs(strs)
 
     {:ok, grid: grid, strs: strs}
+  end
+
+  test "update" do
+    grid = from_rows([
+      [1, 2, 3],
+      [4, 5, 6]
+    ])
+
+    expected_grid = from_rows([
+      [1, 4, 3],
+      [2, 5, 42]
+    ])
+
+    actual_grid =
+      grid
+      |> update({1, 0}, 4)
+      |> update({0, 1}, 2)
+      |> update({2, 1}, 42)
+
+    assert actual_grid == expected_grid
+  end
+
+  test "update raises GridAccessError when key does not exist" do
+    grid = from_rows([
+      [1, 2, 3],
+      [4, 5, 6]
+    ])
+
+    assert_raise(
+      GridAccessError,
+      "Attempted to access non-existent Grid cell at position: {2,2}",
+      fn -> update(grid, {2, 2}, "foo") end)
+
   end
 
   test "from_rows" do

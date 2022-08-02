@@ -179,6 +179,29 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
+  Updates the value at the given location.
+
+  Raises GridAccessError if given a location that is not in the Grid.
+  """
+  def update(
+    %Grid2D{grid_map: grid_map, x_max: x_max, y_max: y_max},
+    {_x, _y} = location,
+    value) do
+
+    if not Map.has_key?(grid_map, location) do
+      raise(Grid2D.GridAccessError, location)
+    end
+
+    new_map = %{grid_map | location => value}
+
+    %Grid2D{
+      grid_map: new_map,
+      x_max: x_max,
+      y_max: y_max,
+    }
+  end
+
+  @doc """
   Given a grid and a location, returns a list of adjacent cell values bordering the location on its edges
   (i.e. _not_ on corners, so this does not include values from cells which are diagonally adjacent).
   """
