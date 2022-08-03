@@ -179,10 +179,21 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Updates the value at the given location.
+  Updates the value at the given location. Can be given either a single value, which will be placed into the
+  given location, or a function to be applied to the value at the location. The function receives the current value
+  of the cell.
 
   Raises GridAccessError if given a location that is not in the Grid.
   """
+  def update(grid, location, update_function) when is_function(update_function) do
+    if not Map.has_key?(grid.grid_map, location) do
+      raise(Grid2D.GridAccessError, location)
+    end
+
+    new_value = update_function.(at(grid, location))
+    update(grid, location, new_value)
+  end
+
   def update(
     %Grid2D{grid_map: grid_map, x_max: x_max, y_max: y_max},
     {_x, _y} = location,
@@ -236,6 +247,45 @@ defmodule AocUtils.Grid2D do
   def all?(grid, test_fn) do
     to_list(grid)
     |> Enum.all?(test_fn)
+  end
+
+  @doc """
+  Given a grid and a location, returns a list of values from adjacent cells. This includes diagonal neighbors.
+
+  See Grid2D.edge_neighbors and Grid2D.edge_neighbor_locs if you only want neighbors in "straight" directions.
+  """
+  def neighbors(grid, loc) do
+    neighbor_locs(grid, loc)
+    |> Enum.map(fn loc ->
+      at(grid, loc)
+    end)
+  end
+
+  @doc """
+  Given a grid and a location, returns a list of {x,y} tuples representing grid locations bordering that cell.
+  This includes cells which are diagonally adjacent.
+
+  See Grid2D.edge_neighbors and Grid2D.edge_neighbor_locs if you only want neighbors in "straight" directions.
+  """
+  def neighbor_locs(grid, {x, y}) do
+    neighbor_offsets = [
+      {0, -1}, #up
+      {1, -1}, #up-right
+      {1, 0}, #right
+      {1, 1}, #down-right
+      {0, 1}, #down
+      {-1, 1}, #down-left
+      {-1, 0}, #left
+      {-1, -1}, #up-left
+    ]
+
+    neighbor_offsets
+    |> Enum.map(fn {x_offset, y_offset} ->
+      {x + x_offset, y + y_offset}
+    end)
+    |> Enum.filter(fn loc ->
+      Map.has_key?(grid.grid_map, loc)
+    end)
   end
 
   @doc """

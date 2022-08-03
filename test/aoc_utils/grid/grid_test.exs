@@ -18,12 +18,12 @@ defmodule GridTest do
   end
 
   test "update" do
-    grid = from_rows([
+    grid = new([
       [1, 2, 3],
       [4, 5, 6]
     ])
 
-    expected_grid = from_rows([
+    expected_grid = new([
       [1, 4, 3],
       [2, 5, 42]
     ])
@@ -38,7 +38,7 @@ defmodule GridTest do
   end
 
   test "update raises GridAccessError when key does not exist" do
-    grid = from_rows([
+    grid = new([
       [1, 2, 3],
       [4, 5, 6]
     ])
@@ -47,7 +47,25 @@ defmodule GridTest do
       GridAccessError,
       "Attempted to access non-existent Grid cell at position: {2,2}",
       fn -> update(grid, {2, 2}, "foo") end)
+  end
 
+  test "update with function" do
+    grid = new([
+      [1, 2, 3],
+      [4, 5, 6]
+    ])
+
+    expected_grid = new([
+      [1, 4, 3],
+      [4, 5, 42]
+    ])
+
+    actual_grid =
+      grid
+      |> update({1, 0}, fn v -> v * 2 end)
+      |> update({2, 1}, fn v -> v * 7 end)
+
+    assert expected_grid == actual_grid
   end
 
   test "map" do
@@ -449,6 +467,32 @@ defmodule GridTest do
 
     expected_neighbors = [6, 8]
     actual_neighbors = edge_neighbors(grid, {2, 2}) |> Enum.sort
+
+    assert actual_neighbors == expected_neighbors
+  end
+
+  test "neighbors" do
+    grid = [
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8, 9],
+    ] |> new()
+
+    expected_neighbors = [1, 2, 3, 4, 6, 7, 8, 9]
+    actual_neighbors = neighbors(grid, {1, 1}) |> Enum.sort
+
+    assert actual_neighbors == expected_neighbors
+  end
+
+  test "neighbors when cell is on edge" do
+    grid = [
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8, 9],
+    ] |> new()
+
+    expected_neighbors = [5, 6, 8]
+    actual_neighbors = neighbors(grid, {2, 2}) |> Enum.sort
 
     assert actual_neighbors == expected_neighbors
   end
