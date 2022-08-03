@@ -85,6 +85,23 @@ defmodule GridTest do
     assert actual_grid_keys == grid_keys
   end
 
+  test "all?" do
+    even_grid = new([
+      [2, 4, 6],
+      [8, 10, 12]
+    ])
+
+    not_quite_even_grid = new([
+      [2, 4, 6],
+      [8, 43, 12]
+    ])
+
+    is_even? = fn {_k, v} -> rem(v, 2) == 0 end
+
+    assert all?(even_grid, is_even?)
+    assert not all?(not_quite_even_grid, is_even?)
+  end
+
   test "from_rows" do
     grid = from_rows([
       ["#", ".", "."],

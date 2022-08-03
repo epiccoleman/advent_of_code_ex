@@ -226,7 +226,16 @@ defmodule AocUtils.Grid2D do
       x_max: x_max,
       y_max: y_max,
     }
+  end
 
+  @doc """
+  Returns true if the given function returns a truthy value for every cell in the grid.
+
+  The function will be passed a {location, value} tuple.
+  """
+  def all?(grid, test_fn) do
+    to_list(grid)
+    |> Enum.all?(test_fn)
   end
 
   @doc """
