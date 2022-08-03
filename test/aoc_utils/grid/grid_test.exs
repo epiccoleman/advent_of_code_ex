@@ -50,6 +50,41 @@ defmodule GridTest do
 
   end
 
+  test "map" do
+    grid = from_rows([
+      [1, 2, 3],
+      [4, 5, 6]
+    ])
+
+    expected_grid = from_rows([
+      [2, 3, 4],
+      [5, 6, 7]
+    ])
+
+    actual_grid = map(grid, fn {_k, value  } -> value + 1 end)
+
+    assert actual_grid == expected_grid
+  end
+
+  test "map does not affect keys" do
+    grid = from_rows([
+      [1, 2, 3],
+      [4, 5, 6]
+    ])
+    grid_keys = Map.keys(grid.grid_map)
+
+    expected_grid = from_rows([
+      [{{0, 0}, 2}, {{1, 0}, 3}, {{2, 0}, 4}],
+      [{{0, 1}, 5}, {{1, 1}, 6}, {{2, 1}, 7}],
+    ])
+
+    actual_grid = map(grid, fn {k, v} -> {k, v + 1} end)
+    actual_grid_keys = Map.keys(expected_grid.grid_map)
+
+    assert actual_grid == expected_grid
+    assert actual_grid_keys == grid_keys
+  end
+
   test "from_rows" do
     grid = from_rows([
       ["#", ".", "."],

@@ -202,6 +202,34 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
+  Returns a Grid whose cells have been updated by the given function.
+
+  The given function will be invoked with a tuple of {grid_location, cell_value}. The result of the function
+  will be stored as the new value of the cell at the location.
+
+  It is important to note that this function behaves slightly differently than calling Enum.map against a
+  regular Map. The function's result can only update the _value_ of the cell, and is not able to affect
+  the key. This is by design in order to preserve the structure of the Grid.
+  """
+  def map(%Grid2D{grid_map: grid_map, x_max: x_max, y_max: y_max}, function) do
+    new_map =
+      grid_map
+      |> Map.to_list()
+      |> Enum.map(fn {position, value} ->
+        new_value = function.({position, value})
+        {position, new_value}
+      end)
+      |> Map.new()
+
+    %Grid2D{
+      grid_map: new_map,
+      x_max: x_max,
+      y_max: y_max,
+    }
+
+  end
+
+  @doc """
   Given a grid and a location, returns a list of adjacent cell values bordering the location on its edges
   (i.e. _not_ on corners, so this does not include values from cells which are diagonally adjacent).
   """
