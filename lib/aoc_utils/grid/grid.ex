@@ -180,8 +180,8 @@ defmodule AocUtils.Grid2D do
 
   @doc """
   Updates the value at the given location. Can be given either a single value, which will be placed into the
-  given location, or a function to be applied to the value at the location. The function receives the current value
-  of the cell.
+  given location, or a function to be applied to the value at the location. The function receives the location
+  and current value of the cell as a tuple.
 
   Raises GridAccessError if given a location that is not in the Grid.
   """

@@ -8,8 +8,8 @@ defmodule AocUtils.Grid2D.GridAccessError do
   defexception [:message]
 
   @impl true
-  def exception({x, y}) do
-    msg = "Attempted to access non-existent Grid cell at position: {#{x},#{y}}"
+  def exception(key) do
+    msg = "Attempted to access non-existent Grid cell at position: #{inspect(key)}"
     %GridAccessError{message: msg}
   end
 end

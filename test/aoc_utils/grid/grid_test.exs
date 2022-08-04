@@ -45,7 +45,7 @@ defmodule GridTest do
 
     assert_raise(
       GridAccessError,
-      "Attempted to access non-existent Grid cell at position: {2,2}",
+      "Attempted to access non-existent Grid cell at position: {2, 2}",
       fn -> update(grid, {2, 2}, "foo") end)
   end
 
@@ -79,7 +79,7 @@ defmodule GridTest do
       [5, 6, 7]
     ])
 
-    actual_grid = map(grid, fn {_k, value  } -> value + 1 end)
+    actual_grid = map(grid, fn {_k, value} -> value + 1 end)
 
     assert actual_grid == expected_grid
   end

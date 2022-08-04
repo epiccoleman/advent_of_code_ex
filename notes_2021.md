@@ -1,5 +1,18 @@
 ## notes - 2021
 
+## day 11
+This one turned out to be bigger than it initially seemed! A lot of the work went into implementing new functionality on `Grid2D`.
+
+There are a couple of lessons I learned here. The first thing I did was to implement the `Enumerable` protocol on `Grid2D`. This was a pretty educational experience overall and taught me a lot about Elixir - I wound up actually pulling down the Elixir source to dig into how `Enumerable` was implemented for `Maps`, which seemed like it would get me closer to what I wanted. However, I eventually realized that `Enumerable` wasn't a silver bullet, because it does not preserve the shape of Maps (and other stuff) that are passed into the various functions in `Enum`. Still, it turned out to be useful in a few different places - for example, since it doesn't make sense to `filter` a Grid2D, so I was able to use `Enum.filter` where I needed it. Also learned how to define a custom Exception, which was prompted by the ass-pain of debugging some issues and proved to be fairly useful.
+
+But what ultimately turned out to be more useful (or at least, get me closer to what I wanted) was to implement a few functions that shadow functions in `Enum` for `Grid2D` in particular, in a way that preserves the structure of the ... struct. For example, I added implementations of `all?`, `map`, and `update`, all of which were quite useful in solving this problem. There are some mildly confusing behaviors in some of these new functions, which might require
+
+If I was going to go back and improve this solution, one thing I think I'd do would be to define a struct for the cell state - mostly just for "type" checking purposes. I had a few bugs which turned out to be caused by me just forgetting to return the cell state in the correct format, and a struct would have made some of it mildly more convenient to type out.
+
+Arguably, I should have had a function that performed 1 full step which `do_steps` could have called, but it was easier to just call `do_steps(grid, 1)` in the body of the function that solves part 2. Still, I'm always happy when Part 2 is easy to implement, becasue it (seems to) mean that I did something right in the first part, and part 2 was quite easy to write using the existing simulation function and `Grid2D.all?` (at least, after I looked at my old notes and remembered how to use `Stream.iterate` and `Enum.reduce_while` to repeat code until some condition is met.
+
+Overall I learned a ton from this one, even though I spent a ton more time on it than any of the other puzzles this year. Pretty happy with it.
+
 ## digression - protocols
 I mentioned before that i was interested in implementing Enumerable for the Grid2D module, so I've spent some time digging into what it would take to do this. I started by reading the code that implements `Enumerable` for the `Map` struct, as this is basically the same thing I want to be able to do.
 
