@@ -1,5 +1,9 @@
 ## notes - 2021
 
+## day 13
+well well well, if it isn't another excuse to work on Grid2D... :)
+
+
 ## day 12
 That was a hard one. The twist here turned out to be fairly tricky. Some ugliness in the solution but overall pretty cool. Need to remember that this has code for de-nestification of big ol' nasty lists.
 

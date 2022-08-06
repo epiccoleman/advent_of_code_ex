@@ -4,6 +4,7 @@ defmodule AocUtils.Grid2D.Transformations do
   """
 
   alias AocUtils.Grid2D
+  alias AocUtils.Grid2D.Edges
 
   @doc """
   Given a Grid, returns that grid with values flipped (mirrored) horizontally.
@@ -55,47 +56,6 @@ defmodule AocUtils.Grid2D.Transformations do
   end
 
   @doc """
-  Returns the column at the leftmost edge of the grid, as a list of cell values.
-  """
-  def left_edge(grid) do
-    Grid2D.col(grid, 0)
-  end
-
-  @doc """
-  Returns the column at the rightmost edge of the grid, as a list of cell values.
-  """
-  def right_edge(grid) do
-    Grid2D.col(grid, grid.x_max)
-  end
-
-  @doc """
-  Returns the topmost row of the grid as a list of cell values.
-  """
-  def top_edge(grid) do
-    Grid2D.row(grid, 0)
-  end
-
-  @doc """
-  Returns the lowest row of the grid as a list of cell values.
-  """
-  def bottom_edge(grid) do
-    Grid2D.row(grid, grid.y_max)
-  end
-
-  @doc """
-  Removes all the cells on the edges of the grid.
-  """
-  def trim_edges(grid) do
-    new_rows =
-      Grid2D.rows(grid)
-      |> List.delete_at(grid.y_max)
-      |> List.delete_at(0)
-      |> Enum.map(fn row -> row |> List.delete_at(grid.x_max) |> List.delete_at(0) end)
-
-    Grid2D.from_rows(new_rows)
-  end
-
-  @doc """
   Given a grid, and a list of values representing one edge of the grid, reorients the grid so that that edge is
   on the top.
 
@@ -104,7 +64,7 @@ defmodule AocUtils.Grid2D.Transformations do
   def orient_edge_top(grid, edge) do
     grid
     |> all_orientations()
-    |> Enum.find(fn grid -> top_edge(grid) == edge end)
+    |> Enum.find(fn grid -> Edges.top_edge(grid) == edge end)
   end
 
   @doc """
@@ -117,10 +77,10 @@ defmodule AocUtils.Grid2D.Transformations do
   """
   def orient_edge_to_direction(grid, edge, direction) do
     edge_fn = case direction do
-      :top -> &top_edge/1
-      :bottom -> &bottom_edge/1
-      :right -> &right_edge/1
-      :left -> &left_edge/1
+      :top -> &Edges.top_edge/1
+      :bottom -> &Edges.bottom_edge/1
+      :right -> &Edges.right_edge/1
+      :left -> &Edges.left_edge/1
     end
 
     grid
