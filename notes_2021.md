@@ -1,5 +1,12 @@
 ## notes - 2021
 
+## day 12
+That was a hard one. The twist here turned out to be fairly tricky. Some ugliness in the solution but overall pretty cool. Need to remember that this has code for de-nestification of big ol' nasty lists.
+
+Some good recursion in here.
+
+More commentary in the module doc, I'm ready to move on from this one.
+
 ## day 11
 This one turned out to be bigger than it initially seemed! A lot of the work went into implementing new functionality on `Grid2D`.
 
