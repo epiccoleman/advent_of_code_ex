@@ -17,55 +17,84 @@ defmodule GridTest do
     {:ok, grid: grid, strs: strs}
   end
 
-  test "update" do
-    grid = new([
-      [1, 2, 3],
-      [4, 5, 6]
-    ])
+  describe "new" do
+    test "new from list of rows" do
+      grid = new([
+        [1, 2],
+        [3, 4]
+      ])
 
-    expected_grid = new([
-      [1, 4, 3],
-      [2, 5, 42]
-    ])
+      assert at(grid, {0,0}) == 1
+      assert at(grid, {1,0}) == 2
+      assert at(grid, {0,1}) == 3
+      assert at(grid, {1,1}) == 4
+    end
 
-    actual_grid =
-      grid
-      |> update({1, 0}, 4)
-      |> update({0, 1}, 2)
-      |> update({2, 1}, 42)
+    test "with dimensions and default value" do
+      grid = new(2, 3, ".")
 
-    assert actual_grid == expected_grid
+      assert grid.x_max == 2
+      assert grid.y_max == 3
+      assert at(grid, {0,0}) == "."
+      assert at(grid, {1,0}) == "."
+      assert at(grid, {0,1}) == "."
+      assert at(grid, {1,1}) == "."
+      assert at(grid, {0,2}) == "."
+      assert at(grid, {1,2}) == "."
+    end
   end
 
-  test "update raises GridAccessError when key does not exist" do
-    grid = new([
-      [1, 2, 3],
-      [4, 5, 6]
-    ])
+  describe "update" do
+    test "with value" do
+      grid = new([
+        [1, 2, 3],
+        [4, 5, 6]
+      ])
 
-    assert_raise(
-      GridAccessError,
-      "Attempted to access non-existent Grid cell at position: {2, 2}",
-      fn -> update(grid, {2, 2}, "foo") end)
-  end
+      expected_grid = new([
+        [1, 4, 3],
+        [2, 5, 42]
+      ])
 
-  test "update with function" do
-    grid = new([
-      [1, 2, 3],
-      [4, 5, 6]
-    ])
+      actual_grid =
+        grid
+        |> update({1, 0}, 4)
+        |> update({0, 1}, 2)
+        |> update({2, 1}, 42)
 
-    expected_grid = new([
-      [1, 4, 3],
-      [4, 5, 42]
-    ])
+      assert actual_grid == expected_grid
+    end
 
-    actual_grid =
-      grid
-      |> update({1, 0}, fn v -> v * 2 end)
-      |> update({2, 1}, fn v -> v * 7 end)
+    test "update raises GridAccessError when key does not exist" do
+      grid = new([
+        [1, 2, 3],
+        [4, 5, 6]
+      ])
 
-    assert expected_grid == actual_grid
+      assert_raise(
+        GridAccessError,
+        "Attempted to access non-existent Grid cell at position: {2, 2}",
+        fn -> update(grid, {2, 2}, "foo") end)
+    end
+
+    test "with function" do
+      grid = new([
+        [1, 2, 3],
+        [4, 5, 6]
+      ])
+
+      expected_grid = new([
+        [1, 4, 3],
+        [4, 5, 42]
+      ])
+
+      actual_grid =
+        grid
+        |> update({1, 0}, fn v -> v * 2 end)
+        |> update({2, 1}, fn v -> v * 7 end)
+
+      assert expected_grid == actual_grid
+    end
   end
 
   test "map" do
@@ -208,10 +237,20 @@ defmodule GridTest do
     assert state[:strs] == new_strs
   end
 
-  test "at", state do
-    assert at(state.grid, {0, 0}) == "#"
-    assert at(state.grid, {0, 1}) == "."
-    assert at(state.grid, {2, 2}) == "#"
+  describe "at" do
+    test "when given position exists", state do
+      assert at(state.grid, {0, 0}) == "#"
+      assert at(state.grid, {0, 1}) == "."
+      assert at(state.grid, {2, 2}) == "#"
+    end
+
+    test "raises GridAccessException when given position does not exist", state do
+
+      assert_raise(
+        GridAccessError,
+        "Attempted to access non-existent Grid cell at position: {2, 42}",
+        fn -> at(state.grid, {2, 42}) end)
+    end
   end
 
   test "rows", state do
@@ -310,5 +349,52 @@ defmodule GridTest do
     actual_neighbors = neighbors(grid, {2, 2}) |> Enum.sort
 
     assert actual_neighbors == expected_neighbors
+  end
+
+  test "slice_vertically" do
+    grid = new([
+      [1, 2, 3, 4, 5, 6],
+      [7, 8, 9, 4, 9, 8],
+    ])
+
+    expected_g_left = new([
+      [1, 2, 3],
+      [7, 8, 9],
+    ])
+
+    expected_g_right = new([
+      [5, 6],
+      [9, 8],
+    ])
+
+    {g_left, g_right} = slice_vertically(grid, 3)
+
+    assert g_left == expected_g_left
+    assert g_right == expected_g_right
+  end
+
+  test "slice_horizontally" do
+    grid = new([
+      [1, 2],
+      [3, 4],
+      [0, 0],
+      [5, 6],
+      [7, 8],
+    ])
+
+    expected_g_up = new([
+      [1, 2],
+      [3, 4],
+    ])
+
+    expected_g_down = new([
+      [5, 6],
+      [7, 8],
+    ])
+
+    {g_up, g_down} = slice_horizontally(grid, 2)
+
+    assert g_up == expected_g_up
+    assert g_down == expected_g_down
   end
 end

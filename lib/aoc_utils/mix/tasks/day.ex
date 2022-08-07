@@ -3,7 +3,7 @@ defmodule Mix.Tasks.Day do
   use Mix.Task
 
   @impl Mix.Task
-  def run([number, year | args ]) do
+  def run([number, year | _args ]) do
 
     IO.puts "You didn't code any protection from deleting untracked code with this..."
     response = IO.gets "Create files for AOC #{year} Day #{number}? [Y/n]"

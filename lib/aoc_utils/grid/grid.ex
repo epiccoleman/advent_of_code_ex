@@ -40,6 +40,24 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
+  Given a size in the x and y directions, and an optional default value, creates a Grid of the given size.
+  """
+  def new(x_max, y_max, default \\ nil) do
+    grid_map =
+      for x <- 0..x_max,
+          y <- 0..y_max do
+        {{x, y}, default}
+      end
+      |> Enum.into(%{})
+
+    %Grid2D{
+      grid_map: grid_map,
+      x_max: x_max,
+      y_max: y_max
+    }
+  end
+
+  @doc """
   Produces a grid from a list of strings. Each string in the list represents a row of the grid, and
   each character in the strings represents a single grid cell.
 
@@ -168,10 +186,25 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Returns the value of the Grid cell at the given coordinates.
+  Given a Grid2D, converts it to a list of {{x,y}, val} tuples.
+
+  Note that in so doing, the x_max and y_max fields are lost, and must be recomputed to construct a
+  new Grid2D.
   """
-  def at(grid, {x, y}) do
-    Map.get(grid.grid_map, {x, y})
+  def to_list(grid) do
+    :maps.to_list(grid.grid_map)
+  end
+
+  @doc """
+  Returns the value of the Grid cell at the given `{x, y}` location. Raises GridAccessError if the given location
+  does not exist in the Grid.
+  """
+  def at(grid, location) do
+    if not Map.has_key?(grid.grid_map, location) do
+      raise(Grid2D.GridAccessError, location)
+    end
+
+    Map.get(grid.grid_map, location)
   end
 
   def at(grid, x, y) do
@@ -210,6 +243,22 @@ defmodule AocUtils.Grid2D do
       x_max: x_max,
       y_max: y_max,
     }
+  end
+
+  @doc """
+  Merges two grids into one by overlaying `g2` onto `g1`. `g2`'s top left corner will be placed at the given `location`.
+  In cases where points in the merge conflict, they will be resolved through the given `merge_function`.
+
+  Since Grid2Ds must be rectangular, the proposed merge must conform to a few different contraints. `g2`, when overlaid
+  at `location` must either:
+  * fit within the bounds of `g1`
+  * have the same y dimension as `g1` (i.e. the overlay can extend the grid horizontally, but only if it's still rectangular)
+  * have the same x dimension as `g1` (i.e. the overlay can extend the grid vertically, but only if it's still rectangular)
+  """
+  def merge(g1, g2, {x, y} = _location, merge_function) when is_function(merge_function) do
+  # first, we need to check that the proposed merge will maintain the rectangularity of the Grid
+
+  # if we pass these checks, perform the merge. we'll probably need different branches to handle extensions
   end
 
   @doc """
@@ -321,16 +370,6 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Given a Grid2D, converts it to a list of {{x,y}, val} tuples.
-
-  Note that in so doing, the x_max and y_max fields are lost, and must be recomputed to construct a
-  new Grid2D.
-  """
-  def to_list(grid) do
-    :maps.to_list(grid.grid_map)
-  end
-
-  @doc """
   Given two grids of equal size, sticks the second grid onto the right edge of the first grid.
   """
   def append_grid([], other) do
@@ -350,11 +389,44 @@ defmodule AocUtils.Grid2D do
 
   @doc """
   Prints as a Grid all mashed together - not particularly useful outside of Aoc 2020 Day 20 debugging.
-  Don't use.
   """
   def print(grid) do
     to_strs(grid)
     |> Enum.map(&IO.puts/1)
+  end
+
+  @doc """
+  Slices the grid into two separate grids along the vertical line at the given x value.
+
+  Returns a tuple containing the two grids on _either side_ of the line. The first item in the tuple will be the
+  grid to the left the slice, and the second item will be the grid to the right of the slice.
+
+  It is important to note that, as currently implemented, all points covered by the cut line will be lost. This is intentional
+  as this is what is required by the puzzle for which this function was developed.  (AOC 2021 Day 13).
+  """
+  def slice_vertically(grid, x) do
+    cols = cols(grid)
+    g_left_cols = Enum.slice(cols, 0..(x-1))
+    g_right_cols = Enum.slice(cols, (x+1)..length(cols))
+
+    {from_cols(g_left_cols), from_cols(g_right_cols)}
+  end
+
+  @doc """
+  Slices the grid into two separate grids along the horizontal line at the given y value.
+
+  Returns a tuple containing the two grids on _either side_ of the line. The first item in the tuple will be the
+  grid _above_ the slice, and the second item will be what is below the slice.
+
+  It is important to note that, as currently implemented, all points covered by the cut line will be lost. This is intentional
+  as this is what is required by the puzzle for which this function was developed.  (AOC 2021 Day 13).
+  """
+  def slice_horizontally(grid, y) do
+    rows = rows(grid)
+    g_up_rows = Enum.slice(rows, 0..(y-1))
+    g_down_rows = Enum.slice(rows, (y+1)..length(rows))
+
+    {new(g_up_rows), new(g_down_rows)}
   end
 
   ## Edge access / manipulation
@@ -375,12 +447,10 @@ defmodule AocUtils.Grid2D do
   defdelegate rotate270(grid), to: Grid2D.Transformations
 
   ## Protocol impls
-  # SOON
-
   # from a quick grep through the Elixir source, it looks like Map implements the following protocols:
   # Enumerable
   # Collectable
-  # Size
+  # Size?
   # Inspect
   # Iex.Info
 
