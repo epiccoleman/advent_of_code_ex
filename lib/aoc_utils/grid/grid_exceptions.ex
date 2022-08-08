@@ -13,3 +13,19 @@ defmodule AocUtils.Grid2D.GridAccessError do
     %GridAccessError{message: msg}
   end
 end
+
+defmodule AocUtils.Grid2D.InvalidMergeError do
+  @doc """
+  Indicates an error when the user attempts to merge two Grids in a manner that would result in a non-rectangular grid.
+
+  Includes the index in the error message.
+  """
+  alias AocUtils.Grid2D.GridAccessError
+  defexception [:message]
+
+  @impl true
+  def exception(offset) do
+    msg = "The proposed merge of the given grids at #{inspect(offset)} would result in a non-rectangular grid."
+    %GridAccessError{message: msg}
+  end
+end

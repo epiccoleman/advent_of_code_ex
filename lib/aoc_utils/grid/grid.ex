@@ -247,19 +247,75 @@ defmodule AocUtils.Grid2D do
 
   @doc """
   Merges two grids into one by overlaying `g2` onto `g1`. `g2`'s top left corner will be placed at the given `location`.
-  In cases where points in the merge conflict, they will be resolved through the given `merge_function`.
+  In cases where points in the merge conflict, they will be resolved through the given `merge_function`. As a general rule,
+  if you're merging grids of different sizes, you should pass the bigger grid as g1, and the smaller as g2.
 
   Since Grid2Ds must be rectangular, the proposed merge must conform to a few different contraints. `g2`, when overlaid
   at `location` must either:
   * fit within the bounds of `g1`
   * have the same y dimension as `g1` (i.e. the overlay can extend the grid horizontally, but only if it's still rectangular)
   * have the same x dimension as `g1` (i.e. the overlay can extend the grid vertically, but only if it's still rectangular)
-  """
-  def merge(g1, g2, {x, y} = _location, merge_function) when is_function(merge_function) do
-  # first, we need to check that the proposed merge will maintain the rectangularity of the Grid
 
-  # if we pass these checks, perform the merge. we'll probably need different branches to handle extensions
+  Note that while negative offsets are accepted (which would extend the grid either upward or left depending on the offset),
+  any offset where both values are
+  Additionally, proposed extending merges with negative offsets must not create empty space between the two grids.
+
+  Invalid merges will raise Grid2D.InvalidMergeError.
+  """
+  def merge(g1, g2, {0, 0} = _location, merge_function)
+    when is_function(merge_function)
+    and g1.x_max == g2.y_max
+    and g2.y_max == g2.y_max do
+
+    # easy case, where grids are of the same size and no offset
+    %Grid2D{
+      x_max: g1.x_max,
+      y_max: g1.y_max,
+      grid_map: Map.merge(g1.grid_map, g2.grid_map, merge_function)
+    }
   end
+
+  def merge(g1, g2, {x_offset, 0}, merge_function)
+    when is_function(merge_function)
+    and g1.y_max == g2.y_max
+  do
+    # this is the case that allows horizontal extension
+
+  end
+
+  def merge(g1, g2, {0, y_offset}, merge_function)
+    when is_function(merge_function)
+    and g1.x_max == g2.x_max
+  do
+    # this is the case that allows vertical extension
+
+  end
+
+  def merge(g1, g2, {x_offset, y_offset} = merge_loc , merge_function) when is_function(merge_function) do
+    g2_new_x_max = g2.x_max + x_offset
+    g2_new_y_max = g2.y_max + y_offset
+
+    if g2_new_x_max > g1.x_max or g2_new_y_max > g1.y_max do
+      raise(Grid2D.InvalidMergeError, merge_loc)
+    end
+
+    g2_grid_map_with_new_positions =
+      g2
+      |> to_list()
+      |> Enum.map(fn {{old_x, old_y}, v} ->
+        {{old_x + x_offset, old_y + y_offset}, v}
+      end)
+      |> Map.new()
+
+    new_grid_map = Map.merge(g1.grid_map, g2_grid_map_with_new_positions, merge_function)
+
+    %Grid2D{
+      x_max: g1.x_max,
+      y_max: g1.y_max,
+      grid_map: new_grid_map
+    }
+  end
+
 
   @doc """
   Returns a Grid whose cells have been updated by the given function.

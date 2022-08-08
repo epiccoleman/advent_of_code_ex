@@ -97,6 +97,138 @@ defmodule GridTest do
     end
   end
 
+  describe "merge" do
+    setup do
+      g1 = new(3, 3, 0)
+      g2 = new(3, 3, 1)
+
+      merge_fn = fn _location, _g1_value, g2_value -> g2_value end
+
+      {:ok, g1: g1, g2: g2, merge_fn: merge_fn}
+    end
+
+    test "with no extension", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      expected_grid = new(3, 3, 1)
+
+      actual_grid = merge(g1, g2, {0, 0}, merge_fn)
+      assert actual_grid == expected_grid
+    end
+
+    test "with non-zero offset", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      little_grid = new([
+        [2, 2],
+        [2, 2]
+      ])
+
+      expected_grid = new([
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 2, 2],
+        [0, 0, 2, 2],
+      ])
+
+      actual_grid = merge(g1, little_grid, {2, 2}, merge_fn)
+      assert actual_grid == expected_grid
+    end
+
+    test "when grids have equal x dimension, negative y offset extends grid upward",
+      %{g1: g1, g2: g2, merge_fn: merge_fn} do
+
+      expected_grid = new([
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ])
+
+      actual_grid = merge(g1, g2, {0, -2}, merge_fn)
+
+      assert actual_grid == expected_grid
+    end
+
+    test "when grids have equal x dimension, positive y offset extends grid downward",
+      %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      expected_grid = new([
+        [0, 0, 0, 0],
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+      ])
+
+      actual_grid = merge(g1, g2, {0, 1}, merge_fn)
+
+      assert actual_grid == expected_grid
+    end
+
+    test "when grids have equal y dimension, positive x offset extends grid right",
+      %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      expected_grid = new([
+        [0, 0, 1, 1, 1, 1],
+        [0, 0, 1, 1, 1, 1],
+        [0, 0, 1, 1, 1, 1],
+        [0, 0, 1, 1, 1, 1],
+      ])
+
+      actual_grid = merge(g1, g2, {2, 0}, merge_fn)
+
+      assert actual_grid == expected_grid
+    end
+
+    test "when grids have equal y dimension, negative x offset extends grid left",
+      %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      expected_grid = new([
+        [1, 1, 1, 1, 0, 0, 0],
+        [1, 1, 1, 1, 0, 0, 0],
+        [1, 1, 1, 1, 0, 0, 0],
+        [1, 1, 1, 1, 0, 0, 0],
+      ])
+
+      actual_grid = merge(g1, g2, {-3, 0}, merge_fn)
+
+      assert actual_grid == expected_grid
+    end
+
+    test "when invalid raises InvalidMergeError", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+        assert_raise(
+          GridAccessError,
+          "The proposed merge of the given grids at {2, 2} would result in a non-rectangular grid.",
+          fn -> merge(g1, g2, {2, 2}, merge_fn) end
+        )
+    end
+
+    test "when invalid negative offset, raises InvalidMergeError", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+        assert_raise(
+          GridAccessError,
+          "The proposed merge of the given grids at {-1, -1} would result in a non-rectangular grid.",
+          fn -> merge(g1, g2, {-1, -1}, merge_fn) end
+        )
+    end
+
+    test "when proposed merge would create empty space between the merged grids, raises InvalidMergeError",
+      %{g1: g1, g2: g2, merge_fn: merge_fn} do
+
+      assert_raise(
+        GridAccessError,
+        "The proposed merge of the given grids at {0, 45} would result in a non-rectangular grid.",
+        fn -> merge(g1, g2, {0, 45}, merge_fn) end
+      )
+    end
+
+    test "when proposed merge with negative offset would create empty space between the merged grids, raises InvalidMergeError",
+      %{g1: g1, g2: g2, merge_fn: merge_fn} do
+
+      assert_raise(
+        GridAccessError,
+        "The proposed merge of the given grids at {-2112, 0} would result in a non-rectangular grid.",
+        fn -> merge(g1, g2, {-2112, 0}, merge_fn) end
+      )
+    end
+
+  end
+
   test "map" do
     grid = from_rows([
       [1, 2, 3],
@@ -245,7 +377,6 @@ defmodule GridTest do
     end
 
     test "raises GridAccessException when given position does not exist", state do
-
       assert_raise(
         GridAccessError,
         "Attempted to access non-existent Grid cell at position: {2, 42}",
