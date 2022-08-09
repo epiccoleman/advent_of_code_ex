@@ -4,6 +4,7 @@ defmodule GridTest do
   import AocUtils.Grid2D
 
   alias AocUtils.Grid2D.GridAccessError
+  alias AocUtils.Grid2D.InvalidGridMergeError
 
   setup_all do
     strs = [
@@ -94,6 +95,57 @@ defmodule GridTest do
         |> update({2, 1}, fn v -> v * 7 end)
 
       assert expected_grid == actual_grid
+    end
+  end
+
+  describe "merge" do
+    setup do
+      g1 = new(3, 3, 0)
+      g2 = new(3, 3, 1)
+
+      merge_fn = fn _location, _g1_value, g2_value -> g2_value end
+
+      {:ok, g1: g1, g2: g2, merge_fn: merge_fn}
+    end
+
+    test "with same dimensions", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      expected_grid = new(3, 3, 1)
+
+      actual_grid = merge(g1, g2, {0, 0}, merge_fn)
+      assert actual_grid == expected_grid
+    end
+
+    test "with non-zero offset", %{g1: g1, merge_fn: merge_fn} do
+      little_grid = new([
+        [2, 2],
+        [2, 2]
+      ])
+
+      expected_grid = new([
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 2, 2],
+        [0, 0, 2, 2],
+      ])
+
+      actual_grid = merge(g1, little_grid, {2, 2}, merge_fn)
+      assert actual_grid == expected_grid
+    end
+
+    test "when g2 does not fit inside g1 raises InvalidGridMergeError", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      assert_raise(
+        InvalidGridMergeError,
+        "Proposed merge of g2 onto g1 at position {2, 2} is invalid. Merges may not extend the grid.",
+        fn -> merge(g1, g2, {2, 2}, merge_fn) end
+      )
+    end
+
+    test "when negative values in offset raises InvalidGridMergeError", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      assert_raise(
+        InvalidGridMergeError,
+        "Proposed merge of g2 onto g1 at position {-1, -1} is invalid. Negative values are not allowed in merge locations.",
+        fn -> merge(g1, g2, {-1, -1}, merge_fn) end
+      )
     end
   end
 
@@ -245,7 +297,6 @@ defmodule GridTest do
     end
 
     test "raises GridAccessException when given position does not exist", state do
-
       assert_raise(
         GridAccessError,
         "Attempted to access non-existent Grid cell at position: {2, 42}",
