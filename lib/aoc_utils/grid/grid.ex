@@ -256,9 +256,9 @@ defmodule AocUtils.Grid2D do
   * have the same y dimension as `g1` (i.e. the overlay can extend the grid horizontally, but only if it's still rectangular)
   * have the same x dimension as `g1` (i.e. the overlay can extend the grid vertically, but only if it's still rectangular)
 
-  Note that while negative offsets are accepted (which would extend the grid either upward or left depending on the offset),
-  any offset where both values are
-  Additionally, proposed extending merges with negative offsets must not create empty space between the two grids.
+  Merges which extend the size of the resulting grid may only extend the grid in the positive x or y direction. Additionally,
+  proposed extending merges may only extend the grid in one axis at a time (this restriction can be worked around by remembering
+  to pass the larger of the two grids as g1). Finally, extending merges must not leave empty space in the resulting grid.
 
   Invalid merges will raise Grid2D.InvalidMergeError.
   """
@@ -275,28 +275,61 @@ defmodule AocUtils.Grid2D do
     }
   end
 
+  def merge(_g1, _g2, {x_offset, y_offset}, _merge_function) when x_offset < 0 or y_offset < 0 do
+    raise(Grid2D.InvalidGridMergeError, "Merge positions may not contain negative values.")
+  end
+
+  def merge(g1, g2, {x_offset, 0} = loc, merge_function)
+    when is_function(merge_function)
+    and g1.y_max == g2.y_max
+    and x_offset > g1.x_max
+  do
+    raise(
+      Grid2D.InvalidGridMergeError,
+      "The proposed merge of the given grids at #{inspect(loc)} would create empty space in the resulting grid.")
+  end
+
   def merge(g1, g2, {x_offset, 0}, merge_function)
     when is_function(merge_function)
     and g1.y_max == g2.y_max
+    and x_offset <= g1.x_max
   do
     # this is the case that allows horizontal extension
+    :unimplemented
+  end
 
+  def merge(g1, g2, {0, y_offset} = loc, merge_function)
+    when is_function(merge_function)
+    and g1.x_max == g2.x_max
+    and y_offset > g1.y_max
+  do
+    raise(
+      Grid2D.InvalidGridMergeError,
+      "The proposed merge of the given grids at #{inspect(loc)} would create empty space in the resulting grid.")
   end
 
   def merge(g1, g2, {0, y_offset}, merge_function)
     when is_function(merge_function)
     and g1.x_max == g2.x_max
+    and y_offset <= g1.y_max
   do
     # this is the case that allows vertical extension
+    new_y_max = (g1.y_max - y_offset) + g2.y_max
+    new_x_max = g1.x_max
 
+    # create a new blank grid with the new dimensions
+    # base_grid = new(new_x_max, new_y_max, )
   end
 
-  def merge(g1, g2, {x_offset, y_offset} = merge_loc , merge_function) when is_function(merge_function) do
+  def merge(g1, g2, {x_offset, y_offset} = merge_loc , merge_function)
+    when is_function(merge_function)
+  do
+
     g2_new_x_max = g2.x_max + x_offset
     g2_new_y_max = g2.y_max + y_offset
 
     if g2_new_x_max > g1.x_max or g2_new_y_max > g1.y_max do
-      raise(Grid2D.InvalidMergeError, merge_loc)
+      raise(Grid2D.InvalidGridMergeError, merge_loc)
     end
 
     g2_grid_map_with_new_positions =

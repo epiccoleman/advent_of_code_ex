@@ -4,6 +4,7 @@ defmodule GridTest do
   import AocUtils.Grid2D
 
   alias AocUtils.Grid2D.GridAccessError
+  alias AocUtils.Grid2D.InvalidGridMergeError
 
   setup_all do
     strs = [
@@ -131,23 +132,6 @@ defmodule GridTest do
       assert actual_grid == expected_grid
     end
 
-    test "when grids have equal x dimension, negative y offset extends grid upward",
-      %{g1: g1, g2: g2, merge_fn: merge_fn} do
-
-      expected_grid = new([
-        [1, 1, 1, 1],
-        [1, 1, 1, 1],
-        [1, 1, 1, 1],
-        [1, 1, 1, 1],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-      ])
-
-      actual_grid = merge(g1, g2, {0, -2}, merge_fn)
-
-      assert actual_grid == expected_grid
-    end
-
     test "when grids have equal x dimension, positive y offset extends grid downward",
       %{g1: g1, g2: g2, merge_fn: merge_fn} do
       expected_grid = new([
@@ -177,53 +161,39 @@ defmodule GridTest do
       assert actual_grid == expected_grid
     end
 
-    test "when grids have equal y dimension, negative x offset extends grid left",
-      %{g1: g1, g2: g2, merge_fn: merge_fn} do
-      expected_grid = new([
-        [1, 1, 1, 1, 0, 0, 0],
-        [1, 1, 1, 1, 0, 0, 0],
-        [1, 1, 1, 1, 0, 0, 0],
-        [1, 1, 1, 1, 0, 0, 0],
-      ])
-
-      actual_grid = merge(g1, g2, {-3, 0}, merge_fn)
-
-      assert actual_grid == expected_grid
+    test "when merge would result in non-rectangular grid raises InvalidMergeError", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      assert_raise(
+        InvalidGridMergeError,
+        "The proposed merge of the given grids at {2, 2} would result in a non-rectangular grid.",
+        fn -> merge(g1, g2, {2, 2}, merge_fn) end
+      )
     end
 
-    test "when invalid raises InvalidMergeError", %{g1: g1, g2: g2, merge_fn: merge_fn} do
-        assert_raise(
-          GridAccessError,
-          "The proposed merge of the given grids at {2, 2} would result in a non-rectangular grid.",
-          fn -> merge(g1, g2, {2, 2}, merge_fn) end
-        )
+    test "when merge location contains negative values raises InvalidMergeError", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      assert_raise(
+        InvalidGridMergeError,
+        "Merge positions may not contain negative values.",
+        fn -> merge(g1, g2, {-1, -1}, merge_fn) end
+      )
     end
 
-    test "when invalid negative offset, raises InvalidMergeError", %{g1: g1, g2: g2, merge_fn: merge_fn} do
-        assert_raise(
-          GridAccessError,
-          "The proposed merge of the given grids at {-1, -1} would result in a non-rectangular grid.",
-          fn -> merge(g1, g2, {-1, -1}, merge_fn) end
-        )
+    test "when proposed merge would extend grid in both directions, raises InvalidMergeError", %{g1: g1, merge_fn: merge_fn} do
+      extending_grid = new(4, 4, 2)
+
+      assert_raise(
+        InvalidGridMergeError,
+        "Extending merges may extend the grid in only one direction.",
+        fn -> merge(g1, extending_grid, {0, 0}, merge_fn) end
+      )
     end
 
     test "when proposed merge would create empty space between the merged grids, raises InvalidMergeError",
       %{g1: g1, g2: g2, merge_fn: merge_fn} do
 
       assert_raise(
-        GridAccessError,
-        "The proposed merge of the given grids at {0, 45} would result in a non-rectangular grid.",
+        InvalidGridMergeError,
+        "The proposed merge of the given grids at {0, 45} would create empty space in the resulting grid.",
         fn -> merge(g1, g2, {0, 45}, merge_fn) end
-      )
-    end
-
-    test "when proposed merge with negative offset would create empty space between the merged grids, raises InvalidMergeError",
-      %{g1: g1, g2: g2, merge_fn: merge_fn} do
-
-      assert_raise(
-        GridAccessError,
-        "The proposed merge of the given grids at {-2112, 0} would result in a non-rectangular grid.",
-        fn -> merge(g1, g2, {-2112, 0}, merge_fn) end
       )
     end
 
