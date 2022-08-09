@@ -49,7 +49,7 @@
     # If both players have at least as many cards remaining in their deck as the value of the card they just drew, the winner of the round is determined by playing a new game of Recursive Combat (see below).
     # Otherwise, at least one player must not have enough cards left in their deck to recurse; the winner of the round is the player with the higher-value card.
 
-    def recursive_combat(%{p1: p1, p2: p2, seen: seen, winner: winner} = state) do
+    def recursive_combat(%{p1: p1, p2: p2, seen: seen, winner: _winner} = state) do
       cond do
         # winner -> state # game is over, don't think should ever happen?
         Enum.member?(seen, {p1, p2}) -> Map.put(state, :winner, :p1)

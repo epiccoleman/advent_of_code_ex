@@ -212,16 +212,16 @@ defmodule Aoc2021.Day08 do
   We will store the signals as map sets and then map those to digits?
   """
 
-@doc """
-From a single puzzle input string, deduce the mapping of signals to digits, and also the mapping of
-characters to segments.
+  @doc """
+  From a single puzzle input string, deduce the mapping of signals to digits, and also the mapping of
+  characters to segments.
 
-For naming purposes in the code below, I'm using capital letters to refer to each segment, with
-the following map of the segments:
+  For naming purposes in the code below, I'm using capital letters to refer to each segment, with
+  the following map of the segments:
 
-Notes on the process of deduction exist both in the moduledoc and code comments in this function.
+  Notes on the process of deduction exist both in the moduledoc and code comments in this function.
 
-Segment map:
+  Segment map:
 
    AAAA
   B    C

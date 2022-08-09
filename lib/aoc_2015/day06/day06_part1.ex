@@ -21,18 +21,6 @@ defmodule Aoc2015.Day06.Part1 do
     |> Enum.map(&Task.await/1)
   end
 
-
-  ###
-
-  def do_instruction_merge_parallel(state_map, {:on, x_range, y_range}) do
-    updates =
-      get_locs_for_ranges(x_range, y_range)
-      |> pmap(fn loc -> {loc, :on} end)
-      |> Enum.into(%{})
-
-    Map.merge(state_map, updates)
-  end
-
   ###
 
   def do_instruction_merge_parallel(state_map, {:on, x_range, y_range}) do
