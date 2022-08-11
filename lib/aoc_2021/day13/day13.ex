@@ -1,4 +1,4 @@
-  defmodule Aoc2021.Day13 do
+  defmodule Aoc2021.Day13.Shelved do
     @moduledoc """
     Ha, looks like another reason to work on Grid2d.
 
@@ -64,6 +64,9 @@
       - for example, as a semi-trivial case, if the top half was filled with dots, and your cut line only gives you one row, also
         full of dots, then there would be some range of indices where you could merge that row and you'd still have the same number of
         dots... this seems pretty unlikely for our inputs but we could write a test around this idea?
+
+
+    Screw it, I give up. I'll do it with math.
     """
     alias AocUtils.Grid2D
 
@@ -98,8 +101,8 @@
       {_first_left_fold, x_midpoint } = Enum.find(folds, fn {direction, _} -> :left end)
 
       # not 100% on this math, let's see what happens
-      # x_max = (x_midpoint * 2)
-      # y_max = (y_midpoint * 2) + 1
+      x_max = (x_midpoint * 2) + 1
+      y_max = (y_midpoint * 2) + 1
 
       dot_locs =
         dot_strs
@@ -110,8 +113,8 @@
         end)
 
       # I'm not confident in this but let's just leave it for now, it's time to drop a wip commit.
-      {x_max, _} = Enum.max_by(dot_locs, fn {x, _y} -> x end)
-      {_, y_max} = Enum.max_by(dot_locs, fn {_x, y} -> y end)
+      # {x_max, _} = Enum.max_by(dot_locs, fn {x, _y} -> x end)
+      # {_, y_max} = Enum.max_by(dot_locs, fn {_x, y} -> y end)
 
       grid_no_dots =
         Grid2D.new(x_max, y_max, ".")
@@ -141,11 +144,12 @@
     """
     def fold_up(grid, fold_line_y) do
       {g_up, g_down} = Grid2D.slice_horizontally(grid, fold_line_y)
-      offset = { 0, g_up.y_max - g_down.y_max }
+      # offset = { 0, abs(g_up.y_max - g_down.y_max) }
+      offset = { 0, 1 }
 
       flipped_g_down = Grid2D.flip_vert(g_down)
 
-      Grid2D.merge(g_up, flipped_g_down, offset, &merge_cells/3)
+      Grid2D.merge(flipped_g_down, g_up, offset, &merge_cells/3)
     end
 
     def do_fold(grid, {direction, line}) do

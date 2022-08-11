@@ -147,6 +147,32 @@ defmodule GridTest do
         fn -> merge(g1, g2, {-1, -1}, merge_fn) end
       )
     end
+
+    test "a different merge function" do
+      g1 = from_strs([
+        "...#...",
+        "..#.#..",
+        ".#...#.",
+        "#.....#"
+      ])
+
+      g2 = from_strs([
+        ".......",
+        "...#...",
+        "..###..",
+        ".#####."
+      ])
+
+      expected = from_strs([
+        "...#...",
+        "..###..",
+        ".#####.",
+        "#######",
+      ])
+
+      merge_fn = fn _k, v1, v2 -> if(v1 == "#" or v2 == "#", do: "#", else: ".") end
+      assert merge(g1, g2, {0,0}, merge_fn)
+    end
   end
 
   test "map" do

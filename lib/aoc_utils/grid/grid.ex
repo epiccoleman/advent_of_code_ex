@@ -472,7 +472,7 @@ defmodule AocUtils.Grid2D do
     g_up_rows = Enum.slice(rows, 0..(y-1))
     g_down_rows = Enum.slice(rows, (y+1)..length(rows))
 
-    {new(g_up_rows), new(g_down_rows)}
+    {from_rows(g_up_rows), from_rows(g_down_rows)}
   end
 
   ## Edge access / manipulation

@@ -73,7 +73,7 @@ defmodule Aoc2021.Day13Test do
 
   test "Part 1" do
    input = File.read!("./test/aoc_2021/day13/input.txt")
-   assert part_1(input) == 0
+   assert part_1(input) == 751
   end
 
   #test "Part 2" do
