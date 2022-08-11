@@ -6,7 +6,6 @@ well well well, if it isn't another excuse to work on Grid2D... :)
 alright, well i chased my tail for a while on the merge functionality before deciding to just keep it simple. Time to actually do the puzzle...
 
 
-
 ## day 12
 That was a hard one. The twist here turned out to be fairly tricky. Some ugliness in the solution but overall pretty cool. Need to remember that this has code for de-nestification of big ol' nasty lists.
 

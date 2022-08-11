@@ -223,6 +223,13 @@ defmodule GridTest do
   end
 
   test "from_cols_simpler" do
+    # this reads a bit confusingly. remember that each column's index increases as it moves downward. so this appears
+    # to be not only rotated but mirrored horizontally from what the final resulting grid would look like
+
+    # picture of the actual grid :
+    #      # # #
+    #      . . #
+    #
     grid = from_cols([
       ["#", "."],
       ["#", "."],
@@ -263,6 +270,12 @@ defmodule GridTest do
       {2, 1} => "#",
       {2, 2} => "#"
     }
+  end
+
+  test "from_cols works both ways", %{grid: grid} do
+    actual = grid |> cols |> from_cols
+
+    assert grid == actual
   end
 
   test "from_strs", state do
