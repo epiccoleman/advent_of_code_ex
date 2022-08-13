@@ -254,37 +254,84 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Updates the value at the given location. Can be given either a single value, which will be placed into the
-  given location, or a function to be applied to the value at the location. The function receives the location
-  and current value of the cell as a tuple.
+  Updates the value at the given grid position to the given value.
 
-  Raises GridAccessError if given a location that is not in the Grid.
+  If the position is outside the bounds of the Grid, the grid will be returned unmodified.
   """
-  def update(grid, location, update_function) when is_function(update_function) do
-    if not Map.has_key?(grid.grid_map, location) do
-      raise(Grid2D.GridAccessError, location)
-    end
-
-    new_value = update_function.(at(grid, location))
-    update(grid, location, new_value)
+  def update(grid, {x, y}, _value)
+    when
+      x < grid.x_min
+      or x > grid.x_max
+      or y < grid.y_min
+      or y > grid.y_max
+  do
+    grid
   end
 
-  def update(
-    %Grid2D{grid_map: grid_map, x_max: x_max, y_max: y_max},
-    {_x, _y} = location,
-    value) do
+  def update(grid, {_x, _y} = location, value) do
+    %Grid2D{ grid | grid_map: Map.put(grid.grid_map, location, value)}
+  end
 
-    if not Map.has_key?(grid_map, location) do
+  @doc """
+  Updates the value at the given grid position with the given function.
+
+  If the position is already present in the map, its value is passed to the `update_fn` and its result is used
+  as the updated value at that position. If the location is not present, and within the bounds of the map, the default
+  value will be inserted.
+
+  If the position is outside the bounds of the Grid, the grid will be returned unmodified.
+  """
+  def update(grid, location, update_fn, default) when is_function(update_fn) do
+    new_value = if Map.has_key?(grid.grid_map, location) do
+      update_fn.(at(grid, location))
+    else
+      default
+    end
+
+    new_grid_map = Map.put(grid.grid_map, location, new_value)
+
+    %Grid2D{ grid | grid_map: new_grid_map}
+  end
+
+
+
+  @doc """
+  Updates the value at the location. Accepts either an update_fn, which will be called with the current value at the location,
+  or a value to be placed at the given location.
+
+  If the location is not present in the grid, or outside its boundaries, a GridAccessError exception will be raised.
+  """
+  def update!(
+    %Grid2D{} = grid,
+    {_x, _y} = location,
+    update_fn)
+    when is_function(update_fn)
+  do
+    new_value = update_fn.(at(grid, location))
+
+    update!(grid, location, new_value)
+  end
+
+  def update!(
+    %Grid2D{} = grid,
+    {x, y} = location,
+    value) when not is_function(value) do
+
+    if x > grid.x_max
+       or x < grid.x_min
+       or y > grid.y_max
+       or y < grid.y_min
+       do
+      raise(Grid2D.GridAccessError, "Grid position #{inspect(location)} is outside the bounds of the grid.")
+    end
+
+    if not Map.has_key?(grid.grid_map, location) do
       raise(Grid2D.GridAccessError, "Attempted to access non-existent Grid cell at position: #{inspect(location)}")
     end
 
-    new_map = %{grid_map | location => value}
+    new_grid_map = Map.put(grid.grid_map, location, value)
 
-    %Grid2D{
-      grid_map: new_map,
-      x_max: x_max,
-      y_max: y_max,
-    }
+    %Grid2D{ grid | grid_map: new_grid_map}
   end
 
   @doc """

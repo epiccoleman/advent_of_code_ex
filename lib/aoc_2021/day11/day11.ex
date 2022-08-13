@@ -69,12 +69,12 @@
         # update the energy levels of every neighbor who receives flashes
         grid_after_flashes =
           Enum.reduce(flash_counts, grid, fn {flash_pos, flash_count}, grid_acc ->
-            Grid2D.update(grid_acc, flash_pos, fn %{energy: energy} = cell_state -> %{cell_state | energy: energy + flash_count} end)
+            Grid2D.update!(grid_acc, flash_pos, fn %{energy: energy} = cell_state -> %{cell_state | energy: energy + flash_count} end)
           end)
         # mark the octopi who have flashed once this turn
         grid_for_next_step =
           Enum.reduce(flashers, grid_after_flashes, fn {flasher_pos, cell_state}, grid_acc ->
-            Grid2D.update(grid_acc, flasher_pos, %{cell_state | flashed?: true})
+            Grid2D.update!(grid_acc, flasher_pos, %{cell_state | flashed?: true})
           end)
 
 

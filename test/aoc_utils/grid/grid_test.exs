@@ -127,16 +127,66 @@ defmodule GridTest do
       assert actual_grid == expected_grid
     end
 
-    test "update raises GridAccessError when key does not exist" do
-      grid = from_rows([
-        [1, 2, 3],
-        [4, 5, 6]
-      ])
+    test "with function" do
+      grid =
+        new(x_max: 2, y_max: 2)
+        |> update({1, 1}, "i'll be replaced")
+        |> update({2, 1}, "i'll be replaced")
+
+      actual_grid =
+        grid
+        |> update({1, 1}, fn _ -> "foo" end, nil)
+        |> update({2, 1}, fn v -> String.upcase(v) end, nil)
+
+      assert at(actual_grid, {1, 1}) == "foo"
+      assert at(actual_grid, {2, 1}) == "I'LL BE REPLACED"
+    end
+
+    test "inserts default when position is unoccupied" do
+      grid = new(x_max: 2, y_max: 2)
+
+      actual_grid = update(grid, {1, 1}, fn _ -> 97 end, 1)
+
+      assert at(actual_grid, {1, 1}) == 1
+    end
+
+    test "uses update fn when position is occupied" do
+      grid =
+        new(x_max: 2, y_max: 2)
+        |> update({1, 1}, "i'll be replaced")
+
+      actual_grid = update(grid, {1, 1}, fn _ -> 97 end, 1)
+
+      assert at(actual_grid, {1, 1}) == 97
+    end
+
+    test "does nothing when position is outside bounds of grid" do
+      grid = new(x_max: 2, y_max: 2)
+
+      actual = update(grid, {3, 3}, 42)
+
+      assert actual == grid
+    end
+  end
+
+  describe "update!" do
+    test "raises GridAccessError when position does not exist" do
+      grid = new(x_max: 2, y_max: 2)
 
       assert_raise(
         GridAccessError,
         "Attempted to access non-existent Grid cell at position: {2, 2}",
-        fn -> update(grid, {2, 2}, "foo") end)
+        fn -> update!(grid, {2, 2}, "foo") end)
+    end
+
+    test "on sparse grid raises GridAccessError when position is out of bounds" do
+      grid = new(x_max: 2, y_max: 2)
+
+      assert_raise(
+        GridAccessError,
+        "Grid position {3, 3} is outside the bounds of the grid.",
+        fn -> update!(grid, {3, 3}, "foo") end)
+      false
     end
 
     test "with function" do
@@ -152,8 +202,27 @@ defmodule GridTest do
 
       actual_grid =
         grid
-        |> update({1, 0}, fn v -> v * 2 end)
-        |> update({2, 1}, fn v -> v * 7 end)
+        |> update!({1, 0}, fn v -> v * 2 end)
+        |> update!({2, 1}, fn v -> v * 7 end)
+
+      assert expected_grid == actual_grid
+    end
+
+    test "with value" do
+      grid = from_rows([
+        [1, 2, 3],
+        [4, 5, 6]
+      ])
+
+      expected_grid = from_rows([
+        [1, "foo", 3],
+        [4, 5, 42]
+      ])
+
+      actual_grid =
+        grid
+        |> update!({1, 0}, "foo")
+        |> update!({2, 1}, 42)
 
       assert expected_grid == actual_grid
     end
