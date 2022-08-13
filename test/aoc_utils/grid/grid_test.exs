@@ -5,6 +5,7 @@ defmodule GridTest do
 
   alias AocUtils.Grid2D.GridAccessError
   alias AocUtils.Grid2D.InvalidGridMergeError
+  alias AocUtils.Grid2D.InvalidGridDimensionsError
 
   setup_all do
     strs = [
@@ -32,9 +33,77 @@ defmodule GridTest do
       assert at(grid, {1,2}) == "."
     end
 
-    # test "with options" do
-    #   assert false
-    # end
+    test "with default options" do
+      grid = new()
+
+      assert grid.x_min == 0
+      assert grid.y_min == 0
+      assert grid.x_max == 0
+      assert grid.y_max == 0
+
+      assert grid.grid_map == %{}
+    end
+
+    test "with x_max and y_max" do
+      grid = new(x_max: 10, y_max: 12)
+
+      assert grid.x_min == 0
+      assert grid.y_min == 0
+      assert grid.x_max == 10
+      assert grid.y_max == 12
+
+      assert grid.grid_map == %{}
+    end
+
+    test "with x_min and y_min" do
+      grid = new(x_min: -4, y_min: -3)
+
+      assert grid.x_min == -4
+      assert grid.y_min == -3
+      assert grid.x_max == 0
+      assert grid.y_max == 0
+
+      assert grid.grid_map == %{}
+    end
+
+    test "raises InvalidGridDimensionsError if x_min not <= x_max " do
+      assert_raise(
+        InvalidGridDimensionsError,
+        fn -> new(x_min: 10, x_max: 0) end
+      )
+    end
+
+    test "raises InvalidGridError if y_min not <= y_max " do
+      assert_raise(
+        InvalidGridDimensionsError,
+        fn -> new(y_min: 10, y_max: 0) end
+      )
+    end
+
+    test "with default value" do
+      grid = new(x_max: 1, y_max: 1, default: ".")
+
+      assert length(Map.keys(grid.grid_map)) == 4
+      assert at(grid, {0, 0}) == "."
+      assert at(grid, {0, 1}) == "."
+      assert at(grid, {1, 0}) == "."
+      assert at(grid, {1, 1}) == "."
+    end
+
+    test "with x_min and y_min and default value" do
+      grid = new(x_min: -1, x_max: 1, y_min: -1,  y_max: 1, default: ".")
+
+      assert length(Map.keys(grid.grid_map)) == 9
+      assert at(grid, {-1, -1}) == "."
+      assert at(grid, {-1, 0}) == "."
+      assert at(grid, {-1, 1}) == "."
+      assert at(grid, {0, -1}) == "."
+      assert at(grid, {0, 0}) == "."
+      assert at(grid, {0, 1}) == "."
+      assert at(grid, {1, -1}) == "."
+      assert at(grid, {1, 0}) == "."
+      assert at(grid, {1, 1}) == "."
+    end
   end
 
   describe "update" do
@@ -221,7 +290,6 @@ defmodule GridTest do
       ["#", "#"]
     ])
 
-
     assert grid.x_max == 2
     assert grid.y_max == 1
     assert grid.grid_map == %{
@@ -240,7 +308,6 @@ defmodule GridTest do
       ["#", "#", "."],
       [".", "#", "#"]
     ])
-
 
     assert grid.x_max == 2
     assert grid.y_max == 2
@@ -281,18 +348,42 @@ defmodule GridTest do
     assert state[:strs] == new_strs
   end
 
-  describe "at" do
+  describe "at!" do
     test "when given position exists", state do
+      assert at!(state.grid, {0, 0}) == "#"
+      assert at!(state.grid, {0, 1}) == "."
+      assert at!(state.grid, {2, 2}) == "#"
+    end
+
+    test "raises GridAccessException when given position is not occupied" do
+      grid = new(x_max: 3, y_max: 2)
+
+      assert_raise(
+        GridAccessError,
+        "There is no value at grid position {2, 1}",
+        fn -> at!(grid, {2, 1}) end)
+    end
+
+    test "raises GridAccessException when given position is outside the grid", state do
+      assert_raise(
+        GridAccessError,
+        "Grid position {2, 42} is outside the bounds of the grid.",
+        fn -> at!(state.grid, {2, 42}) end)
+    end
+  end
+
+  describe "at" do
+    test "returns value when given position exists", state do
       assert at(state.grid, {0, 0}) == "#"
       assert at(state.grid, {0, 1}) == "."
       assert at(state.grid, {2, 2}) == "#"
     end
 
-    test "raises GridAccessException when given position does not exist", state do
-      assert_raise(
-        GridAccessError,
-        "Attempted to access non-existent Grid cell at position: {2, 42}",
-        fn -> at(state.grid, {2, 42}) end)
+    test "returns nil when given position does not exist" do
+      grid = new([x_max: 2, y_max: 2])
+
+      assert at(grid, {0, 0}) == nil
+      assert at(grid, {42, 6}) == nil
     end
   end
 

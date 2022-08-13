@@ -2,20 +2,21 @@ defmodule AocUtils.Grid2D do
   @moduledoc """
   Defines a data structure for working with a 2-dimensional grid of values.
 
-  Indexed "graphics" style, where the top left corner is 0,0 and indices increase as you move
+  The Grid2D is indexed "graphics" style, where the top left corner is 0,0 and indices increase as you move
   right and down.
 
   It differs somewhat from a "traditional" 2d array in that the implementation is not actually backed by
   arrays, but presents a fairly similar interface. In Elixir it turns out that it is much easier to write
   this kind of data structure as a map where the keys are tuples referring to indices of the grid.
 
-  Grid2Ds can be constructed from a list of lists of values, or, in cases where grid cells contain a single
-  character, they can be constructed from a list of strings (which will be split into characters).
+  Grids can be constructed either with Grid2D.new, which allow the most customization of the Grid's
+  properties. Or, slightly more conveniently, you can use from_rows, from_strs, or from_cols to create a
+  grid from a list containing a representation of a grid's rows.
 
-  Note: I'd like to write the construction functions (from_rows and from_strs) as "new" and let the
-  language choose which one to dispatch based on the type of the argument. I'm not sure how to do this
-  right now, so I'll just be explicit about the construction I'm using for now.
+  Functions are provided for various ways of manipulating and accessing the Grid. The internal representation
+  of the Grid is a Map, and in most cases I've tried to emulate the Map API.
   """
+
   alias AocUtils.Grid2D
 
   defstruct grid_map: %{}, x_max: 0, y_max: 0, x_min: 0, y_min: 0
@@ -24,19 +25,21 @@ defmodule AocUtils.Grid2D do
   Produces a new Grid2D.
 
   Accepts the following optional keyword parameters:
-  * :x_min - sets the minimum x coordinate of the grid. If not passed, defaults to 0.
-  * :y_min - sets the minimum y coordinate of the grid. If not passed, defaults to 0.
+  * :x_min - sets the minimum x coordinate of the grid. If not passed, defaults to 0. Must be less than y_max.
+  * :y_min - sets the minimum y coordinate of the grid. If not passed, defaults to 0. Must be less than y_max.
   * :x_max - sets the maximum x coordinate of the grid. If not passed, defaults to 0.
   * :y_max - sets the maximum y coordinate of the grid. If not passed, defaults to 0.
   * :default - defines the default value for each cell of the grid. When not given, grid position keys will not exist until
     explicitly set using Grid2D.update or similar.
   """
-  def new(params) do
+  def new(params \\ []) do
     x_max = Keyword.get(params, :x_max, 0)
     y_max = Keyword.get(params, :y_max, 0)
     x_min = Keyword.get(params, :x_min, 0)
     y_min = Keyword.get(params, :y_min, 0)
 
+    if(x_max < x_min, do: raise(Grid2D.InvalidGridDimensionsError,"x_min must be less than or equal to x_max."))
+    if(y_max < y_min, do: raise(Grid2D.InvalidGridDimensionsError,"y_min must be less than or equal to y_max."))
 
     grid_map =
       if Keyword.has_key?(params, :default) do
@@ -230,16 +233,24 @@ defmodule AocUtils.Grid2D do
   Returns the value of the Grid cell at the given `{x, y}` location. Raises GridAccessError if the given location
   does not exist in the Grid.
   """
-  def at(grid, location) do
+  def at!(grid, {x, y} = location) do
+    if x > grid.x_max
+       or x < grid.x_min
+       or y > grid.y_max
+       or y < grid.y_min
+       do
+      raise(Grid2D.GridAccessError, "Grid position #{inspect(location)} is outside the bounds of the grid.")
+    end
+
     if not Map.has_key?(grid.grid_map, location) do
-      raise(Grid2D.GridAccessError, location)
+      raise(Grid2D.GridAccessError, "There is no value at grid position {2, 1}")
     end
 
     Map.get(grid.grid_map, location)
   end
 
-  def at(grid, x, y) do
-    at(grid, {x, y})
+  def at(grid, {x, y}, default \\ nil) do
+    Map.get(grid.grid_map, {x, y}, default)
   end
 
   @doc """
@@ -264,7 +275,7 @@ defmodule AocUtils.Grid2D do
     value) do
 
     if not Map.has_key?(grid_map, location) do
-      raise(Grid2D.GridAccessError, location)
+      raise(Grid2D.GridAccessError, "Attempted to access non-existent Grid cell at position: #{inspect(location)}")
     end
 
     new_map = %{grid_map | location => value}
