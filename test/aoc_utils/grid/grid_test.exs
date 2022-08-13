@@ -393,6 +393,28 @@ defmodule GridTest do
     }
   end
 
+  test "from_columns" do
+    grid = from_columns([
+      ["#", ".", "."],
+      ["#", "#", "."],
+      [".", "#", "#"]
+    ])
+
+    assert grid.x_max == 2
+    assert grid.y_max == 2
+    assert grid.grid_map == %{
+      {0, 0} => "#",
+      {0, 1} => ".",
+      {0, 2} => ".",
+      {1, 0} => "#",
+      {1, 1} => "#",
+      {1, 2} => ".",
+      {2, 0} => ".",
+      {2, 1} => "#",
+      {2, 2} => "#"
+    }
+  end
+
   test "from_strs", state do
     assert state.grid.x_max == 2
     assert state.grid.y_max == 2
@@ -456,32 +478,64 @@ defmodule GridTest do
     end
   end
 
-  test "rows", state do
-    assert rows(state.grid) == [["#", ".", "."], [".", "#", "."], [".", ".", "#"]]
+  describe "rows" do
+    test "rows", state do
+      assert rows(state.grid) == [["#", ".", "."], [".", "#", "."], [".", ".", "#"]]
+    end
   end
 
-  test "row", state do
-    assert row(state.grid, 1) == [".", "#", "."]
+  describe "row" do
+    test "returns the row", state do
+      assert row(state.grid, 1) == [".", "#", "."]
+    end
   end
 
-  test "cols" do
-    grid = [
-      "##.",
-      ".#.",
-      ".##"
-    ] |> from_strs()
+  describe "cols" do
+    test "on complete grid returns columns" do
+      grid = [
+        "##.",
+        ".#.",
+        ".##"
+      ] |> from_strs()
 
-    assert cols(grid) == [["#", ".", "."], ["#", "#", "#"], [".", ".", "#"]]
+      assert cols(grid) == [["#", ".", "."], ["#", "#", "#"], [".", ".", "#"]]
+    end
   end
 
-  test "col" do
-    grid = [
-      "##.",
-      ".#.",
-      ".##"
-    ] |> from_strs()
+  describe "col" do
+    test "returns the requested column" do
+      grid = [
+        "##.",
+        ".#.",
+        ".##"
+      ] |> from_strs()
 
-    assert col(grid, 2) == [".", ".", "#"]
+      assert col(grid, 2) == [".", ".", "#"]
+    end
+  end
+
+  describe "columns" do
+    test "on complete grid returns columns" do
+      grid = [
+        "##.",
+        ".#.",
+        ".##"
+      ] |> from_strs()
+
+      assert columns(grid) == [["#", ".", "."], ["#", "#", "#"], [".", ".", "#"]]
+    end
+  end
+
+  describe "column" do
+    test "returns the requested column" do
+      grid = [
+        "##.",
+        ".#.",
+        ".##"
+      ] |> from_strs()
+
+      assert column(grid, 2) == [".", ".", "#"]
+    end
   end
 
   test "append_grid" do

@@ -149,7 +149,7 @@ defmodule AocUtils.Grid2D do
 
   All lists given in the list must be of the same length.
   """
-  def from_cols(cols) do
+  def from_columns(cols) do
     x_max = length(cols) - 1
     y_max = length(Enum.at(cols, 0)) - 1
 
@@ -167,6 +167,8 @@ defmodule AocUtils.Grid2D do
       y_max: y_max
     }
   end
+
+  defdelegate from_cols(cols), to: Grid2D, as: :from_columns
 
   @doc """
   Converts a Grid to a list of strings, where each string is the concatentation of the
@@ -200,24 +202,28 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Returns the col at the given x value as a list of cell values.
+  Returns the column at the given x value as a list of cell values.
   """
-  def col(grid, x) do
+  def column(grid, x) do
     cols(grid)
     |> Enum.at(x)
   end
+
+  defdelegate col(grid, x), to: Grid2D, as: :column
 
   @doc """
   Converts a Grid to a list of lists, where each of the lists represents the ordered values
   of a column in the Grid.
   """
-  def cols(%Grid2D{grid_map: grid_map, x_max: x_max, y_max: y_max}) do
+  def columns(%Grid2D{grid_map: grid_map, x_max: x_max, y_max: y_max}) do
     for x <- 0..x_max do
       for y <- 0..y_max do
         Map.get(grid_map, {x, y})
       end
     end
   end
+
+  defdelegate cols(grid), to: Grid2D, as: :columns
 
   @doc """
   Given a Grid2D, converts it to a list of {{x,y}, val} tuples.
