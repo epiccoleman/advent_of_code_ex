@@ -45,7 +45,7 @@
             flashed?: false }
           end)
       end)
-      |> Grid2D.new()
+      |> Grid2D.from_rows()
     end
 
     def simulate_flashes(grid) do

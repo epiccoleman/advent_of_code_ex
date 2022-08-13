@@ -1,5 +1,58 @@
 ## notes - 2021
 
+## digression - grid stuff
+alright well.
+
+i've been struggling to get the grid to work properly in the day 13 puzzle. so i had a crazy idea.
+
+a lot of the grid module is written in a sort of naive "visually sensible" way. we can construct grids from rows and strings and even columns. we can also construct a grid by passing in dimensions and filling it with a certain value.
+
+_however_
+
+a lot of these operations are quite slow, especially on large grids. one of the reasons for this, especially in the case of day 13, is that grids often contain a lot of unneeded information. the grid in day 13 is 1311 x 854 (or maybe 1310?). This means we've got a map with over a million keys. There are only 907 dots in the puzzle input, so we're storing more information than we need by several orders of magnitude.
+
+in many grids (maybe even _most_) it's really not necessary to store the values of unoccupied cells. we should be able to solve day 13 just by creating a map of the 907 dot positions, and transform the positions of appropriate dots mathematically. this would be way faster and probably also less error prone.
+
+however, many of the functions in Grid currently work on the assumption that the grid is completely filled out. so what's a guy to do?
+
+well, a sensible guy might just _not use_ the grid for a puzzle. but i guess i'm not sensible because i think what i'd like to do is to rewrite some of the grid functionality so that we can handle sparse grids as well as grids which are completely filled out.
+
+now, this means that quite a few functions would have to be rewritten. we wouldn't be able to assume that a grid is complete, so any function which uses things like "rows" and "cols" to do transformations would have to be changed to instead perform any transforms mathematically. the upside though is that this should result in a dramatic speed increase in basically every way. further, it will allow us to handle merges more intelligently and probably reopen the idea of merges which extend the dimensions of the grid.
+
+another thing i'd like to support is grids with negative indices. this would require adding y_min and x_min fields to the struct, and any of the currently existing grid construction functions would have to set those fields.
+
+alright so... how to approach this. luckily we've got a pretty good test suite around existing functionality.
+
+first order of business - let's try to list all the functions that would need to change
+
+new - needs a new function head, docs, maybe some new logic
+from_rows - needs to set min. i think we will still require same length rows
+from_cols - needs to set min.
+to_strs - would need logic to handle empty space
+row and rows - would need to handle empty space
+col and cols - would need to handle empty space
+at - what happens when accessing empty space
+update - already has logic for empty space, but should test
+merge - needs updates anyway... think it already would handle this though? one thing is that it needs to be updated to allow extension
+map - should map be allowed to change positions?
+all? - how should all work on a sparse grid?
+neighbors - think this already handles empty, but might need a note in the doc
+same for neighbor_locs
+same for edge neighbors and edge_neighbor_locs
+append_grid - how would this work with sparse grid? I guess it needs to assume squareness and recalculate coordinates
+print - weird anyway, maybe we could reimplement using to_strs
+slice - think this works the same? test
+
+edge functions - would need to insert nils or something
+
+transformations - all need rewritten to use math to transform coordinates
+
+new code:
+complete? / sparse? - tells you if grid is complete or spars
+
+
+
+
 ## day 13
 well well well, if it isn't another excuse to work on Grid2D... :)
 

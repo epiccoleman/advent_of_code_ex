@@ -18,31 +18,56 @@ defmodule AocUtils.Grid2D do
   """
   alias AocUtils.Grid2D
 
-  defstruct grid_map: %{}, x_max: 0, y_max: 0
+  defstruct grid_map: %{}, x_max: 0, y_max: 0, x_min: 0, y_min: 0
 
   @doc """
-  Produces a new Grid2D from a list of values.
+  Produces a new Grid2D.
 
-  Grids can be constructed from a few different types of inputs:
-    * A list of lists of values. This is the most flexible method of constructing a Grid2D, allowing the caller
-      to index arbitrary types of values. The lists in the list must expected to be of equal length.
-    * A list of strings (binaries). This is provided as a convenient method of constructing a Grid2D when the values
-      in each cell will be a single character. The given strings are split apart into characters with String.graphemes/1.
-    * A list of {key, value} tuples. The keys must be {x,y} coordinate pairs. This is meant primarily
-      to be used to convert the results calls to functions in Enum (which rely on the Grid's implementation of the
-      Enumerable protocol) back to Grid2Ds.
-
-    Alright, all that is neat in principle, but is a lie. For now this only accepts a list of values, and just
-    delegates to from_rows.
+  Accepts the following optional keyword parameters:
+  * :x_min - sets the minimum x coordinate of the grid. If not passed, defaults to 0.
+  * :y_min - sets the minimum y coordinate of the grid. If not passed, defaults to 0.
+  * :x_max - sets the maximum x coordinate of the grid. If not passed, defaults to 0.
+  * :y_max - sets the maximum y coordinate of the grid. If not passed, defaults to 0.
+  * :default - defines the default value for each cell of the grid. When not given, grid position keys will not exist until
+    explicitly set using Grid2D.update or similar.
   """
-  def new(list) when is_list(list) do
-    from_rows(list)
+  def new(params) do
+    x_max = Keyword.get(params, :x_max, 0)
+    y_max = Keyword.get(params, :y_max, 0)
+    x_min = Keyword.get(params, :x_min, 0)
+    y_min = Keyword.get(params, :y_min, 0)
+
+
+    grid_map =
+      if Keyword.has_key?(params, :default) do
+        default = Keyword.get(params, :default)
+
+        for x <- x_min..x_max,
+            y <- y_min..y_max do
+          {{x, y}, default}
+        end
+        |> Enum.into(%{})
+      else
+        %{}
+      end
+
+    %Grid2D{
+      grid_map: grid_map,
+      x_min: x_min,
+      x_max: x_max,
+      y_min: y_min,
+      y_max: y_max,
+    }
   end
 
   @doc """
-  Given a size in the x and y directions, and an optional default value, creates a Grid of the given size.
+  Given a size in the x and y directions, and a value, creates a Grid of the given size. This function assumes that the
+  grid's top left coordinate is 0,0. For a more flexible construction, see Grid2D.new/1.
+
+  If a default value is passed, the grid will be complete - all indices on the grid will exist as keys in the grid_map.
+  If a sparse grid is required, see Grid2D.new/2. If the grid needs to have negative indices, see Grid2D.new/4
   """
-  def new(x_max, y_max, default \\ nil) do
+  def new(x_max, y_max, default) do
     grid_map =
       for x <- 0..x_max,
           y <- 0..y_max do
@@ -60,6 +85,8 @@ defmodule AocUtils.Grid2D do
   @doc """
   Produces a grid from a list of strings. Each string in the list represents a row of the grid, and
   each character in the strings represents a single grid cell.
+
+  This function assumes that the grid's x_min and y_min are zero. For a more configurable constructor, see Grid2D.new.
 
   All strings given in the list must be of the same length.
   """
@@ -88,6 +115,8 @@ defmodule AocUtils.Grid2D do
   Produces a grid from a list of lists. Each list in the list represents a row in the grid, and
   each value in a given list represents a column in that row.
 
+  This function assumes that the grid's x_min and y_min are zero. For a more configurable constructor, see Grid2D.new.
+
   All lists given in the list must be of the same length.
   """
   def from_rows(rows) do
@@ -112,6 +141,8 @@ defmodule AocUtils.Grid2D do
   @doc """
   Produces a grid from a list of lists. Each list in the list represents a column in the grid, and
   each value in a given list represents a cell in that column.
+
+  This function assumes that the grid's x_min and y_min are zero. For a more configurable constructor, see Grid2D.new.
 
   All lists given in the list must be of the same length.
   """
@@ -472,7 +503,7 @@ defmodule AocUtils.Grid2D do
     g_up_rows = Enum.slice(rows, 0..(y-1))
     g_down_rows = Enum.slice(rows, (y+1)..length(rows))
 
-    {new(g_up_rows), new(g_down_rows)}
+    {from_rows(g_up_rows), from_rows(g_down_rows)}
   end
 
   ## Edge access / manipulation

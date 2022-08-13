@@ -19,18 +19,6 @@ defmodule GridTest do
   end
 
   describe "new" do
-    test "new from list of rows" do
-      grid = new([
-        [1, 2],
-        [3, 4]
-      ])
-
-      assert at(grid, {0,0}) == 1
-      assert at(grid, {1,0}) == 2
-      assert at(grid, {0,1}) == 3
-      assert at(grid, {1,1}) == 4
-    end
-
     test "with dimensions and default value" do
       grid = new(2, 3, ".")
 
@@ -43,16 +31,20 @@ defmodule GridTest do
       assert at(grid, {0,2}) == "."
       assert at(grid, {1,2}) == "."
     end
+
+    # test "with options" do
+    #   assert false
+    # end
   end
 
   describe "update" do
     test "with value" do
-      grid = new([
+      grid = from_rows([
         [1, 2, 3],
         [4, 5, 6]
       ])
 
-      expected_grid = new([
+      expected_grid = from_rows([
         [1, 4, 3],
         [2, 5, 42]
       ])
@@ -67,7 +59,7 @@ defmodule GridTest do
     end
 
     test "update raises GridAccessError when key does not exist" do
-      grid = new([
+      grid = from_rows([
         [1, 2, 3],
         [4, 5, 6]
       ])
@@ -79,12 +71,12 @@ defmodule GridTest do
     end
 
     test "with function" do
-      grid = new([
+      grid = from_rows([
         [1, 2, 3],
         [4, 5, 6]
       ])
 
-      expected_grid = new([
+      expected_grid = from_rows([
         [1, 4, 3],
         [4, 5, 42]
       ])
@@ -116,12 +108,12 @@ defmodule GridTest do
     end
 
     test "with non-zero offset", %{g1: g1, merge_fn: merge_fn} do
-      little_grid = new([
+      little_grid = from_rows([
         [2, 2],
         [2, 2]
       ])
 
-      expected_grid = new([
+      expected_grid = from_rows([
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 2, 2],
@@ -185,12 +177,12 @@ defmodule GridTest do
   end
 
   test "all?" do
-    even_grid = new([
+    even_grid = from_rows([
       [2, 4, 6],
       [8, 10, 12]
     ])
 
-    not_quite_even_grid = new([
+    not_quite_even_grid = from_rows([
       [2, 4, 6],
       [8, 43, 12]
     ])
@@ -381,7 +373,7 @@ defmodule GridTest do
       [1, 2, 3],
       [4, 5, 6],
       [7, 8, 9],
-    ] |> new()
+    ] |> from_rows()
 
     expected_neighbors = [1, 2, 3, 4, 6, 7, 8, 9]
     actual_neighbors = neighbors(grid, {1, 1}) |> Enum.sort
@@ -394,7 +386,7 @@ defmodule GridTest do
       [1, 2, 3],
       [4, 5, 6],
       [7, 8, 9],
-    ] |> new()
+    ] |> from_rows()
 
     expected_neighbors = [5, 6, 8]
     actual_neighbors = neighbors(grid, {2, 2}) |> Enum.sort
@@ -403,17 +395,17 @@ defmodule GridTest do
   end
 
   test "slice_vertically" do
-    grid = new([
+    grid = from_rows([
       [1, 2, 3, 4, 5, 6],
       [7, 8, 9, 4, 9, 8],
     ])
 
-    expected_g_left = new([
+    expected_g_left = from_rows([
       [1, 2, 3],
       [7, 8, 9],
     ])
 
-    expected_g_right = new([
+    expected_g_right = from_rows([
       [5, 6],
       [9, 8],
     ])
@@ -425,7 +417,7 @@ defmodule GridTest do
   end
 
   test "slice_horizontally" do
-    grid = new([
+    grid = from_rows([
       [1, 2],
       [3, 4],
       [0, 0],
@@ -433,12 +425,12 @@ defmodule GridTest do
       [7, 8],
     ])
 
-    expected_g_up = new([
+    expected_g_up = from_rows([
       [1, 2],
       [3, 4],
     ])
 
-    expected_g_down = new([
+    expected_g_down = from_rows([
       [5, 6],
       [7, 8],
     ])
