@@ -11,7 +11,7 @@ defmodule AocUtils.Grid2D.Transformations do
   """
   def flip_horiz(grid) do
     grid
-    |> Grid2D.rows
+    |> Grid2D.rows()
     |> Enum.map(&Enum.reverse/1)
     |> Grid2D.from_rows()
   end
@@ -21,7 +21,7 @@ defmodule AocUtils.Grid2D.Transformations do
   """
   def flip_vert(grid) do
     grid
-    |> Grid2D.cols
+    |> Grid2D.cols()
     |> Enum.map(&Enum.reverse/1)
     |> Grid2D.from_cols()
   end

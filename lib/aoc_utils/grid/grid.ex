@@ -184,51 +184,59 @@ defmodule AocUtils.Grid2D do
   @doc """
   Converts a Grid to a list of lists, where each of the lists represents the ordered values
   of a row in the Grid.
+
+  Accepts an optional default value to insert into the row list when a given position is unoccupied. If no
+  default is passed, nils will be inserted for any unoccupied position.
   """
-  def rows(%Grid2D{grid_map: grid_map, x_max: x_max, y_max: y_max}) do
-    for y <- 0..y_max do
-      for x <- 0..x_max do
-        Map.get(grid_map, {x, y})
+  def rows(%Grid2D{} = grid, default \\ nil) do
+    for y <- grid.y_min..grid.y_max do
+      for x <- grid.x_min..grid.x_max do
+        Map.get(grid.grid_map, {x, y}, default)
       end
     end
   end
 
   @doc """
   Returns the row at the given y value as a list of cell values.
+
+  In cases where the Grid is not populated at a given row index, nil will be inserted.
   """
-  def row(grid, y) do
-    rows(grid)
+  def row(grid, y, default \\ nil) do
+    rows(grid, default)
     |> Enum.at(y)
   end
 
   @doc """
   Returns the column at the given x value as a list of cell values.
   """
-  def column(grid, x) do
-    cols(grid)
+  def column(grid, x, default \\ nil) do
+    columns(grid, default)
     |> Enum.at(x)
   end
 
-  defdelegate col(grid, x), to: Grid2D, as: :column
+  defdelegate col(grid, x, default \\ nil), to: Grid2D, as: :column
 
   @doc """
   Converts a Grid to a list of lists, where each of the lists represents the ordered values
   of a column in the Grid.
+
+  Accepts an optional default value to insert into the row list when a given position is unoccupied. If no
+  default is passed, nils will be inserted for any unoccupied position.
   """
-  def columns(%Grid2D{grid_map: grid_map, x_max: x_max, y_max: y_max}) do
-    for x <- 0..x_max do
-      for y <- 0..y_max do
-        Map.get(grid_map, {x, y})
+  def columns(grid, default \\ nil) do
+    for x <- grid.x_min..grid.x_max do
+      for y <- grid.y_min..grid.y_max do
+        Map.get(grid.grid_map, {x, y}, default)
       end
     end
   end
 
-  defdelegate cols(grid), to: Grid2D, as: :columns
+  defdelegate cols(grid, default \\ nil), to: Grid2D, as: :columns
 
   @doc """
   Given a Grid2D, converts it to a list of {{x,y}, val} tuples.
 
-  Note that in so doing, the x_max and y_max fields are lost, and must be recomputed to construct a
+  Note that in so doing, the x_min, x_max, y_min, y_max fields are lost, and must be recomputed to construct a
   new Grid2D.
   """
   def to_list(grid) do
@@ -520,7 +528,7 @@ defmodule AocUtils.Grid2D do
   def append_grid(grid, other) do
     rows_g = rows(grid)
     rows_o = rows(other)
-    y_max = length(rows_g) - 1
+    y_max = grid.y_max
 
     for y <- 0..y_max  do
       Enum.at(rows_g, y) ++ Enum.at(rows_o, y)

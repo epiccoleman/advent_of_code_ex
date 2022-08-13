@@ -479,8 +479,36 @@ defmodule GridTest do
   end
 
   describe "rows" do
-    test "rows", state do
+    test "returns a list of the grid's rows", state do
       assert rows(state.grid) == [["#", ".", "."], [".", "#", "."], [".", ".", "#"]]
+    end
+
+    test "substitutes nil if a position is unoccupied" do
+      grid =
+        new(x_max: 1, y_max: 1)
+        |> update({0, 0}, :foo)
+        |> update({1, 1}, 42)
+
+      expected_rows = [
+        [:foo, nil],
+        [nil, 42],
+      ]
+
+      assert rows(grid) == expected_rows
+    end
+
+    test "when provided default, substitutes default when position is unoccupied" do
+      grid =
+        new(x_max: 1, y_max: 1)
+        |> update({0, 0}, :foo)
+        |> update({1, 1}, 42)
+
+      expected_rows = [
+        [:foo, 2112],
+        [2112, 42],
+      ]
+
+      assert rows(grid, 2112) == expected_rows
     end
   end
 
@@ -488,10 +516,30 @@ defmodule GridTest do
     test "returns the row", state do
       assert row(state.grid, 1) == [".", "#", "."]
     end
+
+    test "substitutes nil if a position is unoccupied" do
+      grid =
+        new(x_max: 1, y_max: 1)
+        |> update({0, 0}, :foo)
+
+      expected_row = [:foo, nil]
+
+      assert row(grid, 0) == expected_row
+    end
+
+    test "when provided default, substitutes default when position is unoccupied" do
+      grid =
+        new(x_max: 1, y_max: 1)
+        |> update({1, 1}, 42)
+
+      expected_row = [2112, 42]
+
+      assert row(grid, 1, 2112) == expected_row
+    end
   end
 
   describe "cols" do
-    test "on complete grid returns columns" do
+    test "returns a list of the grid's columns" do
       grid = [
         "##.",
         ".#.",
@@ -499,6 +547,34 @@ defmodule GridTest do
       ] |> from_strs()
 
       assert cols(grid) == [["#", ".", "."], ["#", "#", "#"], [".", ".", "#"]]
+    end
+
+    test "substitutes nil if a position is unoccupied" do
+      grid =
+        new(x_max: 1, y_max: 1)
+        |> update({1, 0}, :foo)
+        |> update({1, 1}, 42)
+
+      expected_cols = [
+        [nil, nil],
+        [:foo, 42],
+      ]
+
+      assert cols(grid) == expected_cols
+    end
+
+    test "when provided default, substitutes default when position is unoccupied" do
+      grid =
+        new(x_max: 1, y_max: 1)
+        |> update({1, 0}, :foo)
+        |> update({1, 1}, 42)
+
+      expected_cols = [
+        [2112, 2112],
+        [:foo, 42],
+      ]
+
+      assert cols(grid, 2112) == expected_cols
     end
   end
 
@@ -512,6 +588,27 @@ defmodule GridTest do
 
       assert col(grid, 2) == [".", ".", "#"]
     end
+
+    test "substitutes nil if a position is unoccupied" do
+      grid =
+        new(x_max: 1, y_max: 1)
+        |> update({0, 0}, :foo)
+
+      expected_col = [:foo, nil]
+
+
+      assert col(grid, 0) == expected_col
+    end
+
+    test "when provided default, substitutes default when position is unoccupied" do
+      grid =
+        new(x_max: 1, y_max: 1)
+        |> update({1, 1}, 42)
+
+      expected_col = [2112, 42]
+
+      assert col(grid, 1, 2112) == expected_col
+    end
   end
 
   describe "columns" do
@@ -524,6 +621,34 @@ defmodule GridTest do
 
       assert columns(grid) == [["#", ".", "."], ["#", "#", "#"], [".", ".", "#"]]
     end
+
+    test "substitutes nil if a position is unoccupied" do
+      grid =
+        new(x_max: 1, y_max: 1)
+        |> update({1, 0}, :foo)
+        |> update({1, 1}, 42)
+
+      expected_cols = [
+        [nil, nil],
+        [:foo, 42],
+      ]
+
+      assert columns(grid) == expected_cols
+    end
+
+    test "when provided default, substitutes default when position is unoccupied" do
+      grid =
+        new(x_max: 1, y_max: 1)
+        |> update({1, 0}, :foo)
+        |> update({1, 1}, 42)
+
+      expected_cols = [
+        [2112, 2112],
+        [:foo, 42],
+      ]
+
+      assert columns(grid, 2112) == expected_cols
+    end
   end
 
   describe "column" do
@@ -535,6 +660,27 @@ defmodule GridTest do
       ] |> from_strs()
 
       assert column(grid, 2) == [".", ".", "#"]
+    end
+
+    test "substitutes nil if a position is unoccupied" do
+      grid =
+        new(x_max: 1, y_max: 1)
+        |> update({0, 0}, :foo)
+
+      expected_col = [:foo, nil]
+
+
+      assert column(grid, 0) == expected_col
+    end
+
+    test "when provided default, substitutes default when position is unoccupied" do
+      grid =
+        new(x_max: 1, y_max: 1)
+        |> update({1, 1}, 42)
+
+      expected_col = [2112, 42]
+
+      assert column(grid, 1, 2112) == expected_col
     end
   end
 
