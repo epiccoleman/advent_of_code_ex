@@ -172,12 +172,13 @@ defmodule AocUtils.Grid2D do
 
   @doc """
   Converts a Grid to a list of strings, where each string is the concatentation of the
-  values in a row of the Grid. Not usable for grids with numberic values in their cells,
-  really only useful for debugging the 2020 Day 20 code and as a convenience method for testing.
-  In general, you probably shouldn't use this outside those two use cases.
+  values in a row of the Grid.
+
+  Accepts an optional argument `spacer` which will be used to fill in any non-occupied spaces in the grid. By default,
+  non-occupied spaces will be subsituted with a single space.
   """
-  def to_strs(grid) do
-    rows(grid)
+  def to_strs(grid, spacer \\ " ") do
+    rows(grid, spacer)
     |> Enum.map(&Enum.join/1)
   end
 
@@ -236,8 +237,8 @@ defmodule AocUtils.Grid2D do
   @doc """
   Given a Grid2D, converts it to a list of {{x,y}, val} tuples.
 
-  Note that in so doing, the x_min, x_max, y_min, y_max fields are lost, and must be recomputed to construct a
-  new Grid2D.
+  Note that in so doing, the x_min, x_max, y_min, y_max fields are lost. If the grid is sparsely populated, this may
+  result in losing information about the dimensions of the grid.
   """
   def to_list(grid) do
     :maps.to_list(grid.grid_map)
@@ -263,6 +264,12 @@ defmodule AocUtils.Grid2D do
     Map.get(grid.grid_map, location)
   end
 
+  @doc """
+  Returns the value of the Grid cell at the given `{x, y}` location.
+
+  Accepts an optional `default` value, which will be returned if the given cell does not have a value. By default,
+  `nil` will be returned for unoccupied cells.
+  """
   def at(grid, {x, y}, default \\ nil) do
     Map.get(grid.grid_map, {x, y}, default)
   end
@@ -306,8 +313,6 @@ defmodule AocUtils.Grid2D do
 
     %Grid2D{ grid | grid_map: new_grid_map}
   end
-
-
 
   @doc """
   Updates the value at the location. Accepts either an update_fn, which will be called with the current value at the location,
@@ -438,7 +443,8 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Returns true if the given function returns a truthy value for every cell in the grid.
+  Returns true if the given function returns a truthy value for every occupied cell in the grid. If a given
+  cell is unoccupied, the function will not be called - this only verifies values in occupied cells.
 
   The function will be passed a {location, value} tuple.
   """
@@ -448,7 +454,7 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Given a grid and a location, returns a list of values from adjacent cells. This includes diagonal neighbors.
+  Given a grid and a location, returns a list of values from adjacent occupied cells. This includes diagonal neighbors.
 
   See Grid2D.edge_neighbors and Grid2D.edge_neighbor_locs if you only want neighbors in "straight" directions.
   """
@@ -460,7 +466,7 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Given a grid and a location, returns a list of {x,y} tuples representing grid locations bordering that cell.
+  Given a grid and a location, returns a list of {x,y} tuples representing existing grid locations bordering that cell.
   This includes cells which are diagonally adjacent.
 
   See Grid2D.edge_neighbors and Grid2D.edge_neighbor_locs if you only want neighbors in "straight" directions.
@@ -487,7 +493,7 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Given a grid and a location, returns a list of adjacent cell values bordering the location on its edges
+  Given a grid and a location, returns a list of adjacent occupied cell values bordering the location on its edges
   (i.e. _not_ on corners, so this does not include values from cells which are diagonally adjacent).
   """
   def edge_neighbors(grid, loc) do
@@ -498,7 +504,7 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Given a grid and a location, returns the list of locations bordering that cell on its edges (i.e. _not_ on corners, so this
+  Given a grid and a location, returns the list of existing locations bordering that cell on its edges (i.e. _not_ on corners, so this
   does not include locations which are diagonally adjacent).
   """
   def edge_neighbor_locs(grid, {x, y}) do

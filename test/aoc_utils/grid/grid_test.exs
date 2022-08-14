@@ -431,12 +431,56 @@ defmodule GridTest do
     }
   end
 
-  test "to_strs", state do
-    grid = state.grid
+  describe "to_strs" do
+    test "converts the grid to a list of row strings", state do
+      grid = state.grid
 
-    new_strs = to_strs(grid)
+      new_strs = to_strs(grid)
 
-    assert state[:strs] == new_strs
+      assert state[:strs] == new_strs
+    end
+
+    test "inserts a space for non-occupied positions" do
+      grid =
+        new(x_max: 2, y_max: 2)
+        |> update({0,0}, "x")
+        |> update({1,0}, "x")
+        |> update({0,1}, "x")
+        |> update({2,1}, "x")
+        |> update({1,2}, "x")
+        |> update({2,2}, "x")
+
+      expected_strs = [
+        "xx ",
+        "x x",
+        " xx"
+      ]
+
+      actual_strs = to_strs(grid)
+
+      assert actual_strs == expected_strs
+    end
+
+    test "when given a default value inserts it for non-occupied positions" do
+      grid =
+        new(x_max: 2, y_max: 2)
+        |> update({0,0}, "x")
+        |> update({1,0}, "x")
+        |> update({0,1}, "x")
+        |> update({2,1}, "x")
+        |> update({1,2}, "x")
+        |> update({2,2}, "x")
+
+      expected_strs = [
+        "xx.",
+        "x.x",
+        ".xx"
+      ]
+
+      actual_strs = to_strs(grid, ".")
+
+      assert actual_strs == expected_strs
+    end
   end
 
   describe "at!" do
