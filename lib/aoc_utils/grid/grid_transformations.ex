@@ -28,11 +28,20 @@ defmodule AocUtils.Grid2D.Transformations do
   @doc """
   Given a Grid, returns that grid with values flipped (mirrored) vertically.
   """
-  def flip_vert(grid) do
-    grid
-    |> Grid2D.cols()
-    |> Enum.map(&Enum.reverse/1)
-    |> Grid2D.from_cols()
+  def flip_vert(%Grid2D{y_max: y_max, y_min: y_min} = grid) do
+    midpoint = (( y_max + y_min ) / 2)
+
+    new_grid_map =
+      Grid2D.to_list(grid)
+      |> Enum.map(fn {{x, y}, v} ->
+        distance_to_midpoint = midpoint - y
+        new_y = trunc(y + (2 * distance_to_midpoint))
+
+        {{x, new_y}, v}
+      end)
+      |> Map.new()
+
+      %Grid2D{ grid | grid_map: new_grid_map }
   end
 
   @doc """

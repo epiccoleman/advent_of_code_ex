@@ -80,34 +80,116 @@ defmodule GridTransformationsTest do
       flipped =
         grid
         |> flip_horiz()
-        |> to_strs("_")
 
-      assert flipped == [
+      assert to_strs(flipped, "_") == [
         "__x",
         "xx_",
       ]
+
+      assert flipped.x_min == -2
+      assert flipped.x_max == 0
+      assert flipped.y_max == 1
+      assert flipped.y_min == 0
     end
   end
 
   # #..
   # .#.
   # ..#
-  test "flip_vert" do
-    grid = [
-      "##.",
-      ".#.",
-      "..#"] |> from_strs
+  describe "flip_vert" do
+    test "flips the grid vertically" do
+      grid = [
+        "##.",
+        ".#.",
+        "..#"] |> from_strs
 
-    flipped =
-      grid
-      |> flip_vert()
-      |> to_strs()
+      flipped =
+        grid
+        |> flip_vert()
+        |> to_strs()
 
-    assert flipped == [
-      "..#",
-      ".#.",
-      "##."
-    ]
+      assert flipped == [
+        "..#",
+        ".#.",
+        "##."
+      ]
+    end
+
+    test "works properly on grids with even number of rows" do
+      strs = [
+        "#...",
+        ".#.#",
+        "..#.",
+        ".###"
+      ]
+
+      grid = from_strs(strs)
+
+      flipped =
+        grid
+        |> flip_vert()
+        |> to_strs()
+
+      assert flipped == [
+        ".###",
+        "..#.",
+        ".#.#",
+        "#...",
+      ]
+    end
+
+    test "works properly on sparse grids" do
+      # looks like this:
+
+      #     x _ _
+      #     _ x x
+      grid =
+        new(x_max: 2, y_max: 1)
+        |> update({0, 0}, "x")
+        |> update({1, 1}, "x")
+        |> update({2, 1}, "x")
+
+      flipped =
+        grid
+        |> flip_vert()
+        |> to_strs("_")
+
+      assert flipped == [
+        "_xx",
+        "x__",
+      ]
+    end
+
+    test "works on grids with negative indices" do
+      # looks like this:
+
+      # x _ _
+      # _ x x
+      # x _ x
+
+      grid =
+        new(x_min: -2, x_max: 0, y_min: -2, y_max: 0)
+        |> update({-2, -2}, "x")
+        |> update({-1, -1}, "x")
+        |> update({0, -1}, "x")
+        |> update({-2, 0}, "x")
+        |> update({0, 0}, "x")
+
+      flipped =
+        grid
+        |> flip_vert()
+
+      assert to_strs(flipped, "_") == [
+        "x_x",
+        "_xx",
+        "x__",
+      ]
+
+      assert flipped.x_min == -2
+      assert flipped.x_max == 0
+      assert flipped.y_max == 0
+      assert flipped.y_min == -2
+    end
   end
 
   test "rotations" do
