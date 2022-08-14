@@ -295,6 +295,19 @@ defmodule GridTest do
     assert actual_grid == expected_grid
   end
 
+  test "map on sparse grid transforms only existing keys" do
+    grid =
+      new(x_max: 2, y_max: 2)
+      |> update({1,1}, 2)
+      |> update({2,2}, 4)
+
+    actual_grid = map(grid, fn {_, v} -> v * 2 end)
+
+    assert length(Map.keys(actual_grid.grid_map)) == length(Map.keys(actual_grid.grid_map))
+    assert at(actual_grid, {1, 1}) == 4
+    assert at(actual_grid, {2, 2}) == 8
+  end
+
   test "map does not affect keys" do
     grid = from_rows([
       [1, 2, 3],

@@ -16,9 +16,9 @@ defmodule Mix.Tasks.Test.Aoc do
     "test/aoc_#{year}/day#{day_number}"
   end
 
-  def run([day, year | _rest]) do
+  def run([day, year | rest]) do
     test_file_path = get_test_file_path(day, year)
-    Mix.Tasks.Test.run([test_file_path])
+    Mix.Tasks.Test.run([test_file_path] ++ rest)
   end
 end
 
@@ -28,9 +28,9 @@ defmodule Mix.Tasks.Test.Aoc.Watch do
 
   Call it like this: `mix test.aoc.watch $day $year` - e.g. `mix test.aoc.watch 10 2021`
   """
-  def run([day, year | _rest]) do
+  def run([day, year | rest]) do
     test_file_path = Mix.Tasks.Test.Aoc.get_test_file_path(day, year)
-    Mix.Tasks.Test.Watch.run([test_file_path])
+    Mix.Tasks.Test.Watch.run([test_file_path] ++ rest)
   end
 end
 

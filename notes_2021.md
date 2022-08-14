@@ -25,20 +25,20 @@ alright so... how to approach this. luckily we've got a pretty good test suite a
 
 first order of business - let's try to list all the functions that would need to change
 
-new - needs a new function head, docs, maybe some new logic
+~~new - needs a new function head, docs, maybe some new logic~~
 from_rows - needs to set min. i think we will still require same length rows
 from_cols - needs to set min.
-to_strs - would need logic to handle empty space
-row and rows - would need to handle empty space
-col and cols - would need to handle empty space
-at - what happens when accessing empty space
-update - already has logic for empty space, but should test
+~~to_strs - would need logic to handle empty space~~
+~~row and rows - would need to handle empty space~~
+~~col and cols - would need to handle empty space~~
+~~at - what happens when accessing empty space~~
+~~update - already has logic for empty space, but should test~~
 merge - needs updates anyway... think it already would handle this though? one thing is that it needs to be updated to allow extension
 map - should map be allowed to change positions?
-all? - how should all work on a sparse grid?
-neighbors - think this already handles empty, but might need a note in the doc
-same for neighbor_locs
-same for edge neighbors and edge_neighbor_locs
+~~all? - how should all work on a sparse grid? - current decision is it just cares about populated values~~
+~~neighbors - think this already handles empty, but might need a note in the doc~~
+~~same for neighbor_locs~~
+~~same for edge neighbors and edge_neighbor_locs~~
 append_grid - how would this work with sparse grid? I guess it needs to assume squareness and recalculate coordinates
 print - weird anyway, maybe we could reimplement using to_strs
 slice - think this works the same? test

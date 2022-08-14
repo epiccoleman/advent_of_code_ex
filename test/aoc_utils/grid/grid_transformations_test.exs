@@ -3,27 +3,90 @@ defmodule GridTransformationsTest do
 
   import AocUtils.Grid2D.Transformations
 
-  import AocUtils.Grid2D, only: [to_strs: 1, from_strs: 1]
+  import AocUtils.Grid2D, only: [new: 1, update: 3, to_strs: 2, to_strs: 1, from_strs: 1]
 
-  test "flip_horiz" do
-    strs = [
-      "#..",
-      ".#.",
-      "..#"
-    ]
+  describe "flip_horiz" do
+    test "flips the grid horizontally" do
+      strs = [
+        "#..",
+        ".##",
+        "..#"
+      ]
 
-    grid = from_strs(strs)
+      grid = from_strs(strs)
 
-    flipped =
-      grid
-      |> flip_horiz()
-      |> to_strs()
+      flipped =
+        grid
+        |> flip_horiz()
+        |> to_strs()
 
-    assert flipped == [
-      "..#",
-      ".#.",
-      "#.."
-    ]
+      assert flipped == [
+        "..#",
+        "##.",
+        "#.."
+      ]
+    end
+
+    test "works properly on grids with even number of columns" do
+      strs = [
+        "#...",
+        ".#.#",
+        "..#.",
+      ]
+
+      grid = from_strs(strs)
+
+      flipped =
+        grid
+        |> flip_horiz()
+        |> to_strs()
+
+      assert flipped == [
+        "...#",
+        "#.#.",
+        ".#..",
+      ]
+    end
+
+    test "works properly on sparse grids" do
+      # looks like this:
+
+      #     x _ _
+      #     _ x x
+      grid =
+        new(x_max: 2, y_max: 1)
+        |> update({0, 0}, "x")
+        |> update({1, 1}, "x")
+        |> update({2, 1}, "x")
+
+      flipped =
+        grid
+        |> flip_horiz()
+        |> to_strs("_")
+
+      assert flipped == [
+        "__x",
+        "xx_",
+      ]
+    end
+
+    test "works on grids with negative indices" do
+      grid =
+        new(x_min: -2, x_max: 0, y_max: 1)
+        |> update({-2, 0}, "x")
+        |> update({-1, 1}, "x")
+        |> update({0, 1}, "x")
+
+      flipped =
+        grid
+        |> flip_horiz()
+        |> to_strs("_")
+
+      assert flipped == [
+        "__x",
+        "xx_",
+      ]
+    end
   end
 
   # #..
