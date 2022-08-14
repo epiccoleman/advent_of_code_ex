@@ -9,25 +9,17 @@ defmodule AocUtils.Grid2D.Transformations do
   @doc """
   Given a Grid, returns that grid with values flipped (mirrored) horizontally.
   """
-  def flip_horiz(%Grid2D{x_max: x_max, y_max: y_max, x_min: x_min, y_min: y_min} = grid) do
+  def flip_horiz(%Grid2D{x_max: x_max, x_min: x_min} = grid) do
+    midpoint = (( x_max + x_min ) / 2)
+
     new_grid_map =
-      for x <- x_min..x_max,
-          y <- y_min..y_max do
-
-        midpoint = (( x_max + x_min ) / 2)
+      Grid2D.to_list(grid)
+      |> Enum.map(fn {{x, y}, v} ->
         distance_to_midpoint = midpoint - x
+        new_x = trunc(x + (2 * distance_to_midpoint))
 
-        old_x = trunc(x + (2 * distance_to_midpoint))
-
-        value = Grid2D.at(grid, {old_x, y})
-
-        if not is_nil(value) do
-          {{x, y}, value}
-        else
-          nil
-        end
-      end
-      |> Enum.reject(&is_nil/1)
+        {{new_x, y}, v}
+      end)
       |> Map.new()
 
       %Grid2D{ grid | grid_map: new_grid_map }
