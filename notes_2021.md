@@ -1,5 +1,24 @@
 ## notes - 2021
 
+## further down the grid rabbit hole
+
+alright so, at this point i've done a ton of work in Grid2D, I think it's come together quite nicely. The new api is a little nicer to use in some important ways, sticks closer to normally expected behaviors from functions with names like update and at and new.
+
+We've gone a long way towards the goal of making Grid more flexible - we now support negative indices and sparsely populated grids in most of the major functions and transformations in the module. the rewritten transformation functions gain quite a bit in performance (the benchmark script in the grid test dir can attest to that).
+
+The lowest difference I saw was one of the small cases where the new version is only about twice as fast as the old version. But with a large input, like a 1000x1000 grid, it's more like 30 times faster. And on a sparse grid the new version was _30,000_ times faster - pretty huge difference to not have to iterate over 1,000,000 values.
+
+I still have a few improvements planned.
+
+from_rows - should take a config like new to allow to set the origin. should have an option to ignore a given value or by default ignore nils - we shouldn't insert empty cells if they're not needed. basically, support construction of sparse grids.
+from_cols - ditto above
+from_cols - ditto above
+append_grid - this should be updated to not use rows
+print - have some ideas for this, basically to_strs but allow a bit more customization of the print, could make it less useless
+slice - make sure this still works. should take a config to include or discard the cut line
+merge - I think this should handle sparse and negative pretty well, needs some updates anyway though. should be able to get rid
+of some of the exceptions and whatnot now that it accepts negative grids, and we could add some logic in merge to merge the smaller grid onto the larger grid. basically all this fiddling has been to enable a big rewrite of merge.
+
 ## digression - grid stuff
 alright well.
 
@@ -49,8 +68,6 @@ transformations - all need rewritten to use math to transform coordinates
 
 new code:
 complete? / sparse? - tells you if grid is complete or spars
-
-
 
 
 ## day 13

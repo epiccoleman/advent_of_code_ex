@@ -3,7 +3,24 @@ defmodule GridTransformationsTest do
 
   import AocUtils.Grid2D.Transformations
 
-  import AocUtils.Grid2D, only: [new: 1, update: 3, to_strs: 2, to_strs: 1, from_strs: 1]
+  import AocUtils.Grid2D, only: [new: 1, update: 3, from_rows: 1, to_strs: 2, to_strs: 1, from_strs: 1]
+
+  describe "transpose" do
+    test "returns the grid transpose" do
+      grid = from_rows([
+        [1, 2, 3],
+        [4, 5, 6]
+      ])
+
+      expected = from_rows([
+        [1, 4],
+        [2, 5],
+        [3, 6]
+      ])
+
+      assert transpose(grid) == expected
+    end
+  end
 
   describe "flip_horiz" do
     test "flips the grid horizontally" do
@@ -192,77 +209,79 @@ defmodule GridTransformationsTest do
     end
   end
 
-  test "rotations" do
-    grid = [
-      "**",
-      ".."
-    ] |> from_strs()
+  describe "rotations" do
+    test "rotations" do
+      grid = [
+        "**",
+        ".."
+      ] |> from_strs()
 
-    rotated90 =
-      grid
-      |> rotate()
-      |> to_strs()
+      rotated90 =
+        grid
+        |> rotate()
+        |> to_strs()
 
-    assert rotated90 == [
-      ".*",
-      ".*"
-    ]
+      assert rotated90 == [
+        ".*",
+        ".*"
+      ]
 
-    rotated180 =
-      grid
-      |> rotate()
-      |> rotate()
-      |> to_strs()
+      rotated180 =
+        grid
+        |> rotate()
+        |> rotate()
+        |> to_strs()
 
-    assert rotated180 == [
-      "..",
-      "**"
-    ]
+      assert rotated180 == [
+        "..",
+        "**"
+      ]
 
-    rotated270 =
-      grid
-      |> rotate()
-      |> rotate()
-      |> rotate()
-      |> to_strs()
+      rotated270 =
+        grid
+        |> rotate()
+        |> rotate()
+        |> rotate()
+        |> to_strs()
 
-    assert rotated270 == [
-      "*.",
-      "*."
-    ]
-  end
+      assert rotated270 == [
+        "*.",
+        "*."
+      ]
+    end
 
-  test "rotated bigger" do
-    grid = [
-      "##########",
-      ".........#",
-      ".........#",
-      ".........#",
-      ".........#",
-      ".........#",
-      ".........#",
-      ".........#",
-      ".........#",
-      ".........#",
-    ] |> from_strs()
+    test "rotated bigger" do
+      grid = [
+        "##########",
+        ".........#",
+        ".........#",
+        ".........#",
+        ".........#",
+        ".........#",
+        ".........#",
+        ".........#",
+        ".........#",
+        ".........#",
+      ] |> from_strs()
 
-    rotated90 =
-      grid
-      |> rotate()
-      |> to_strs()
+      rotated90 =
+        grid
+        |> rotate()
+        |> to_strs()
 
-    assert rotated90 == [
-      ".........#",
-      ".........#",
-      ".........#",
-      ".........#",
-      ".........#",
-      ".........#",
-      ".........#",
-      ".........#",
-      ".........#",
-      "##########",
-    ]
+      assert rotated90 == [
+        ".........#",
+        ".........#",
+        ".........#",
+        ".........#",
+        ".........#",
+        ".........#",
+        ".........#",
+        ".........#",
+        ".........#",
+        "##########",
+      ]
+    end
   end
 
   test "orient_edge_top" do

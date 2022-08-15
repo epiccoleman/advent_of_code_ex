@@ -1,67 +1,31 @@
-defmodule AocUtils.Grid2D.Transformations do
+defmodule AocUtils.Grid2D.Transformations.Old do
   @moduledoc """
   Defines a number of functions which perform various transformations on the Grid2D.
+
+  Keeping this around to use for some benchmarks.
   """
 
   alias AocUtils.Grid2D
   alias AocUtils.Grid2D.Edges
 
   @doc """
-  Given a Grid, returns the transpose of the grid.
-  """
-  def transpose(%Grid2D{x_min: x_min, x_max: x_max, y_min: y_min, y_max: y_max} = grid) do
-    new_grid_map =
-      Grid2D.to_list(grid)
-      |> Enum.map(fn {{x, y}, v} ->
-        {{y, x}, v}
-      end)
-      |> Map.new()
-
-      %Grid2D{
-        x_min: y_min,
-        x_max: y_max,
-        y_min: x_min,
-        y_max: x_max,
-        grid_map: new_grid_map
-      }
-  end
-
-  @doc """
   Given a Grid, returns that grid with values flipped (mirrored) horizontally.
   """
-  def flip_horiz(%Grid2D{x_max: x_max, x_min: x_min} = grid) do
-    midpoint = (( x_max + x_min ) / 2)
-
-    new_grid_map =
-      Grid2D.to_list(grid)
-      |> Enum.map(fn {{x, y}, v} ->
-        distance_to_midpoint = midpoint - x
-        new_x = trunc(x + (2 * distance_to_midpoint))
-
-        {{new_x, y}, v}
-      end)
-      |> Map.new()
-
-      %Grid2D{ grid | grid_map: new_grid_map }
+  def flip_horiz(grid) do
+    grid
+    |> Grid2D.rows()
+    |> Enum.map(&Enum.reverse/1)
+    |> Grid2D.from_rows()
   end
 
   @doc """
   Given a Grid, returns that grid with values flipped (mirrored) vertically.
   """
-  def flip_vert(%Grid2D{y_max: y_max, y_min: y_min} = grid) do
-    midpoint = (( y_max + y_min ) / 2)
-
-    new_grid_map =
-      Grid2D.to_list(grid)
-      |> Enum.map(fn {{x, y}, v} ->
-        distance_to_midpoint = midpoint - y
-        new_y = trunc(y + (2 * distance_to_midpoint))
-
-        {{x, new_y}, v}
-      end)
-      |> Map.new()
-
-      %Grid2D{ grid | grid_map: new_grid_map }
+  def flip_vert(grid) do
+    grid
+    |> Grid2D.cols()
+    |> Enum.map(&Enum.reverse/1)
+    |> Grid2D.from_cols()
   end
 
   @doc """
@@ -69,8 +33,9 @@ defmodule AocUtils.Grid2D.Transformations do
   """
   def rotate(grid) do
     grid
-    |> transpose()
-    |> flip_horiz()
+    |> flip_vert()
+    |> Grid2D.cols
+    |> Grid2D.from_rows()
   end
 
   @doc """
