@@ -4,7 +4,6 @@ defmodule GridTest do
   import AocUtils.Grid2D
 
   alias AocUtils.Grid2D.GridAccessError
-  alias AocUtils.Grid2D.InvalidGridMergeError
   alias AocUtils.Grid2D.InvalidGridDimensionsError
 
   setup_all do
@@ -262,21 +261,112 @@ defmodule GridTest do
       assert actual_grid == expected_grid
     end
 
-    test "when g2 does not fit inside g1 raises InvalidGridMergeError", %{g1: g1, g2: g2, merge_fn: merge_fn} do
-      assert_raise(
-        InvalidGridMergeError,
-        "Proposed merge of g2 onto g1 at position {2, 2} is invalid. Merges may not extend the grid.",
-        fn -> merge(g1, g2, {2, 2}, merge_fn) end
-      )
+    test "can extend the grid to the right", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      expected_grid = from_rows([
+        [0, 0, 0, 0, 1, 1, 1, 1],
+        [0, 0, 0, 0, 1, 1, 1, 1],
+        [0, 0, 0, 0, 1, 1, 1, 1],
+        [0, 0, 0, 0, 1, 1, 1, 1],
+      ])
+
+      actual_grid = merge(g1, g2, {4, 0}, merge_fn)
+
+      assert actual_grid == expected_grid
     end
 
-    test "when negative values in offset raises InvalidGridMergeError", %{g1: g1, g2: g2, merge_fn: merge_fn} do
-      assert_raise(
-        InvalidGridMergeError,
-        "Proposed merge of g2 onto g1 at position {-1, -1} is invalid. Negative values are not allowed in merge locations.",
-        fn -> merge(g1, g2, {-1, -1}, merge_fn) end
-      )
+    test "can extend the grid to the left", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      expected_grid_rows = [
+        [1, 1, 1, 1, 0, 0, 0, 0],
+        [1, 1, 1, 1, 0, 0, 0, 0],
+        [1, 1, 1, 1, 0, 0, 0, 0],
+        [1, 1, 1, 1, 0, 0, 0, 0],
+      ]
+
+      actual_grid = merge(g1, g2, {-4, 0}, merge_fn)
+      actual_grid_rows = actual_grid |> rows()
+
+      assert actual_grid.x_min == -4
+      assert actual_grid.x_max == 3
+      assert actual_grid.y_min == 0
+      assert actual_grid.y_max == 3
+
+      assert actual_grid_rows == expected_grid_rows
     end
+
+    test "can extend the grid down", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      expected_grid = from_rows([
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+      ])
+
+      actual_grid = merge(g1, g2, {0, 3}, merge_fn)
+
+      assert actual_grid == expected_grid
+    end
+
+    test "can extend the grid up", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      expected_grid_rows = [
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ]
+
+      actual_grid = merge(g1, g2, {0, -2}, merge_fn)
+      actual_grid_rows = actual_grid |> rows()
+
+      assert actual_grid.x_min == 0
+      assert actual_grid.x_max == 3
+      assert actual_grid.y_min == -2
+      assert actual_grid.y_max == 3
+
+      assert actual_grid_rows == expected_grid_rows
+    end
+
+    test "extends the grid in both positive directions", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      expected_grid = from_rows([
+        [  0,   0,   0,   0, nil, nil, nil],
+        [  0,   0,   0,   0, nil, nil, nil],
+        [  0,   0,   0,   0, nil, nil, nil],
+        [  0,   0,   0,   1,   1,   1,   1],
+        [nil, nil, nil,   1,   1,   1,   1],
+        [nil, nil, nil,   1,   1,   1,   1],
+        [nil, nil, nil,   1,   1,   1,   1],
+      ])
+
+      actual_grid = merge(g1, g2, {3, 3}, merge_fn)
+
+      assert expected_grid == actual_grid
+    end
+
+    test "extends the grid in both negative directions", %{g1: g1, g2: g2, merge_fn: merge_fn} do
+      expected_grid_rows = [
+        [   1, 1, 1, 1, nil ],
+        [   1, 1, 1, 1, nil ],
+        [   1, 1, 1, 1, nil ],
+        [   1, 1, 1, 1,   0 ],
+        [ nil, 0, 0, 0,   0 ],
+        [ nil, 0, 0, 0,   0 ],
+        [ nil, 0, 0, 0,   0 ],
+      ]
+
+      actual_grid = merge(g1, g2, {-1, -3}, merge_fn)
+      actual_grid_rows = rows(actual_grid)
+
+      assert expected_grid_rows == actual_grid_rows
+      assert actual_grid.x_min == -1
+      assert actual_grid.x_max == 3
+      assert actual_grid.y_min == -3
+      assert actual_grid.y_max == 3
+    end
+
   end
 
   test "map" do
@@ -344,25 +434,43 @@ defmodule GridTest do
     assert not all?(not_quite_even_grid, is_even?)
   end
 
-  test "from_rows" do
-    grid = from_rows([
-      ["#", ".", "."],
-      [".", "#", "."],
-      [".", ".", "#"]
-    ])
-    assert grid.x_max == 2
-    assert grid.y_max == 2
-    assert grid.grid_map == %{
-      {0, 0} => "#",
-      {0, 1} => ".",
-      {0, 2} => ".",
-      {1, 0} => ".",
-      {1, 1} => "#",
-      {1, 2} => ".",
-      {2, 0} => ".",
-      {2, 1} => ".",
-      {2, 2} => "#"
-    }
+  describe "from_rows" do
+    test "from_rows" do
+      grid = from_rows([
+        ["#", ".", "."],
+        [".", "#", "."],
+        [".", ".", "#"]
+      ])
+      assert grid.x_max == 2
+      assert grid.y_max == 2
+      assert grid.grid_map == %{
+        {0, 0} => "#",
+        {0, 1} => ".",
+        {0, 2} => ".",
+        {1, 0} => ".",
+        {1, 1} => "#",
+        {1, 2} => ".",
+        {2, 0} => ".",
+        {2, 1} => ".",
+        {2, 2} => "#"
+      }
+    end
+
+    test "does not create keys in the grid map for nils" do
+      grid = from_rows([
+        ["#", nil, nil],
+        [".", nil, "."],
+        [nil, nil, "#"]
+      ])
+      assert grid.x_max == 2
+      assert grid.y_max == 2
+      assert grid.grid_map == %{
+        {0, 0} => "#",
+        {0, 1} => ".",
+        {2, 1} => ".",
+        {2, 2} => "#"
+      }
+    end
   end
 
   test "from_cols_simpler" do

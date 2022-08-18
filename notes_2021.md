@@ -1,5 +1,22 @@
 ## notes - 2021
 
+## popping up the grid rewrite stack
+
+almost there. i've just reworked the merge function. i take it as a good sign that the implementation here has gotten a lot simpler while also being more capable. most of the work was just writing new tests to characterize the actual behavior.
+
+in order to make writing the tests a bit easier, i added the bit i was planning for from_rows to cause it to ignore nils in the input.
+
+here's what's left to do:
+from_rows - should take a config like new to allow to set the origin. should have an option to ignore a given value
+from_cols - ditto above, ignore nils
+from_strs - take a char to ignore
+append_grid - this should be updated to not use rows, and instead use merge
+slice - make sure this still works. should take a config to include or discard the cut line. should not use rows.
+
+probably need a function to shift a grid to a new origin (translate)
+
+print - have some ideas for this, basically to_strs but allow a bit more customization of the print, could make it less useless. probably leave this for another time though.
+
 ## further down the grid rabbit hole
 
 alright so, at this point i've done a ton of work in Grid2D, I think it's come together quite nicely. The new api is a little nicer to use in some important ways, sticks closer to normally expected behaviors from functions with names like update and at and new.
@@ -18,6 +35,8 @@ print - have some ideas for this, basically to_strs but allow a bit more customi
 slice - make sure this still works. should take a config to include or discard the cut line
 merge - I think this should handle sparse and negative pretty well, needs some updates anyway though. should be able to get rid
 of some of the exceptions and whatnot now that it accepts negative grids, and we could add some logic in merge to merge the smaller grid onto the larger grid. basically all this fiddling has been to enable a big rewrite of merge.
+
+probably need a function to shift a grid to a new origin (translate)
 
 ## digression - grid stuff
 alright well.

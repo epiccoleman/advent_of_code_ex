@@ -116,7 +116,8 @@ defmodule AocUtils.Grid2D do
 
   @doc """
   Produces a grid from a list of lists. Each list in the list represents a row in the grid, and
-  each value in a given list represents a column in that row.
+  each value in a given list represents a column in that row. Any nil values in the rows lists will be ignored,
+  and not added to the grid.
 
   This function assumes that the grid's x_min and y_min are zero. For a more configurable constructor, see Grid2D.new.
 
@@ -130,9 +131,10 @@ defmodule AocUtils.Grid2D do
       for x <- 0..x_max,
           y <- 0..y_max do
         state = rows |> Enum.at(y) |> Enum.at(x)
-        {{x, y}, state}
+        if(is_nil(state), do: nil, else: {{x, y}, state})
       end
-      |> Enum.into(%{})
+      |> Enum.reject(&is_nil/1)
+      |> Map.new()
 
     %Grid2D{
       grid_map: grid_map,
@@ -354,49 +356,47 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Merges two grids into one by overlaying `g2` onto `g1`. `g2`'s top left corner will be placed at the given `location`.
+  Merges two grids into one by overlaying `g2` onto `g1`. If an `offset` is passed, `g2`'s locations will be translated such that
+  the given offset is the top-left coordinate in g2.
+
   In cases where points in the merge conflict, they will be resolved through the given `merge_function`.
 
-  Merging of Grids of different sizes is supported. However, g2 must fit completely inside of the boundaries of g1 when overlaid
-  at the given offset. In practice, this means that offset may only be used when g2 is smaller in its dimensions than g1. Additionally,
-  negative valued offsets are unsupported and will raise an exception. As a rule, if you're merging grids of different sizes,
-  you must pass the bigger grid as g1, and the smaller as g2.
+  The `merge_function` is given the position and the values from g1 and g2. The merge function will only run for grid positions
+  which are populated, and takes place _after_ the translation of g2 to the offset.
 
-  Invalid merges will raise Grid2D.InvalidMergeError.
+  Merges may extend the boundaries of the resulting grid in any direction. It is important to note that the `offset` will always be
+  applied to `g2`. As a general rule, it will usually make the most sense to pass the larger of the two grids as g1.
   """
   def merge(g1, g2, {0, 0} = _location, merge_function)
     when is_function(merge_function)
-    and g1.x_max == g2.y_max
+    and g1.x_min == g2.x_min
+    and g1.x_max == g2.x_max
+    and g1.y_min == g2.y_min
     and g2.y_max == g2.y_max do
 
     # easy case, where grids are of the same size and no offset
     %Grid2D{
+      x_min: g1.x_min,
       x_max: g1.x_max,
+      y_min: g1.y_min,
       y_max: g1.y_max,
       grid_map: Map.merge(g1.grid_map, g2.grid_map, merge_function)
     }
   end
 
-  def merge(_g1, _g2, {x_offset, y_offset} = merge_loc , _merge_function)
-    when x_offset < 0
-    or y_offset < 0
-  do
-    raise(
-      Grid2D.InvalidGridMergeError,
-      "Proposed merge of g2 onto g1 at position #{inspect(merge_loc)} is invalid. Negative values are not allowed in merge locations."
-    )
-  end
-
-  def merge(g1, g2, {x_offset, y_offset} = merge_loc , merge_function)
+  def merge(g1, g2, {x_offset, y_offset} = _merge_loc, merge_function)
     when is_function(merge_function)
   do
 
+    g2_new_x_min = g2.x_min + x_offset
     g2_new_x_max = g2.x_max + x_offset
+    g2_new_y_min = g2.y_min + y_offset
     g2_new_y_max = g2.y_max + y_offset
 
-    if g2_new_x_max > g1.x_max or g2_new_y_max > g1.y_max do
-      raise(Grid2D.InvalidGridMergeError, merge_loc)
-    end
+    new_x_min = min(g1.x_min, g2_new_x_min)
+    new_x_max = max(g1.x_max, g2_new_x_max)
+    new_y_min = min(g1.y_min, g2_new_y_min)
+    new_y_max = max(g1.y_max, g2_new_y_max)
 
     g2_grid_map_with_new_positions =
       g2
@@ -409,9 +409,11 @@ defmodule AocUtils.Grid2D do
     new_grid_map = Map.merge(g1.grid_map, g2_grid_map_with_new_positions, merge_function)
 
     %Grid2D{
-      x_max: g1.x_max,
-      y_max: g1.y_max,
-      grid_map: new_grid_map
+      x_min: new_x_min,
+      x_max: new_x_max,
+      y_min: new_y_min,
+      y_max: new_y_max,
+      grid_map: new_grid_map,
     }
   end
 
