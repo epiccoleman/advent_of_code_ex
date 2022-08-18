@@ -471,69 +471,101 @@ defmodule GridTest do
         {2, 2} => "#"
       }
     end
+
+    test "when given ignore_value does not create keys in the map for that value" do
+      grid = from_rows([
+        ["#", ".", "."],
+        [".", "#", "."],
+        [".", ".", "#"]
+      ], ".")
+      assert grid.x_max == 2
+      assert grid.y_max == 2
+      assert grid.grid_map == %{
+        {0, 0} => "#",
+        {1, 1} => "#",
+        {2, 2} => "#"
+      }
+    end
   end
 
-  test "from_cols_simpler" do
-    grid = from_cols([
-      ["#", "."],
-      ["#", "."],
-      ["#", "#"]
-    ])
+  describe "from_cols" do
+    test "simple input" do
+      grid = from_cols([
+        ["#", "."],
+        ["#", "."],
+        ["#", "#"]
+      ])
 
-    assert grid.x_max == 2
-    assert grid.y_max == 1
-    assert grid.grid_map == %{
-      {0, 0} => "#",
-      {0, 1} => ".",
-      {1, 0} => "#",
-      {1, 1} => ".",
-      {2, 0} => "#",
-      {2, 1} => "#",
-    }
-  end
+      assert grid.x_max == 2
+      assert grid.y_max == 1
+      assert grid.grid_map == %{
+        {0, 0} => "#",
+        {0, 1} => ".",
+        {1, 0} => "#",
+        {1, 1} => ".",
+        {2, 0} => "#",
+        {2, 1} => "#",
+      }
+    end
 
-  test "from_cols" do
-    grid = from_cols([
-      ["#", ".", "."],
-      ["#", "#", "."],
-      [".", "#", "#"]
-    ])
+    test "when not given ignore_value ignores nils" do
+      grid = from_cols([
+        ["#", nil, nil],
+        ["#", "#", nil],
+        [nil, "#", "#"]
+      ])
 
-    assert grid.x_max == 2
-    assert grid.y_max == 2
-    assert grid.grid_map == %{
-      {0, 0} => "#",
-      {0, 1} => ".",
-      {0, 2} => ".",
-      {1, 0} => "#",
-      {1, 1} => "#",
-      {1, 2} => ".",
-      {2, 0} => ".",
-      {2, 1} => "#",
-      {2, 2} => "#"
-    }
-  end
+      assert grid.x_max == 2
+      assert grid.y_max == 2
+      assert grid.grid_map == %{
+        {0, 0} => "#",
+        {1, 0} => "#",
+        {1, 1} => "#",
+        {2, 1} => "#",
+        {2, 2} => "#"
+      }
+    end
 
-  test "from_columns" do
-    grid = from_columns([
-      ["#", ".", "."],
-      ["#", "#", "."],
-      [".", "#", "#"]
-    ])
+    test "when given ignore_value ignores that value in the input" do
+      grid = from_cols([
+        ["#", ".", "."],
+        ["#", "#", "."],
+        [".", "#", "#"]
+      ], ".")
 
-    assert grid.x_max == 2
-    assert grid.y_max == 2
-    assert grid.grid_map == %{
-      {0, 0} => "#",
-      {0, 1} => ".",
-      {0, 2} => ".",
-      {1, 0} => "#",
-      {1, 1} => "#",
-      {1, 2} => ".",
-      {2, 0} => ".",
-      {2, 1} => "#",
-      {2, 2} => "#"
-    }
+      assert grid.x_max == 2
+      assert grid.y_max == 2
+      assert grid.grid_map == %{
+        {0, 0} => "#",
+        {1, 0} => "#",
+        {1, 1} => "#",
+        {2, 1} => "#",
+        {2, 2} => "#"
+      }
+    end
+
+    test "from_columns simple" do
+      grid = from_columns([
+        ["#", ".", "."],
+        ["#", "#", "."],
+        [".", "#", "#"]
+      ])
+
+      assert grid.x_max == 2
+      assert grid.y_max == 2
+      assert grid.grid_map == %{
+        {0, 0} => "#",
+        {0, 1} => ".",
+        {0, 2} => ".",
+        {1, 0} => "#",
+        {1, 1} => "#",
+        {1, 2} => ".",
+        {2, 0} => ".",
+        {2, 1} => "#",
+        {2, 2} => "#"
+      }
+    end
+
   end
 
   test "from_strs", state do

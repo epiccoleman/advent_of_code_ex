@@ -116,14 +116,16 @@ defmodule AocUtils.Grid2D do
 
   @doc """
   Produces a grid from a list of lists. Each list in the list represents a row in the grid, and
-  each value in a given list represents a column in that row. Any nil values in the rows lists will be ignored,
-  and not added to the grid.
+  each value in a given list represents a column in that row.
+
+  Accepts an optional 'ignore_value`. Any occurrences of the `ignore_value` in the input will be ignored, and not
+  added to the grid. By default, `ignore_value` is nil, and nils will not be added to the grid.
 
   This function assumes that the grid's x_min and y_min are zero. For a more configurable constructor, see Grid2D.new.
 
-  All lists given in the list must be of the same length.
+  All lists given in the input should be of the same length.
   """
-  def from_rows(rows) do
+  def from_rows(rows, ignore_value \\ nil) do
     y_max = length(rows) - 1
     x_max = length(Enum.at(rows, 0)) - 1
 
@@ -131,7 +133,7 @@ defmodule AocUtils.Grid2D do
       for x <- 0..x_max,
           y <- 0..y_max do
         state = rows |> Enum.at(y) |> Enum.at(x)
-        if(is_nil(state), do: nil, else: {{x, y}, state})
+        if(state == ignore_value, do: nil, else: {{x, y}, state})
       end
       |> Enum.reject(&is_nil/1)
       |> Map.new()
@@ -147,11 +149,14 @@ defmodule AocUtils.Grid2D do
   Produces a grid from a list of lists. Each list in the list represents a column in the grid, and
   each value in a given list represents a cell in that column.
 
+  Accepts an optional 'ignore_value`. Any occurrences of the `ignore_value` in the input will be ignored, and not
+  added to the grid. By default, `ignore_value` is nil, and nils will not be added to the grid.
+
   This function assumes that the grid's x_min and y_min are zero. For a more configurable constructor, see Grid2D.new.
 
   All lists given in the list must be of the same length.
   """
-  def from_columns(cols) do
+  def from_columns(cols, ignore_value \\ nil) do
     x_max = length(cols) - 1
     y_max = length(Enum.at(cols, 0)) - 1
 
@@ -159,8 +164,9 @@ defmodule AocUtils.Grid2D do
       for x <- 0..x_max,
           y <- 0..y_max do
         state = cols |> Enum.at(x) |> Enum.at(y)
-        {{x, y}, state}
+        if(state == ignore_value, do: nil, else: {{x, y}, state})
       end
+      |> Enum.reject(&is_nil/1)
       |> Enum.into(%{})
 
     %Grid2D{
@@ -170,7 +176,7 @@ defmodule AocUtils.Grid2D do
     }
   end
 
-  defdelegate from_cols(cols), to: Grid2D, as: :from_columns
+  defdelegate from_cols(cols, ignore_value \\ nil), to: Grid2D, as: :from_columns
 
   @doc """
   Converts a Grid to a list of strings, where each string is the concatentation of the

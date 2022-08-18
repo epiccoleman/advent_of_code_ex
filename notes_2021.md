@@ -7,8 +7,8 @@ almost there. i've just reworked the merge function. i take it as a good sign th
 in order to make writing the tests a bit easier, i added the bit i was planning for from_rows to cause it to ignore nils in the input.
 
 here's what's left to do:
-from_rows - should take a config like new to allow to set the origin. should have an option to ignore a given value
-from_cols - ditto above, ignore nils
+~from_rows - should take a config like new to allow to set the origin. should have an option to ignore a given value~
+~from_cols - ditto above, ignore nils~
 from_strs - take a char to ignore
 append_grid - this should be updated to not use rows, and instead use merge
 slice - make sure this still works. should take a config to include or discard the cut line. should not use rows.
@@ -16,6 +16,7 @@ slice - make sure this still works. should take a config to include or discard t
 probably need a function to shift a grid to a new origin (translate)
 
 print - have some ideas for this, basically to_strs but allow a bit more customization of the print, could make it less useless. probably leave this for another time though.
+from_ functions - maybe eventually take a config to set origin, for now, they assume 0,0
 
 ## further down the grid rabbit hole
 
