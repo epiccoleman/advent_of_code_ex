@@ -901,6 +901,44 @@ defmodule GridTest do
     end
   end
 
+  describe "translate" do
+    test "shifts the grid's locations to a new origin" do
+      grid =
+        new(x_min: -2, x_max: 0, y_min: -2, y_max: 0)
+        |> update({0,0}, 1)
+        |> update({-1,-1}, 2)
+        |> update({-2,-2}, 4)
+
+      actual = translate(grid, {0, 0})
+
+      expected = from_rows([
+        [4,     nil, nil],
+        [nil,     2, nil],
+        [nil,   nil,   1]
+      ])
+
+      assert actual == expected
+    end
+
+    test "shifts the grid's locations negative" do
+      grid = from_rows([
+        [4,     nil, nil],
+        [nil,     2, nil],
+        [nil,   nil,   1]
+      ])
+
+      actual = translate(grid, {-2, -2})
+
+      expected =
+        new(x_min: -2, x_max: 0, y_min: -2, y_max: 0)
+        |> update({0,0}, 1)
+        |> update({-1,-1}, 2)
+        |> update({-2,-2}, 4)
+
+      assert actual == expected
+    end
+  end
+
   test "append_grid" do
     grid = [
       "#.#.",

@@ -592,6 +592,29 @@ defmodule AocUtils.Grid2D do
     {from_rows(g_up_rows), from_rows(g_down_rows)}
   end
 
+  # @doc """
+  # Translates a grid's coordinates to the given origin `{h, k}`, resulting in a grid whose top left corner is at `{h,k}`.
+  # """
+  def translate(grid, {h, k} = _origin) do
+    x_shift = h - grid.x_min
+    y_shift = k - grid.y_min
+    new_grid_map =
+      grid
+      |> to_list()
+      |> Enum.map(fn {{x, y}, v} ->
+        {{x + x_shift, y + y_shift}, v}
+      end)
+      |> Map.new()
+
+    %Grid2D{
+      x_min: h,
+      x_max: h + abs(grid.x_max - grid.x_min),
+      y_min: k,
+      y_max: k + abs(grid.y_max - grid.y_min),
+      grid_map: new_grid_map
+    }
+  end
+
   ## Edge access / manipulation
   defdelegate left_edge(grid), to: Grid2D.Edges
   defdelegate right_edge(grid), to: Grid2D.Edges
