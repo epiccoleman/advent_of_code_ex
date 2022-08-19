@@ -9,7 +9,7 @@ in order to make writing the tests a bit easier, i added the bit i was planning 
 here's what's left to do:
 ~from_rows - should take a config like new to allow to set the origin. should have an option to ignore a given value~
 ~from_cols - ditto above, ignore nils~
-from_strs - take a char to ignore
+~from_strs - take a char to ignore~
 append_grid - this should be updated to not use rows, and instead use merge
 slice - make sure this still works. should take a config to include or discard the cut line. should not use rows.
 

@@ -568,20 +568,40 @@ defmodule GridTest do
 
   end
 
-  test "from_strs", state do
-    assert state.grid.x_max == 2
-    assert state.grid.y_max == 2
-    assert state.grid.grid_map == %{
-      {0, 0} => "#",
-      {0, 1} => ".",
-      {0, 2} => ".",
-      {1, 0} => ".",
-      {1, 1} => "#",
-      {1, 2} => ".",
-      {2, 0} => ".",
-      {2, 1} => ".",
-      {2, 2} => "#"
-    }
+  describe "from_strs" do
+    test "adds the characters of the given strings", state do
+      assert state.grid.x_max == 2
+      assert state.grid.y_max == 2
+      assert state.grid.grid_map == %{
+        {0, 0} => "#",
+        {0, 1} => ".",
+        {0, 2} => ".",
+        {1, 0} => ".",
+        {1, 1} => "#",
+        {1, 2} => ".",
+        {2, 0} => ".",
+        {2, 1} => ".",
+        {2, 2} => "#"
+      }
+    end
+
+    test "ignores the ignore_char if given" do
+      expected =
+        new(x_max: 2, y_max: 2)
+        |> update({0,0}, "#")
+        |> update({1,1}, "#")
+        |> update({2,2}, "#")
+
+      actual = from_strs(
+        ["#..",
+        ".#.",
+        "..#"],
+        ignore: "."
+      )
+
+      assert expected == actual
+    end
+
   end
 
   describe "to_strs" do

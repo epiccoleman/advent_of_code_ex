@@ -91,9 +91,14 @@ defmodule AocUtils.Grid2D do
 
   This function assumes that the grid's x_min and y_min are zero. For a more configurable constructor, see Grid2D.new.
 
+  Accepts optional config argument :ignore. If you pass a single character binary with this option, that string will be
+  ignored in the input.
+
   All strings given in the list must be of the same length.
   """
-  def from_strs(strs) do
+  def from_strs(strs, options \\ []) do
+    ignore_char = Keyword.get(options, :ignore)
+
     grid_chars = strs |> Enum.map(&String.graphemes/1)
 
     y_max = length(grid_chars) - 1
@@ -103,8 +108,9 @@ defmodule AocUtils.Grid2D do
       for x <- 0..x_max,
           y <- 0..y_max do
         state = grid_chars |> Enum.at(y) |> Enum.at(x)
-        {{x, y}, state}
+        if(state == ignore_char, do: nil, else: {{x, y}, state})
       end
+      |> Enum.reject(&is_nil/1)
       |> Enum.into(%{})
 
     %Grid2D{
