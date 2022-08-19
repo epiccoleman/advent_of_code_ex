@@ -1009,50 +1009,52 @@ defmodule GridTest do
     assert actual_neighbors == expected_neighbors
   end
 
-  test "slice_vertically" do
-    grid = from_rows([
-      [1, 2, 3, 4, 5, 6],
-      [7, 8, 9, 4, 9, 8],
-    ])
+  describe "slice" do
+    test "slice_vertically" do
+      grid = from_rows([
+        [1, 2, 3, 4, 5, 6],
+        [7, 8, 9, 4, 9, 8],
+      ])
 
-    expected_g_left = from_rows([
-      [1, 2, 3],
-      [7, 8, 9],
-    ])
+      expected_g_left = from_rows([
+        [1, 2, 3],
+        [7, 8, 9],
+      ])
 
-    expected_g_right = from_rows([
-      [5, 6],
-      [9, 8],
-    ])
+      expected_g_right = from_rows([
+        [5, 6],
+        [9, 8],
+      ])
 
-    {g_left, g_right} = slice_vertically(grid, 3)
+      {g_left, g_right} = slice_vertically(grid, 3)
 
-    assert g_left == expected_g_left
-    assert g_right == expected_g_right
-  end
+      assert g_left == expected_g_left
+      assert g_right == expected_g_right
+    end
 
-  test "slice_horizontally" do
-    grid = from_rows([
-      [1, 2],
-      [3, 4],
-      [0, 0],
-      [5, 6],
-      [7, 8],
-    ])
+    test "slice_horizontally" do
+      grid = from_rows([
+        [1, 2],
+        [3, 4],
+        [0, 0],
+        [5, 6],
+        [7, 8],
+      ])
 
-    expected_g_up = from_rows([
-      [1, 2],
-      [3, 4],
-    ])
+      expected_g_up = from_rows([
+        [1, 2],
+        [3, 4],
+      ])
 
-    expected_g_down = from_rows([
-      [5, 6],
-      [7, 8],
-    ])
+      expected_g_down = from_rows([
+        [5, 6],
+        [7, 8],
+      ])
 
-    {g_up, g_down} = slice_horizontally(grid, 2)
+      {g_up, g_down} = slice_horizontally(grid, 2)
 
-    assert g_up == expected_g_up
-    assert g_down == expected_g_down
+      assert g_up == expected_g_up
+      assert g_down == expected_g_down
+    end
   end
 end
