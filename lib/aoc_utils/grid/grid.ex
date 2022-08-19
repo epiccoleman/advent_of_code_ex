@@ -539,21 +539,15 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
-  Given two grids of equal size, sticks the second grid onto the right edge of the first grid.
+  Given two grids, sticks the second grid onto the right edge of the first grid. In general you probably want to use
+  `merge` - that was written for AoC2020 and is currently only used in the Day 20 puzzle.
   """
   def append_grid([], other) do
     other
   end
 
   def append_grid(grid, other) do
-    rows_g = rows(grid)
-    rows_o = rows(other)
-    y_max = grid.y_max
-
-    for y <- 0..y_max  do
-      Enum.at(rows_g, y) ++ Enum.at(rows_o, y)
-    end
-    |> from_rows()
+    merge(grid, other, {grid.x_max + 1, 0}, fn _, _, g2 -> g2 end)
   end
 
   @doc """
