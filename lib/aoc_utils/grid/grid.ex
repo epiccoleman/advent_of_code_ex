@@ -568,6 +568,10 @@ defmodule AocUtils.Grid2D do
   as this is what is required by the puzzle for which this function was developed.  (AOC 2021 Day 13).
   """
   def slice_vertically(grid, x) do
+
+
+
+
     cols = cols(grid)
     g_left_cols = Enum.slice(cols, 0..(x-1))
     g_right_cols = Enum.slice(cols, (x+1)..length(cols))
