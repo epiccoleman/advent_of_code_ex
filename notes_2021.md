@@ -1,5 +1,41 @@
 ## notes - 2021
 
+## day 14
+fairly easy to get a solution for part 1... which is always a bad sign, lol
+
+currently running it for part 2, which requires more iterations. 23rd took about a minute, 24th 2:30, and currently waiting for the 25th. my guess based on not much thinking is it's gonna be about 5 minutes, looks like we're looking at a rough doubling of runtime for each iteration. we need 15 more iterations after this so... if that estimate holds up, the last cycle will take... about 1000 hours. so that's not going to work.
+
+I'm not sure what the "trick" is going to be here... idk if we could like, memoize chunks of the polymer? even that seems like it wouldn't be very performant... still looking at having to linear access whole chonks so probably not the ticket. we might have to math it out somehow from the rules? i have basically no idea how to approach that though. already coming up on 6 minutes for the 25th cycle so it's looking worse than I thought.
+
+alright, we're at 8 minutes. obviously this approach will not work.
+
+===
+
+ok so here's the idea - classic AoC - don't actually "simulate" the whole thing, but just the part you care about.
+
+for each pair of letters in the input (or, at least, each pair with an insertion rule), there will be _two_ pairs after any insertion. so we could just count the existing pairs in each generation, and based on that count, we can figure out which pairs exist in the next generation. and that shouldn't result in a bajillion char string.
+
+one problem we'll have to solve is how to avoid double counting the letters. i think we can deal with that with clever chunk_every... the one question would be the last letter maybe?
+
+ok, so turned out not to be nearly as hard as I had initially thought it was - i got hung up on the idea that i couldn't know _which_ pairs were "cancelling" each other out. But that's fine. Just count only the first letter of each pair, and then your only problem becomes that you'll miss the very last character of the polymer string. Since we know that from the input, easily solved.
+
+Slapped together a quick benchmark. It is probably mildly unscientific but I think the results hold. Kinda interesting - for smaller inputs, the string version is actually faster. After you start iterating more than 10 times, however, the map version pulls waaay ahead. When you perform 15 iterations the map version is 500x faster and based on the absolute crawl once we got to around iteration 20-25 with the naive version, I'm sure it's obscenely faster at that point.
+
+Went back to test - 20 iterations is 12000 times faster for the map version. Beautiful.
+
+Lost some momentum overthinking this one. Onwards!
+
+## day 13
+well.
+
+i spent hours and hours on this thing, rewriting the whole grid module basically to make it work better.
+
+but the whole time, the problem was that i had flipped the directions in the part that processes the input.
+
+after i noticed that, it was like 5 minutes of work to finish the puzzle.
+
+oh well, on to the next one.
+
 ## popping up the grid rewrite stack
 
 almost there. i've just reworked the merge function. i take it as a good sign that the implementation here has gotten a lot simpler while also being more capable. most of the work was just writing new tests to characterize the actual behavior.
