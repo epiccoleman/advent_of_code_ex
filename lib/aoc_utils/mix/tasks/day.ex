@@ -33,15 +33,15 @@ defmodule Mix.Tasks.Day do
     File.write!(
       day_module_path,
       """
-        defmodule #{day_module_name} do
-          def part_1(input) do
-            input
-          end
-
-          def part_2(input) do
-            input
-          end
+      defmodule #{day_module_name} do
+        def part_1(input) do
+          input
         end
+
+        def part_2(input) do
+          input
+        end
+      end
       """
     )
 
