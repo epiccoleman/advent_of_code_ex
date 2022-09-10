@@ -373,8 +373,8 @@ defmodule AocUtils.Grid2D do
 
   In cases where points in the merge conflict, they will be resolved through the given `merge_function`.
 
-  The `merge_function` is given the position and the values from g1 and g2. The merge function will only run for grid positions
-  which are populated, and takes place _after_ the translation of g2 to the offset.
+  The `merge_function` is given the position and the values from g1 and g2. (i.e. the signature of the function should be `fn k, v1, v2 ->`
+  The merge function will only run for grid positions which are populated, and takes place _after_ the translation of g2 to the offset.
 
   Merges may extend the boundaries of the resulting grid in any direction. It is important to note that the `offset` will always be
   applied to `g2`. As a general rule, it will usually make the most sense to pass the larger of the two grids as g1.
@@ -568,10 +568,6 @@ defmodule AocUtils.Grid2D do
   as this is what is required by the puzzle for which this function was developed.  (AOC 2021 Day 13).
   """
   def slice_vertically(grid, x) do
-
-
-
-
     cols = cols(grid)
     g_left_cols = Enum.slice(cols, 0..(x-1))
     g_right_cols = Enum.slice(cols, (x+1)..length(cols))
