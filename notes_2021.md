@@ -1,5 +1,26 @@
 ## notes - 2021
 
+## day 15
+well this one turned out to be a lot more complicated than I thought it would be!
+
+so after reading the problem description and thinking about various ways to tackle it for a bit, i got it in my head that I wanted
+to implement Dijkstra's algorithm. It looks like a standard kinda pathfinding problem and so picking a big boy pathfinding alg seemed like the way to go.
+
+I had to read over the Wikipedia article a dozen times, and let my brain chew on it for a while, but when I sat down to implement it things went pretty smoothly. It worked great on Part 1 of the puzzle.
+
+Then Part 2 comes in, like it always does, and smashes my hopes. I will say this much for myself - Grid handled the requirement to stitch tiles really well. I think I coded up the `assemble_megagrid` function in like 15 minutes. So that was cool. But it turns out that operating on a 500 x 500 was crazy slower than on a 100 x 100 grid. It makes _some_ sense - after all, it's 25 times bigger than the original.
+
+I had to do a lot of rethinking to get the algorithm down to the point where it runs against the input in an hour, which is pretty sad and my longest running solution to date. THere are folks on the subreddit claiming that their solutions run in a few seconds, so this seems somewhat disappointing. After all. you're using a common, battle tested algorithm - how bad could it go?
+
+There were a few easy imrpvements that I made to the code with the help of one @shockwell from the Elixir slack, which took me down from 6 hours to 1 - but I still think there's some big performance gains to be had here.
+
+The majore time sink in my implemntation seems to be the code which selects the next current node for the algorithm. Currently, as written it traverse the entire set of unvisited nodes on each iteration of hte algorithm, which, in this case, is 240000 nodes. i guess id you analyze that, the runtime is something like O(n^2) given that you have to traverse the whole set once for every element in the cell. (in the worst case).
+
+The wikipedia article suggests using a priority queue to store unvisted nodes - in this case, the update and insert become more expensive, but accessing the min_priority memeber (in the case of this alg, that would be the node with the min current distance (this distance represnts the distance from the start node)). and if we think about it, that makes sense. instead of the O(n^2) runtime of my current version, you lose the inner n and replace it with the insert/update and find operations. if insert and update are O(log n) for the priority queue, and access is constant, then this should be a big speedup (I guess I've just convinced myself to try this).
+
+===
+ok so priority queue approach is extremely faster, but produces the wrong answer. i _think_ this may be because there are old entries in the priority queue?
+
 ## day 14
 fairly easy to get a solution for part 1... which is always a bad sign, lol
 

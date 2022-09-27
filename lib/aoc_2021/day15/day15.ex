@@ -135,6 +135,41 @@
       end)
     end
 
+    def reconstruct_shortest_path(%{prev: prev}) do
+      Enum.reduce_while(1..map_size(prev), {{499, 499}, []}, fn _i, {current_loc, path_acc} ->
+        new_path_acc = List.insert_at(path_acc, 0, current_loc)
+
+        if current_loc == {0,0} do
+          {:halt, new_path_acc}
+        else
+          next_loc = Map.get(prev, current_loc)
+          {:cont, {next_loc, new_path_acc}}
+        end
+      end)
+    end
+
+    def print_grid(grid, path, path2) do
+      out_str = grid
+      |> Grid.map(fn {k, v} ->
+        cond do
+        k in path and k in path2 ->
+          "<b style=\"color:green\">#{Integer.to_string(v)}</b>"
+        k in path ->
+          "<b style=\"color:red\">#{Integer.to_string(v)}</b>"
+        k in path2 ->
+          "<b style=\"color:blue\">#{Integer.to_string(v)}</b>"
+        true ->
+          Integer.to_string(v)
+        end
+      end)
+      |> Grid.to_strs()
+      |> Enum.join("\n")
+
+      File.write!("out.html", "<pre style=\"color:silver\">\n")
+      File.write!("out.html", out_str, [:append])
+      File.write!("out.html", "\n<\\pre>", [:append])
+    end
+
     def part_1(input) do
       grid = input_to_grid(input)
 
