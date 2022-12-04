@@ -1,5 +1,9 @@
 # notes - 2022
 
+# day 3
+this is just the kind of thing that's mildly annoying in elixir i guess. worked fine though.
+# day 2
+also fairly easy. I actually had ChatGPT help me out a bit on this one, mostly for fun. See [this]() for more info.
 # day 1
 sup aoc!
 
