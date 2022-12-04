@@ -68,7 +68,7 @@ defmodule Aoc2022.Day02 do
     end
   end
 
-  def score_round([p1_move, p2_move] = moves) do
+  def score_round([_, p2_move] = moves) do
     round_score = case play_rps(moves) do
       :win -> 6
       :draw -> 3
