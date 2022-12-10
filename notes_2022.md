@@ -1,5 +1,7 @@
 # notes - 2022
 
+# day 4
+pretty straightforward if you can use sets. I had ChatGPT write me this regex: `~r/(?<a>\d+)-(?<b>\d+),(?<c>\d+)-(?<d>\d+)/x`. One of those things where you already know what you want but it's a pain to write it out. Nice.
 # day 3
 this is just the kind of thing that's mildly annoying in elixir i guess. worked fine though.
 # day 2
