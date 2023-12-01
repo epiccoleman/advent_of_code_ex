@@ -4,31 +4,31 @@ defmodule Aoc2023.Day01Test do
   import AocUtils.FileUtils
   import Aoc2023.Day01
 
-  data_test "first_digit" do
-    assert first_digit(data) == result
+  data_test "first_p1" do
+    assert first_p1(data) == result
 
     where([
       [:data, :result],
-      ["1abc3", "1"],
-      ["123abc5", "1"],
-      ["w00t", "0"]
+      ["1abc3", 1],
+      ["123abc5", 1],
+      ["w00t", 0]
     ])
   end
 
-  data_test "last_digit" do
-    assert last_digit(data) == result
+  data_test "last_p1" do
+    assert last_p1(data) == result
 
     where([
       [:data, :result],
-      ["1abc3", "3"],
-      ["123abc5", "5"],
-      ["w00t", "0"],
-      ["w00t13", "3"]
+      ["1abc3", 3],
+      ["123abc5", 5],
+      ["w00t", 0],
+      ["w00t13", 3]
     ])
   end
 
-  data_test "calibration value" do
-    assert calibration_value(line) == result
+  data_test "calibration_p1" do
+    assert calibration_p1(line) == result
 
     where([
       [:line, :result],
