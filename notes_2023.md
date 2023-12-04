@@ -1,5 +1,53 @@
 ## notes - 2023
 
+## day 3
+
+well, that turned out to be a fairly large solution. i am always so damn happy to be able to use my grid thing though. this is my favorite kind of advent of code problem, where all of a sudden once you've solved the first half, the second is pretty easy. i probably spent 95% of the time doing part one, but once I had the stuff for finding adjacent part locations, and for filtering down grid positions, part 2 was easy.
+
+grid module got a new function - `matching_locs`, which returns a list of all the grid positions which return true for a given function. that's a pretty nifty thing to have. who knows if i'll ever use it again?!
+
+preliminary brainstorming:
+ok, this is an interesting one. and of course it's got a grid, which means I have to decide whether my grid module is useful or not.
+
+in this case, i think the main value of it is just that it can save some work processing the input into a usable format
+
+so the basic idea would be to get the list of all the symbols, and then for each one, search for adjacent numbers. that part is a bit tricky, because the current "grid methodology" doesn't really have any way to identify that a number stretches across multiple cells.
+
+Grid has a "neighbors" and "neighbor_locs" function, which could be used to check cells adjacent to a symbol's position for digits. then the only tricky part is determining the numbers that those digits are part of.
+
+one idea i have is that during the processing of the grid, i could set the value at each position occupied by a number to the "whole" number. so that for something like this:
+
+```
+.16.
+....
+```
+
+we would get a grid with positions:
+```
+%{
+    {1, 0} => 16,
+    {2, 0} => 16
+}
+```
+
+as opposed to the "naive":
+```
+%{
+    {1,0} => 1,
+    {2,0} => 6
+}
+```
+
+the problem with that approach is that it potentially causes a duplication issue - with something like:
+
+```
+.16.
+..#.
+....
+```
+In that case, Grid.neighbors would return two 16s, and you'd have no real way of knowing that you were double-counting the same "part number". this is actually still a problem even with the "naive" approach, because you have to be able to tell if any given neighbor cell is (or is not) part of a bigger number.
+
+so maybe the idea is something like this. take a symbol's location. add its neighbors to a list of cells to search for numbers. and for each of those cells, we need to search left and right. if, during that search, a cell is found to contain a number, then you'd need to remove that cell from the list of cells that need to be checked. that way, we'd avoid double-coutning.
 
 ## day 2
 this one didn't feel especially difficult, but there was a lot of work around processing the input into a usable format. i guess the data structure i landed on was decent because writing the actual "business logic" of the puzzle didn't take all that long once i'd done that.

@@ -38,8 +38,13 @@ defmodule AocUtils.Grid2D do
     x_min = Keyword.get(params, :x_min, 0)
     y_min = Keyword.get(params, :y_min, 0)
 
-    if(x_max < x_min, do: raise(Grid2D.InvalidGridDimensionsError,"x_min must be less than or equal to x_max."))
-    if(y_max < y_min, do: raise(Grid2D.InvalidGridDimensionsError,"y_min must be less than or equal to y_max."))
+    if(x_max < x_min,
+      do: raise(Grid2D.InvalidGridDimensionsError, "x_min must be less than or equal to x_max.")
+    )
+
+    if(y_max < y_min,
+      do: raise(Grid2D.InvalidGridDimensionsError, "y_min must be less than or equal to y_max.")
+    )
 
     grid_map =
       if Keyword.has_key?(params, :default) do
@@ -59,7 +64,7 @@ defmodule AocUtils.Grid2D do
       x_min: x_min,
       x_max: x_max,
       y_min: y_min,
-      y_max: y_max,
+      y_max: y_max
     }
   end
 
@@ -263,12 +268,14 @@ defmodule AocUtils.Grid2D do
   does not exist in the Grid.
   """
   def at!(grid, {x, y} = location) do
-    if x > grid.x_max
-       or x < grid.x_min
-       or y > grid.y_max
-       or y < grid.y_min
-       do
-      raise(Grid2D.GridAccessError, "Grid position #{inspect(location)} is outside the bounds of the grid.")
+    if x > grid.x_max or
+         x < grid.x_min or
+         y > grid.y_max or
+         y < grid.y_min do
+      raise(
+        Grid2D.GridAccessError,
+        "Grid position #{inspect(location)} is outside the bounds of the grid."
+      )
     end
 
     if not Map.has_key?(grid.grid_map, location) do
@@ -294,17 +301,15 @@ defmodule AocUtils.Grid2D do
   If the position is outside the bounds of the Grid, the grid will be returned unmodified.
   """
   def update(grid, {x, y}, _value)
-    when
-      x < grid.x_min
-      or x > grid.x_max
-      or y < grid.y_min
-      or y > grid.y_max
-  do
+      when x < grid.x_min or
+             x > grid.x_max or
+             y < grid.y_min or
+             y > grid.y_max do
     grid
   end
 
   def update(grid, {_x, _y} = location, value) do
-    %Grid2D{ grid | grid_map: Map.put(grid.grid_map, location, value)}
+    %Grid2D{grid | grid_map: Map.put(grid.grid_map, location, value)}
   end
 
   @doc """
@@ -317,15 +322,16 @@ defmodule AocUtils.Grid2D do
   If the position is outside the bounds of the Grid, the grid will be returned unmodified.
   """
   def update(grid, location, update_fn, default) when is_function(update_fn) do
-    new_value = if Map.has_key?(grid.grid_map, location) do
-      update_fn.(at(grid, location))
-    else
-      default
-    end
+    new_value =
+      if Map.has_key?(grid.grid_map, location) do
+        update_fn.(at(grid, location))
+      else
+        default
+      end
 
     new_grid_map = Map.put(grid.grid_map, location, new_value)
 
-    %Grid2D{ grid | grid_map: new_grid_map}
+    %Grid2D{grid | grid_map: new_grid_map}
   end
 
   @doc """
@@ -335,36 +341,42 @@ defmodule AocUtils.Grid2D do
   If the location is not present in the grid, or outside its boundaries, a GridAccessError exception will be raised.
   """
   def update!(
-    %Grid2D{} = grid,
-    {_x, _y} = location,
-    update_fn)
-    when is_function(update_fn)
-  do
+        %Grid2D{} = grid,
+        {_x, _y} = location,
+        update_fn
+      )
+      when is_function(update_fn) do
     new_value = update_fn.(at(grid, location))
 
     update!(grid, location, new_value)
   end
 
   def update!(
-    %Grid2D{} = grid,
-    {x, y} = location,
-    value) when not is_function(value) do
-
-    if x > grid.x_max
-       or x < grid.x_min
-       or y > grid.y_max
-       or y < grid.y_min
-       do
-      raise(Grid2D.GridAccessError, "Grid position #{inspect(location)} is outside the bounds of the grid.")
+        %Grid2D{} = grid,
+        {x, y} = location,
+        value
+      )
+      when not is_function(value) do
+    if x > grid.x_max or
+         x < grid.x_min or
+         y > grid.y_max or
+         y < grid.y_min do
+      raise(
+        Grid2D.GridAccessError,
+        "Grid position #{inspect(location)} is outside the bounds of the grid."
+      )
     end
 
     if not Map.has_key?(grid.grid_map, location) do
-      raise(Grid2D.GridAccessError, "Attempted to access non-existent Grid cell at position: #{inspect(location)}")
+      raise(
+        Grid2D.GridAccessError,
+        "Attempted to access non-existent Grid cell at position: #{inspect(location)}"
+      )
     end
 
     new_grid_map = Map.put(grid.grid_map, location, value)
 
-    %Grid2D{ grid | grid_map: new_grid_map}
+    %Grid2D{grid | grid_map: new_grid_map}
   end
 
   @doc """
@@ -380,12 +392,11 @@ defmodule AocUtils.Grid2D do
   applied to `g2`. As a general rule, it will usually make the most sense to pass the larger of the two grids as g1.
   """
   def merge(g1, g2, {0, 0} = _location, merge_function)
-    when is_function(merge_function)
-    and g1.x_min == g2.x_min
-    and g1.x_max == g2.x_max
-    and g1.y_min == g2.y_min
-    and g2.y_max == g2.y_max do
-
+      when is_function(merge_function) and
+             g1.x_min == g2.x_min and
+             g1.x_max == g2.x_max and
+             g1.y_min == g2.y_min and
+             g2.y_max == g2.y_max do
     # easy case, where grids are of the same size and no offset
     %Grid2D{
       x_min: g1.x_min,
@@ -397,9 +408,7 @@ defmodule AocUtils.Grid2D do
   end
 
   def merge(g1, g2, {x_offset, y_offset} = _merge_loc, merge_function)
-    when is_function(merge_function)
-  do
-
+      when is_function(merge_function) do
     g2_new_x_min = g2.x_min + x_offset
     g2_new_x_max = g2.x_max + x_offset
     g2_new_y_min = g2.y_min + y_offset
@@ -425,7 +434,7 @@ defmodule AocUtils.Grid2D do
       x_max: new_x_max,
       y_min: new_y_min,
       y_max: new_y_max,
-      grid_map: new_grid_map,
+      grid_map: new_grid_map
     }
   end
 
@@ -452,8 +461,25 @@ defmodule AocUtils.Grid2D do
     %Grid2D{
       grid_map: new_map,
       x_max: x_max,
-      y_max: y_max,
+      y_max: y_max
     }
+  end
+
+  @doc """
+  Returns a list of locations in the Grid for which the given function returns a truthy
+  value.
+
+  The given function will be invoked with a tuple of {grid_location, cell_value}, and should return
+  either a truthy or falsy value.
+  """
+  def matching_locs(%Grid2D{} = grid, function) do
+    grid
+    |> to_list()
+    |> Enum.map(fn {position, value} ->
+      {position, function.({position, value})}
+    end)
+    |> Enum.filter(fn {_, v} -> v end)
+    |> Enum.map(fn {pos, _} -> pos end)
   end
 
   @doc """
@@ -487,14 +513,22 @@ defmodule AocUtils.Grid2D do
   """
   def neighbor_locs(grid, {x, y}) do
     neighbor_offsets = [
-      {0, -1}, #up
-      {1, -1}, #up-right
-      {1, 0}, #right
-      {1, 1}, #down-right
-      {0, 1}, #down
-      {-1, 1}, #down-left
-      {-1, 0}, #left
-      {-1, -1}, #up-left
+      # up
+      {0, -1},
+      # up-right
+      {1, -1},
+      # right
+      {1, 0},
+      # down-right
+      {1, 1},
+      # down
+      {0, 1},
+      # down-left
+      {-1, 1},
+      # left
+      {-1, 0},
+      # up-left
+      {-1, -1}
     ]
 
     neighbor_offsets
@@ -526,7 +560,7 @@ defmodule AocUtils.Grid2D do
       {1, 0},
       {-1, 0},
       {0, 1},
-      {0, -1},
+      {0, -1}
     ]
 
     neighbor_offsets
@@ -569,8 +603,8 @@ defmodule AocUtils.Grid2D do
   """
   def slice_vertically(grid, x) do
     cols = cols(grid)
-    g_left_cols = Enum.slice(cols, 0..(x-1))
-    g_right_cols = Enum.slice(cols, (x+1)..length(cols))
+    g_left_cols = Enum.slice(cols, 0..(x - 1))
+    g_right_cols = Enum.slice(cols, (x + 1)..length(cols))
 
     {from_cols(g_left_cols), from_cols(g_right_cols)}
   end
@@ -586,8 +620,8 @@ defmodule AocUtils.Grid2D do
   """
   def slice_horizontally(grid, y) do
     rows = rows(grid)
-    g_up_rows = Enum.slice(rows, 0..(y-1))
-    g_down_rows = Enum.slice(rows, (y+1)..length(rows))
+    g_up_rows = Enum.slice(rows, 0..(y - 1))
+    g_down_rows = Enum.slice(rows, (y + 1)..length(rows))
 
     {from_rows(g_up_rows), from_rows(g_down_rows)}
   end
@@ -598,6 +632,7 @@ defmodule AocUtils.Grid2D do
   def translate(grid, {h, k} = _origin) do
     x_shift = h - grid.x_min
     y_shift = k - grid.y_min
+
     new_grid_map =
       grid
       |> to_list()

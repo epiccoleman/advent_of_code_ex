@@ -3,6 +3,7 @@ defmodule GridTest do
 
   import AocUtils.Grid2D
 
+  require Integer
   alias AocUtils.Grid2D.GridAccessError
   alias AocUtils.Grid2D.InvalidGridDimensionsError
 
@@ -24,12 +25,12 @@ defmodule GridTest do
 
       assert grid.x_max == 2
       assert grid.y_max == 3
-      assert at(grid, {0,0}) == "."
-      assert at(grid, {1,0}) == "."
-      assert at(grid, {0,1}) == "."
-      assert at(grid, {1,1}) == "."
-      assert at(grid, {0,2}) == "."
-      assert at(grid, {1,2}) == "."
+      assert at(grid, {0, 0}) == "."
+      assert at(grid, {1, 0}) == "."
+      assert at(grid, {0, 1}) == "."
+      assert at(grid, {1, 1}) == "."
+      assert at(grid, {0, 2}) == "."
+      assert at(grid, {1, 2}) == "."
     end
 
     test "with default options" do
@@ -90,7 +91,7 @@ defmodule GridTest do
     end
 
     test "with x_min and y_min and default value" do
-      grid = new(x_min: -1, x_max: 1, y_min: -1,  y_max: 1, default: ".")
+      grid = new(x_min: -1, x_max: 1, y_min: -1, y_max: 1, default: ".")
 
       assert length(Map.keys(grid.grid_map)) == 9
       assert at(grid, {-1, -1}) == "."
@@ -107,15 +108,17 @@ defmodule GridTest do
 
   describe "update" do
     test "with value" do
-      grid = from_rows([
-        [1, 2, 3],
-        [4, 5, 6]
-      ])
+      grid =
+        from_rows([
+          [1, 2, 3],
+          [4, 5, 6]
+        ])
 
-      expected_grid = from_rows([
-        [1, 4, 3],
-        [2, 5, 42]
-      ])
+      expected_grid =
+        from_rows([
+          [1, 4, 3],
+          [2, 5, 42]
+        ])
 
       actual_grid =
         grid
@@ -175,7 +178,8 @@ defmodule GridTest do
       assert_raise(
         GridAccessError,
         "Attempted to access non-existent Grid cell at position: {2, 2}",
-        fn -> update!(grid, {2, 2}, "foo") end)
+        fn -> update!(grid, {2, 2}, "foo") end
+      )
     end
 
     test "on sparse grid raises GridAccessError when position is out of bounds" do
@@ -184,20 +188,24 @@ defmodule GridTest do
       assert_raise(
         GridAccessError,
         "Grid position {3, 3} is outside the bounds of the grid.",
-        fn -> update!(grid, {3, 3}, "foo") end)
+        fn -> update!(grid, {3, 3}, "foo") end
+      )
+
       false
     end
 
     test "with function" do
-      grid = from_rows([
-        [1, 2, 3],
-        [4, 5, 6]
-      ])
+      grid =
+        from_rows([
+          [1, 2, 3],
+          [4, 5, 6]
+        ])
 
-      expected_grid = from_rows([
-        [1, 4, 3],
-        [4, 5, 42]
-      ])
+      expected_grid =
+        from_rows([
+          [1, 4, 3],
+          [4, 5, 42]
+        ])
 
       actual_grid =
         grid
@@ -208,15 +216,17 @@ defmodule GridTest do
     end
 
     test "with value" do
-      grid = from_rows([
-        [1, 2, 3],
-        [4, 5, 6]
-      ])
+      grid =
+        from_rows([
+          [1, 2, 3],
+          [4, 5, 6]
+        ])
 
-      expected_grid = from_rows([
-        [1, "foo", 3],
-        [4, 5, 42]
-      ])
+      expected_grid =
+        from_rows([
+          [1, "foo", 3],
+          [4, 5, 42]
+        ])
 
       actual_grid =
         grid
@@ -245,29 +255,32 @@ defmodule GridTest do
     end
 
     test "with non-zero offset", %{g1: g1, merge_fn: merge_fn} do
-      little_grid = from_rows([
-        [2, 2],
-        [2, 2]
-      ])
+      little_grid =
+        from_rows([
+          [2, 2],
+          [2, 2]
+        ])
 
-      expected_grid = from_rows([
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 2, 2],
-        [0, 0, 2, 2],
-      ])
+      expected_grid =
+        from_rows([
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [0, 0, 2, 2],
+          [0, 0, 2, 2]
+        ])
 
       actual_grid = merge(g1, little_grid, {2, 2}, merge_fn)
       assert actual_grid == expected_grid
     end
 
     test "can extend the grid to the right", %{g1: g1, g2: g2, merge_fn: merge_fn} do
-      expected_grid = from_rows([
-        [0, 0, 0, 0, 1, 1, 1, 1],
-        [0, 0, 0, 0, 1, 1, 1, 1],
-        [0, 0, 0, 0, 1, 1, 1, 1],
-        [0, 0, 0, 0, 1, 1, 1, 1],
-      ])
+      expected_grid =
+        from_rows([
+          [0, 0, 0, 0, 1, 1, 1, 1],
+          [0, 0, 0, 0, 1, 1, 1, 1],
+          [0, 0, 0, 0, 1, 1, 1, 1],
+          [0, 0, 0, 0, 1, 1, 1, 1]
+        ])
 
       actual_grid = merge(g1, g2, {4, 0}, merge_fn)
 
@@ -279,7 +292,7 @@ defmodule GridTest do
         [1, 1, 1, 1, 0, 0, 0, 0],
         [1, 1, 1, 1, 0, 0, 0, 0],
         [1, 1, 1, 1, 0, 0, 0, 0],
-        [1, 1, 1, 1, 0, 0, 0, 0],
+        [1, 1, 1, 1, 0, 0, 0, 0]
       ]
 
       actual_grid = merge(g1, g2, {-4, 0}, merge_fn)
@@ -294,15 +307,16 @@ defmodule GridTest do
     end
 
     test "can extend the grid down", %{g1: g1, g2: g2, merge_fn: merge_fn} do
-      expected_grid = from_rows([
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [1, 1, 1, 1],
-        [1, 1, 1, 1],
-        [1, 1, 1, 1],
-        [1, 1, 1, 1],
-      ])
+      expected_grid =
+        from_rows([
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [1, 1, 1, 1],
+          [1, 1, 1, 1],
+          [1, 1, 1, 1],
+          [1, 1, 1, 1]
+        ])
 
       actual_grid = merge(g1, g2, {0, 3}, merge_fn)
 
@@ -316,7 +330,7 @@ defmodule GridTest do
         [1, 1, 1, 1],
         [1, 1, 1, 1],
         [0, 0, 0, 0],
-        [0, 0, 0, 0],
+        [0, 0, 0, 0]
       ]
 
       actual_grid = merge(g1, g2, {0, -2}, merge_fn)
@@ -331,15 +345,16 @@ defmodule GridTest do
     end
 
     test "extends the grid in both positive directions", %{g1: g1, g2: g2, merge_fn: merge_fn} do
-      expected_grid = from_rows([
-        [  0,   0,   0,   0, nil, nil, nil],
-        [  0,   0,   0,   0, nil, nil, nil],
-        [  0,   0,   0,   0, nil, nil, nil],
-        [  0,   0,   0,   1,   1,   1,   1],
-        [nil, nil, nil,   1,   1,   1,   1],
-        [nil, nil, nil,   1,   1,   1,   1],
-        [nil, nil, nil,   1,   1,   1,   1],
-      ])
+      expected_grid =
+        from_rows([
+          [0, 0, 0, 0, nil, nil, nil],
+          [0, 0, 0, 0, nil, nil, nil],
+          [0, 0, 0, 0, nil, nil, nil],
+          [0, 0, 0, 1, 1, 1, 1],
+          [nil, nil, nil, 1, 1, 1, 1],
+          [nil, nil, nil, 1, 1, 1, 1],
+          [nil, nil, nil, 1, 1, 1, 1]
+        ])
 
       actual_grid = merge(g1, g2, {3, 3}, merge_fn)
 
@@ -348,13 +363,13 @@ defmodule GridTest do
 
     test "extends the grid in both negative directions", %{g1: g1, g2: g2, merge_fn: merge_fn} do
       expected_grid_rows = [
-        [   1, 1, 1, 1, nil ],
-        [   1, 1, 1, 1, nil ],
-        [   1, 1, 1, 1, nil ],
-        [   1, 1, 1, 1,   0 ],
-        [ nil, 0, 0, 0,   0 ],
-        [ nil, 0, 0, 0,   0 ],
-        [ nil, 0, 0, 0,   0 ],
+        [1, 1, 1, 1, nil],
+        [1, 1, 1, 1, nil],
+        [1, 1, 1, 1, nil],
+        [1, 1, 1, 1, 0],
+        [nil, 0, 0, 0, 0],
+        [nil, 0, 0, 0, 0],
+        [nil, 0, 0, 0, 0]
       ]
 
       actual_grid = merge(g1, g2, {-1, -3}, merge_fn)
@@ -366,19 +381,20 @@ defmodule GridTest do
       assert actual_grid.y_min == -3
       assert actual_grid.y_max == 3
     end
-
   end
 
   test "map" do
-    grid = from_rows([
-      [1, 2, 3],
-      [4, 5, 6]
-    ])
+    grid =
+      from_rows([
+        [1, 2, 3],
+        [4, 5, 6]
+      ])
 
-    expected_grid = from_rows([
-      [2, 3, 4],
-      [5, 6, 7]
-    ])
+    expected_grid =
+      from_rows([
+        [2, 3, 4],
+        [5, 6, 7]
+      ])
 
     actual_grid = map(grid, fn {_k, value} -> value + 1 end)
 
@@ -388,8 +404,8 @@ defmodule GridTest do
   test "map on sparse grid transforms only existing keys" do
     grid =
       new(x_max: 2, y_max: 2)
-      |> update({1,1}, 2)
-      |> update({2,2}, 4)
+      |> update({1, 1}, 2)
+      |> update({2, 2}, 4)
 
     actual_grid = map(grid, fn {_, v} -> v * 2 end)
 
@@ -399,16 +415,19 @@ defmodule GridTest do
   end
 
   test "map does not affect keys" do
-    grid = from_rows([
-      [1, 2, 3],
-      [4, 5, 6]
-    ])
+    grid =
+      from_rows([
+        [1, 2, 3],
+        [4, 5, 6]
+      ])
+
     grid_keys = Map.keys(grid.grid_map)
 
-    expected_grid = from_rows([
-      [{{0, 0}, 2}, {{1, 0}, 3}, {{2, 0}, 4}],
-      [{{0, 1}, 5}, {{1, 1}, 6}, {{2, 1}, 7}],
-    ])
+    expected_grid =
+      from_rows([
+        [{{0, 0}, 2}, {{1, 0}, 3}, {{2, 0}, 4}],
+        [{{0, 1}, 5}, {{1, 1}, 6}, {{2, 1}, 7}]
+      ])
 
     actual_grid = map(grid, fn {k, v} -> {k, v + 1} end)
     actual_grid_keys = Map.keys(expected_grid.grid_map)
@@ -417,16 +436,44 @@ defmodule GridTest do
     assert actual_grid_keys == grid_keys
   end
 
-  test "all?" do
-    even_grid = from_rows([
-      [2, 4, 6],
-      [8, 10, 12]
-    ])
+  test "matching_locs" do
+    grid =
+      from_rows([
+        [1, 2, 3],
+        [4, 5, 6]
+      ])
 
-    not_quite_even_grid = from_rows([
-      [2, 4, 6],
-      [8, 43, 12]
-    ])
+    expected_locs_even = [
+      {0, 1},
+      {1, 0},
+      {2, 1}
+    ]
+
+    expected_locs_odd = [
+      {0, 0},
+      {1, 1},
+      {2, 0}
+    ]
+
+    even_fn = fn {_, v} -> Integer.is_even(v) end
+    odd_fn = fn {_, v} -> Integer.is_odd(v) end
+
+    assert matching_locs(grid, even_fn) == expected_locs_even
+    assert matching_locs(grid, odd_fn) == expected_locs_odd
+  end
+
+  test "all?" do
+    even_grid =
+      from_rows([
+        [2, 4, 6],
+        [8, 10, 12]
+      ])
+
+    not_quite_even_grid =
+      from_rows([
+        [2, 4, 6],
+        [8, 43, 12]
+      ])
 
     is_even? = fn {_k, v} -> rem(v, 2) == 0 end
 
@@ -436,172 +483,193 @@ defmodule GridTest do
 
   describe "from_rows" do
     test "from_rows" do
-      grid = from_rows([
-        ["#", ".", "."],
-        [".", "#", "."],
-        [".", ".", "#"]
-      ])
+      grid =
+        from_rows([
+          ["#", ".", "."],
+          [".", "#", "."],
+          [".", ".", "#"]
+        ])
+
       assert grid.x_max == 2
       assert grid.y_max == 2
+
       assert grid.grid_map == %{
-        {0, 0} => "#",
-        {0, 1} => ".",
-        {0, 2} => ".",
-        {1, 0} => ".",
-        {1, 1} => "#",
-        {1, 2} => ".",
-        {2, 0} => ".",
-        {2, 1} => ".",
-        {2, 2} => "#"
-      }
+               {0, 0} => "#",
+               {0, 1} => ".",
+               {0, 2} => ".",
+               {1, 0} => ".",
+               {1, 1} => "#",
+               {1, 2} => ".",
+               {2, 0} => ".",
+               {2, 1} => ".",
+               {2, 2} => "#"
+             }
     end
 
     test "does not create keys in the grid map for nils" do
-      grid = from_rows([
-        ["#", nil, nil],
-        [".", nil, "."],
-        [nil, nil, "#"]
-      ])
+      grid =
+        from_rows([
+          ["#", nil, nil],
+          [".", nil, "."],
+          [nil, nil, "#"]
+        ])
+
       assert grid.x_max == 2
       assert grid.y_max == 2
+
       assert grid.grid_map == %{
-        {0, 0} => "#",
-        {0, 1} => ".",
-        {2, 1} => ".",
-        {2, 2} => "#"
-      }
+               {0, 0} => "#",
+               {0, 1} => ".",
+               {2, 1} => ".",
+               {2, 2} => "#"
+             }
     end
 
     test "when given ignore_value does not create keys in the map for that value" do
-      grid = from_rows([
-        ["#", ".", "."],
-        [".", "#", "."],
-        [".", ".", "#"]
-      ], ".")
+      grid =
+        from_rows(
+          [
+            ["#", ".", "."],
+            [".", "#", "."],
+            [".", ".", "#"]
+          ],
+          "."
+        )
+
       assert grid.x_max == 2
       assert grid.y_max == 2
+
       assert grid.grid_map == %{
-        {0, 0} => "#",
-        {1, 1} => "#",
-        {2, 2} => "#"
-      }
+               {0, 0} => "#",
+               {1, 1} => "#",
+               {2, 2} => "#"
+             }
     end
   end
 
   describe "from_cols" do
     test "simple input" do
-      grid = from_cols([
-        ["#", "."],
-        ["#", "."],
-        ["#", "#"]
-      ])
+      grid =
+        from_cols([
+          ["#", "."],
+          ["#", "."],
+          ["#", "#"]
+        ])
 
       assert grid.x_max == 2
       assert grid.y_max == 1
+
       assert grid.grid_map == %{
-        {0, 0} => "#",
-        {0, 1} => ".",
-        {1, 0} => "#",
-        {1, 1} => ".",
-        {2, 0} => "#",
-        {2, 1} => "#",
-      }
+               {0, 0} => "#",
+               {0, 1} => ".",
+               {1, 0} => "#",
+               {1, 1} => ".",
+               {2, 0} => "#",
+               {2, 1} => "#"
+             }
     end
 
     test "when not given ignore_value ignores nils" do
-      grid = from_cols([
-        ["#", nil, nil],
-        ["#", "#", nil],
-        [nil, "#", "#"]
-      ])
+      grid =
+        from_cols([
+          ["#", nil, nil],
+          ["#", "#", nil],
+          [nil, "#", "#"]
+        ])
 
       assert grid.x_max == 2
       assert grid.y_max == 2
+
       assert grid.grid_map == %{
-        {0, 0} => "#",
-        {1, 0} => "#",
-        {1, 1} => "#",
-        {2, 1} => "#",
-        {2, 2} => "#"
-      }
+               {0, 0} => "#",
+               {1, 0} => "#",
+               {1, 1} => "#",
+               {2, 1} => "#",
+               {2, 2} => "#"
+             }
     end
 
     test "when given ignore_value ignores that value in the input" do
-      grid = from_cols([
-        ["#", ".", "."],
-        ["#", "#", "."],
-        [".", "#", "#"]
-      ], ".")
+      grid =
+        from_cols(
+          [
+            ["#", ".", "."],
+            ["#", "#", "."],
+            [".", "#", "#"]
+          ],
+          "."
+        )
 
       assert grid.x_max == 2
       assert grid.y_max == 2
+
       assert grid.grid_map == %{
-        {0, 0} => "#",
-        {1, 0} => "#",
-        {1, 1} => "#",
-        {2, 1} => "#",
-        {2, 2} => "#"
-      }
+               {0, 0} => "#",
+               {1, 0} => "#",
+               {1, 1} => "#",
+               {2, 1} => "#",
+               {2, 2} => "#"
+             }
     end
 
     test "from_columns simple" do
-      grid = from_columns([
-        ["#", ".", "."],
-        ["#", "#", "."],
-        [".", "#", "#"]
-      ])
+      grid =
+        from_columns([
+          ["#", ".", "."],
+          ["#", "#", "."],
+          [".", "#", "#"]
+        ])
 
       assert grid.x_max == 2
       assert grid.y_max == 2
-      assert grid.grid_map == %{
-        {0, 0} => "#",
-        {0, 1} => ".",
-        {0, 2} => ".",
-        {1, 0} => "#",
-        {1, 1} => "#",
-        {1, 2} => ".",
-        {2, 0} => ".",
-        {2, 1} => "#",
-        {2, 2} => "#"
-      }
-    end
 
+      assert grid.grid_map == %{
+               {0, 0} => "#",
+               {0, 1} => ".",
+               {0, 2} => ".",
+               {1, 0} => "#",
+               {1, 1} => "#",
+               {1, 2} => ".",
+               {2, 0} => ".",
+               {2, 1} => "#",
+               {2, 2} => "#"
+             }
+    end
   end
 
   describe "from_strs" do
     test "adds the characters of the given strings", state do
       assert state.grid.x_max == 2
       assert state.grid.y_max == 2
+
       assert state.grid.grid_map == %{
-        {0, 0} => "#",
-        {0, 1} => ".",
-        {0, 2} => ".",
-        {1, 0} => ".",
-        {1, 1} => "#",
-        {1, 2} => ".",
-        {2, 0} => ".",
-        {2, 1} => ".",
-        {2, 2} => "#"
-      }
+               {0, 0} => "#",
+               {0, 1} => ".",
+               {0, 2} => ".",
+               {1, 0} => ".",
+               {1, 1} => "#",
+               {1, 2} => ".",
+               {2, 0} => ".",
+               {2, 1} => ".",
+               {2, 2} => "#"
+             }
     end
 
     test "ignores the ignore_char if given" do
       expected =
         new(x_max: 2, y_max: 2)
-        |> update({0,0}, "#")
-        |> update({1,1}, "#")
-        |> update({2,2}, "#")
+        |> update({0, 0}, "#")
+        |> update({1, 1}, "#")
+        |> update({2, 2}, "#")
 
-      actual = from_strs(
-        ["#..",
-        ".#.",
-        "..#"],
-        ignore: "."
-      )
+      actual =
+        from_strs(
+          ["#..", ".#.", "..#"],
+          ignore: "."
+        )
 
       assert expected == actual
     end
-
   end
 
   describe "to_strs" do
@@ -616,12 +684,12 @@ defmodule GridTest do
     test "inserts a space for non-occupied positions" do
       grid =
         new(x_max: 2, y_max: 2)
-        |> update({0,0}, "x")
-        |> update({1,0}, "x")
-        |> update({0,1}, "x")
-        |> update({2,1}, "x")
-        |> update({1,2}, "x")
-        |> update({2,2}, "x")
+        |> update({0, 0}, "x")
+        |> update({1, 0}, "x")
+        |> update({0, 1}, "x")
+        |> update({2, 1}, "x")
+        |> update({1, 2}, "x")
+        |> update({2, 2}, "x")
 
       expected_strs = [
         "xx ",
@@ -637,12 +705,12 @@ defmodule GridTest do
     test "when given a default value inserts it for non-occupied positions" do
       grid =
         new(x_max: 2, y_max: 2)
-        |> update({0,0}, "x")
-        |> update({1,0}, "x")
-        |> update({0,1}, "x")
-        |> update({2,1}, "x")
-        |> update({1,2}, "x")
-        |> update({2,2}, "x")
+        |> update({0, 0}, "x")
+        |> update({1, 0}, "x")
+        |> update({0, 1}, "x")
+        |> update({2, 1}, "x")
+        |> update({1, 2}, "x")
+        |> update({2, 2}, "x")
 
       expected_strs = [
         "xx.",
@@ -669,14 +737,16 @@ defmodule GridTest do
       assert_raise(
         GridAccessError,
         "There is no value at grid position {2, 1}",
-        fn -> at!(grid, {2, 1}) end)
+        fn -> at!(grid, {2, 1}) end
+      )
     end
 
     test "raises GridAccessException when given position is outside the grid", state do
       assert_raise(
         GridAccessError,
         "Grid position {2, 42} is outside the bounds of the grid.",
-        fn -> at!(state.grid, {2, 42}) end)
+        fn -> at!(state.grid, {2, 42}) end
+      )
     end
   end
 
@@ -688,7 +758,7 @@ defmodule GridTest do
     end
 
     test "returns nil when given position does not exist" do
-      grid = new([x_max: 2, y_max: 2])
+      grid = new(x_max: 2, y_max: 2)
 
       assert at(grid, {0, 0}) == nil
       assert at(grid, {42, 6}) == nil
@@ -708,7 +778,7 @@ defmodule GridTest do
 
       expected_rows = [
         [:foo, nil],
-        [nil, 42],
+        [nil, 42]
       ]
 
       assert rows(grid) == expected_rows
@@ -722,7 +792,7 @@ defmodule GridTest do
 
       expected_rows = [
         [:foo, 2112],
-        [2112, 42],
+        [2112, 42]
       ]
 
       assert rows(grid, 2112) == expected_rows
@@ -757,11 +827,13 @@ defmodule GridTest do
 
   describe "cols" do
     test "returns a list of the grid's columns" do
-      grid = [
-        "##.",
-        ".#.",
-        ".##"
-      ] |> from_strs()
+      grid =
+        [
+          "##.",
+          ".#.",
+          ".##"
+        ]
+        |> from_strs()
 
       assert cols(grid) == [["#", ".", "."], ["#", "#", "#"], [".", ".", "#"]]
     end
@@ -774,7 +846,7 @@ defmodule GridTest do
 
       expected_cols = [
         [nil, nil],
-        [:foo, 42],
+        [:foo, 42]
       ]
 
       assert cols(grid) == expected_cols
@@ -788,7 +860,7 @@ defmodule GridTest do
 
       expected_cols = [
         [2112, 2112],
-        [:foo, 42],
+        [:foo, 42]
       ]
 
       assert cols(grid, 2112) == expected_cols
@@ -797,11 +869,13 @@ defmodule GridTest do
 
   describe "col" do
     test "returns the requested column" do
-      grid = [
-        "##.",
-        ".#.",
-        ".##"
-      ] |> from_strs()
+      grid =
+        [
+          "##.",
+          ".#.",
+          ".##"
+        ]
+        |> from_strs()
 
       assert col(grid, 2) == [".", ".", "#"]
     end
@@ -812,7 +886,6 @@ defmodule GridTest do
         |> update({0, 0}, :foo)
 
       expected_col = [:foo, nil]
-
 
       assert col(grid, 0) == expected_col
     end
@@ -830,11 +903,13 @@ defmodule GridTest do
 
   describe "columns" do
     test "on complete grid returns columns" do
-      grid = [
-        "##.",
-        ".#.",
-        ".##"
-      ] |> from_strs()
+      grid =
+        [
+          "##.",
+          ".#.",
+          ".##"
+        ]
+        |> from_strs()
 
       assert columns(grid) == [["#", ".", "."], ["#", "#", "#"], [".", ".", "#"]]
     end
@@ -847,7 +922,7 @@ defmodule GridTest do
 
       expected_cols = [
         [nil, nil],
-        [:foo, 42],
+        [:foo, 42]
       ]
 
       assert columns(grid) == expected_cols
@@ -861,7 +936,7 @@ defmodule GridTest do
 
       expected_cols = [
         [2112, 2112],
-        [:foo, 42],
+        [:foo, 42]
       ]
 
       assert columns(grid, 2112) == expected_cols
@@ -870,11 +945,13 @@ defmodule GridTest do
 
   describe "column" do
     test "returns the requested column" do
-      grid = [
-        "##.",
-        ".#.",
-        ".##"
-      ] |> from_strs()
+      grid =
+        [
+          "##.",
+          ".#.",
+          ".##"
+        ]
+        |> from_strs()
 
       assert column(grid, 2) == [".", ".", "#"]
     end
@@ -885,7 +962,6 @@ defmodule GridTest do
         |> update({0, 0}, :foo)
 
       expected_col = [:foo, nil]
-
 
       assert column(grid, 0) == expected_col
     end
@@ -905,126 +981,141 @@ defmodule GridTest do
     test "shifts the grid's locations to a new origin" do
       grid =
         new(x_min: -2, x_max: 0, y_min: -2, y_max: 0)
-        |> update({0,0}, 1)
-        |> update({-1,-1}, 2)
-        |> update({-2,-2}, 4)
+        |> update({0, 0}, 1)
+        |> update({-1, -1}, 2)
+        |> update({-2, -2}, 4)
 
       actual = translate(grid, {0, 0})
 
-      expected = from_rows([
-        [4,     nil, nil],
-        [nil,     2, nil],
-        [nil,   nil,   1]
-      ])
+      expected =
+        from_rows([
+          [4, nil, nil],
+          [nil, 2, nil],
+          [nil, nil, 1]
+        ])
 
       assert actual == expected
     end
 
     test "shifts the grid's locations negative" do
-      grid = from_rows([
-        [4,     nil, nil],
-        [nil,     2, nil],
-        [nil,   nil,   1]
-      ])
+      grid =
+        from_rows([
+          [4, nil, nil],
+          [nil, 2, nil],
+          [nil, nil, 1]
+        ])
 
       actual = translate(grid, {-2, -2})
 
       expected =
         new(x_min: -2, x_max: 0, y_min: -2, y_max: 0)
-        |> update({0,0}, 1)
-        |> update({-1,-1}, 2)
-        |> update({-2,-2}, 4)
+        |> update({0, 0}, 1)
+        |> update({-1, -1}, 2)
+        |> update({-2, -2}, 4)
 
       assert actual == expected
     end
   end
 
   test "append_grid" do
-    grid = [
-      "#.#.",
-      "#..#",
-      "#..#",
-      "#..#"
-    ] |> from_strs
+    grid =
+      [
+        "#.#.",
+        "#..#",
+        "#..#",
+        "#..#"
+      ]
+      |> from_strs
 
     appended = append_grid(grid, grid) |> to_strs()
 
     assert appended == [
-      "#.#.#.#.",
-      "#..##..#",
-      "#..##..#",
-      "#..##..#"
-    ]
+             "#.#.#.#.",
+             "#..##..#",
+             "#..##..#",
+             "#..##..#"
+           ]
   end
 
   test "edge_neighbors" do
-    grid = [
-      [1, 2, 3],
-      [4, 5, 6],
-      [7, 8, 9],
-    ] |> from_rows
+    grid =
+      [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ]
+      |> from_rows
 
     expected_neighbors = [2, 4, 6, 8]
-    actual_neighbors = edge_neighbors(grid, {1, 1}) |> Enum.sort
+    actual_neighbors = edge_neighbors(grid, {1, 1}) |> Enum.sort()
 
     assert actual_neighbors == expected_neighbors
   end
 
   test "edge_neighbors when cell is on edge" do
-    grid = [
-      [1, 2, 3],
-      [4, 5, 6],
-      [7, 8, 9],
-    ] |> from_rows
+    grid =
+      [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ]
+      |> from_rows
 
     expected_neighbors = [6, 8]
-    actual_neighbors = edge_neighbors(grid, {2, 2}) |> Enum.sort
+    actual_neighbors = edge_neighbors(grid, {2, 2}) |> Enum.sort()
 
     assert actual_neighbors == expected_neighbors
   end
 
   test "neighbors" do
-    grid = [
-      [1, 2, 3],
-      [4, 5, 6],
-      [7, 8, 9],
-    ] |> from_rows()
+    grid =
+      [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ]
+      |> from_rows()
 
     expected_neighbors = [1, 2, 3, 4, 6, 7, 8, 9]
-    actual_neighbors = neighbors(grid, {1, 1}) |> Enum.sort
+    actual_neighbors = neighbors(grid, {1, 1}) |> Enum.sort()
 
     assert actual_neighbors == expected_neighbors
   end
 
   test "neighbors when cell is on edge" do
-    grid = [
-      [1, 2, 3],
-      [4, 5, 6],
-      [7, 8, 9],
-    ] |> from_rows()
+    grid =
+      [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ]
+      |> from_rows()
 
     expected_neighbors = [5, 6, 8]
-    actual_neighbors = neighbors(grid, {2, 2}) |> Enum.sort
+    actual_neighbors = neighbors(grid, {2, 2}) |> Enum.sort()
 
     assert actual_neighbors == expected_neighbors
   end
 
   describe "slice" do
     test "slice_vertically" do
-      grid = from_rows([
-        [1, 2, 3, 4, 5, 6],
-        [7, 8, 9, 4, 9, 8],
-      ])
+      grid =
+        from_rows([
+          [1, 2, 3, 4, 5, 6],
+          [7, 8, 9, 4, 9, 8]
+        ])
 
-      expected_g_left = from_rows([
-        [1, 2, 3],
-        [7, 8, 9],
-      ])
+      expected_g_left =
+        from_rows([
+          [1, 2, 3],
+          [7, 8, 9]
+        ])
 
-      expected_g_right = from_rows([
-        [5, 6],
-        [9, 8],
-      ])
+      expected_g_right =
+        from_rows([
+          [5, 6],
+          [9, 8]
+        ])
 
       {g_left, g_right} = slice_vertically(grid, 3)
 
@@ -1033,23 +1124,26 @@ defmodule GridTest do
     end
 
     test "slice_horizontally" do
-      grid = from_rows([
-        [1, 2],
-        [3, 4],
-        [0, 0],
-        [5, 6],
-        [7, 8],
-      ])
+      grid =
+        from_rows([
+          [1, 2],
+          [3, 4],
+          [0, 0],
+          [5, 6],
+          [7, 8]
+        ])
 
-      expected_g_up = from_rows([
-        [1, 2],
-        [3, 4],
-      ])
+      expected_g_up =
+        from_rows([
+          [1, 2],
+          [3, 4]
+        ])
 
-      expected_g_down = from_rows([
-        [5, 6],
-        [7, 8],
-      ])
+      expected_g_down =
+        from_rows([
+          [5, 6],
+          [7, 8]
+        ])
 
       {g_up, g_down} = slice_horizontally(grid, 2)
 
