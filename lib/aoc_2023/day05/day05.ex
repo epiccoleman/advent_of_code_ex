@@ -16,7 +16,6 @@ defmodule Aoc2023.Day05 do
   def create_mapping(lines) do
     lines
     |> Enum.map(&process_mapping_line/1)
-    |> Enum.reduce(%{}, &Map.merge(&2, &1))
   end
 
   @doc """
@@ -29,14 +28,21 @@ defmodule Aoc2023.Day05 do
       |> String.split()
       |> Enum.map(&String.to_integer/1)
 
-    Enum.map(0..(range_length - 1), fn i ->
-      {source_start + i, destination_start + i}
-    end)
-    |> Enum.into(%{})
+    mapping_fn = fn source ->
+      offset = abs(source_start - source)
+      destination_start + offset
+    end
+
+    {source_start..(source_start + range_length - 1), mapping_fn}
   end
 
   def get_destination(source, map) do
-    Map.get(map, source, source)
+    found_value =
+      Enum.find_value(map, fn {range, funk} ->
+        if(source in range, do: funk.(source))
+      end)
+
+    if(found_value, do: found_value, else: source)
   end
 
   def process_input(input_str) do
@@ -60,10 +66,8 @@ defmodule Aoc2023.Day05 do
     |> Map.put(:seeds, seeds)
   end
 
-  def part_1(input) do
-    puzzle_data = process_input(input)
-
-    puzzle_data.seeds
+  def seeds_to_locations(seeds, puzzle_data) do
+    seeds
     |> Enum.map(fn seed ->
       seed
       |> get_destination(puzzle_data["seed-to-soil"])
@@ -74,7 +78,12 @@ defmodule Aoc2023.Day05 do
       |> get_destination(puzzle_data["temperature-to-humidity"])
       |> get_destination(puzzle_data["humidity-to-location"])
     end)
-    # |> IO.inspect(charlists: :as_lists)
+  end
+
+  def part_1(input) do
+    puzzle_data = process_input(input)
+
+    seeds_to_locations(puzzle_data.seeds, puzzle_data)
     |> Enum.min()
   end
 

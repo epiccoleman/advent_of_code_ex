@@ -19,10 +19,14 @@ defmodule Aoc2023.Day05Test do
 
     # writing out every line is too annoying so:
 
-    assert map_size(map) == 50
+    assert get_destination(50, map) == 52
+    assert get_destination(51, map) == 53
+    assert get_destination(60, map) == 62
     assert get_destination(96, map) == 98
+    assert get_destination(98, map) == 50
     assert get_destination(99, map) == 51
     assert get_destination(13, map) == 13
+    assert get_destination(42, map) == 42
   end
 
   test "Part 1 small" do

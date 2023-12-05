@@ -15,7 +15,17 @@ determine them for each step. so basically check the input seeds against the ran
 
 skimming the code, i think that the process_input function and the part_1 logic are similar. but create_mapping has to be different, and probably get_destination changes as well to take advantage of that.
 
-and if it's not in any range, then you
+ok, got part 1. pretty happy with this solution. it may be slightly overly clever with creating a function to act as the "value" for each range as a key. you could probably just as easily find the correct range for the destination, and then use the source range start and end to figure out the answer. but this feels pretty neat, so works for me.
+
+Part 2 - agh, wastl, you bastard.
+
+So this is the same _kind_ of issue, but ... harder. We won't be able to work with individual seed numbers, since there will be over a billion of them. Even if it only takes like a microsecond per check, that's still 15-20 minutes of run time.
+
+So one thought I had is that we only really need to check the lowest number in each source range. Any number higher than that lowest number would get a higher number in its destination range. UNLESS (and here's the tricky bit) the range of seeds corresponds to multiple ranges of destinations. And there's an additional complication, which is that there may be numbers in a range of seeds which don't correspond to any destination range, and one of those may be the lowest number.
+
+So I guess what we'd need to do is ... for each range of input source numbers, figure out which of the source ranges in the mapping it could cover. then the lowest number in any of those ranges would be the input to the next part? but the problem there is that you would lose information on each round. so i guess the input to each round has to be a set of ranges. and any given starting range may break down into multiple ranges, and also into single values. UGH
+
+
 
 ## day 4
 wooooooof. should have known with an easy part 1 that part 2 would be gnarly.
