@@ -71,7 +71,7 @@ defmodule Mix.Tasks.Day do
     File.write!("#{day_test_dir}/input.txt", puzzle_input)
 
     puzzle_desc = AocUtils.SiteUtils.get_puzzle_description_pt_1(day, year)
-    File.write!("#{day_test_dir}/part1.md", puzzle_desc)
+    File.write!("#{day_lib_dir}/part1.md", puzzle_desc)
   end
 end
 
@@ -100,10 +100,10 @@ defmodule Mix.Tasks.Day.Desc do
 
     aoc_year = "aoc_#{year}"
     day_name = "day#{day_number}"
-    day_test_dir = "#{File.cwd!()}/test/#{aoc_year}/#{day_name}"
+    day_lib_dir = "#{File.cwd!()}/lib/#{aoc_year}/#{day_name}"
 
     puzzle_desc = AocUtils.SiteUtils.get_puzzle_description_pt_1(day, year)
-    File.write!("#{day_test_dir}/puzzle_description.md", puzzle_desc)
+    File.write!("#{day_lib_dir}/puzzle_description.md", puzzle_desc)
   end
 
   def write_description_pt_2(day, year) do
@@ -111,10 +111,10 @@ defmodule Mix.Tasks.Day.Desc do
 
     aoc_year = "aoc_#{year}"
     day_name = "day#{day_number}"
-    day_test_dir = "#{File.cwd!()}/test/#{aoc_year}/#{day_name}"
+    day_lib_dir = "#{File.cwd!()}/lib/#{aoc_year}/#{day_name}"
 
     puzzle_desc = AocUtils.SiteUtils.get_puzzle_description_pt_2(day, year)
-    File.write!("#{day_test_dir}/puzzle_description.md", "\n", [:append])
-    File.write!("#{day_test_dir}/puzzle_description.md", puzzle_desc, [:append])
+    File.write!("#{day_lib_dir}/puzzle_description.md", "\n", [:append])
+    File.write!("#{day_lib_dir}/puzzle_description.md", puzzle_desc, [:append])
   end
 end
