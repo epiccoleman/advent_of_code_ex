@@ -1,5 +1,22 @@
 ## notes - 2023
 
+## day 5
+dammit, i should have known when i saw those giant numbers in the input that the "naive" approach wasn't going to work. since some of the range lengths given in the real input are in the hundreds of millions, i'm guessing that my current approach isn't going to work. although i am tempted to just run it and see how long it takes. for fun, i'm going to stick a timeout infinity on the test and just let it chooch. ns are huge, but i think processing each line is linear time, so i don't think we're looking at like... end of the universe kind of timelines here. but we'll see how long it takes. i think the real problem is we're going to be creating a bunch of maps with hundreds of millions of entries. Map access is O(log n) but with that amount of entries, that's still catastrophically slow. (edit: ran for at least 30 minutes, killing it.)
+
+this is a good opportunity for the year's first benchmark test, i guess.
+
+so the trick, instead, is going to be some way to translate those mappings into a
+function which spits out the right number given an input.
+
+so, given a source, i think i'd need to check if it's in any of the ranges given in the mappings, and then apply some transformation to the source.
+
+Maybe there's another trick by utilizing only the known necessary ranges. we could
+determine them for each step. so basically check the input seeds against the ranges for the seed-to-soil map and figure out which values would get handed to the soil-to-fertilizer map and so forth. i think we still have to solve basically the same problem to do that though, so maybe not much juice for the squeeze there.
+
+skimming the code, i think that the process_input function and the part_1 logic are similar. but create_mapping has to be different, and probably get_destination changes as well to take advantage of that.
+
+and if it's not in any range, then you
+
 ## day 4
 wooooooof. should have known with an easy part 1 that part 2 would be gnarly.
 
