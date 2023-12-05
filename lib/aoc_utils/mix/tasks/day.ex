@@ -74,3 +74,47 @@ defmodule Mix.Tasks.Day do
     File.write!("#{day_test_dir}/part1.md", puzzle_desc)
   end
 end
+
+defmodule Mix.Tasks.Day.Desc do
+  use Mix.Task
+
+  @impl Mix.Task
+  def run([number, year, part | _args]) do
+    response = IO.gets("Fetch description for AOC #{year} Day #{number} Part #{part}? [Y/n]")
+
+    if response =~ ~r{[yY]} or response =~ ~r[^\n$] do
+      cond do
+        part == "1" ->
+          write_description_pt_1(number, year)
+
+        part == "2" ->
+          write_description_pt_2(number, year)
+      end
+    else
+      IO.puts("Not creating files...")
+    end
+  end
+
+  def write_description_pt_1(day, year) do
+    day_number = String.pad_leading(day, 2, "0")
+
+    aoc_year = "aoc_#{year}"
+    day_name = "day#{day_number}"
+    day_test_dir = "#{File.cwd!()}/test/#{aoc_year}/#{day_name}"
+
+    puzzle_desc = AocUtils.SiteUtils.get_puzzle_description_pt_1(day, year)
+    File.write!("#{day_test_dir}/puzzle_description.md", puzzle_desc)
+  end
+
+  def write_description_pt_2(day, year) do
+    day_number = String.pad_leading(day, 2, "0")
+
+    aoc_year = "aoc_#{year}"
+    day_name = "day#{day_number}"
+    day_test_dir = "#{File.cwd!()}/test/#{aoc_year}/#{day_name}"
+
+    puzzle_desc = AocUtils.SiteUtils.get_puzzle_description_pt_2(day, year)
+    File.write!("#{day_test_dir}/puzzle_description.md", "\n", [:append])
+    File.write!("#{day_test_dir}/puzzle_description.md", puzzle_desc, [:append])
+  end
+end

@@ -41,18 +41,12 @@ defmodule AocUtils.SiteUtils do
   end
 
   @doc """
-  Given a year and day, fetches the description text for that puzzle from adventofcode.com.
-  This one may be a bit trickier since the description is not provided in full until you finish part 1.
-
-  It might make sense to have a part 1 function and a part 2 function.
-
-  After inspecting the HTML, it looks like the way things work is an <article> tag with the "day-desc" class. The second one
-  is not returned to the user until after they've successfully completed part 1.
+  Given a year and day, fetches the description text for that puzzle from adventofcode.com, and converts it to markdown.
   """
   def get_puzzle_description_pt_1(day, year) do
-    session_token = load_session_token()
+    init_httpoison()
 
-    IO.puts(puzzle_url(4, 2023))
+    session_token = load_session_token()
 
     html =
       HTTPoison.get!(
@@ -67,6 +61,31 @@ defmodule AocUtils.SiteUtils do
     article_html =
       Floki.find(doc, "article")
       |> Enum.at(0)
+      |> Floki.raw_html()
+
+    {:ok, md} = Pandex.html_to_gfm(article_html)
+
+    md
+  end
+
+  def get_puzzle_description_pt_2(day, year) do
+    init_httpoison()
+
+    session_token = load_session_token()
+
+    html =
+      HTTPoison.get!(
+        puzzle_url(day, year),
+        [
+          {"Cookie", "session=#{session_token}"}
+        ]
+      ).body
+
+    {:ok, doc} = Floki.parse_document(html)
+
+    article_html =
+      Floki.find(doc, "article")
+      |> Enum.at(1)
       |> Floki.raw_html()
 
     {:ok, md} = Pandex.html_to_gfm(article_html)
