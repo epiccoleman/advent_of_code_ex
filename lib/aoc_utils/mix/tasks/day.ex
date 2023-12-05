@@ -1,17 +1,15 @@
 defmodule Mix.Tasks.Day do
-
   use Mix.Task
 
   @impl Mix.Task
-  def run([number, year | _args ]) do
-
-    IO.puts "You didn't code any protection from deleting untracked code with this..."
-    response = IO.gets "Create files for AOC #{year} Day #{number}? [Y/n]"
+  def run([number, year | _args]) do
+    IO.puts("You didn't code any protection from deleting untracked code with this...")
+    response = IO.gets("Create files for AOC #{year} Day #{number}? [Y/n]")
 
     if response =~ ~r{[yY]} or response =~ ~r[^\n$] do
       write_day_module(number, year)
     else
-      IO.puts "Not creating files..."
+      IO.puts("Not creating files...")
     end
   end
 
@@ -21,10 +19,10 @@ defmodule Mix.Tasks.Day do
     aoc_year = "aoc_#{year}"
     day_name = "day#{day_number}"
     day_module_name = "Aoc#{year}.Day#{day_number}"
-    day_lib_dir = "#{File.cwd!}/lib/#{aoc_year}/#{day_name}"
+    day_lib_dir = "#{File.cwd!()}/lib/#{aoc_year}/#{day_name}"
     day_module_path = "#{day_lib_dir}/#{day_name}.ex"
 
-    day_test_dir = "#{File.cwd!}/test/#{aoc_year}/#{day_name}"
+    day_test_dir = "#{File.cwd!()}/test/#{aoc_year}/#{day_name}"
     day_test_module_path = "#{day_test_dir}/#{day_name}_test.exs"
 
     # create module dir
@@ -45,8 +43,9 @@ defmodule Mix.Tasks.Day do
       """
     )
 
-    #create test dir
+    # create test dir
     File.mkdir_p!(day_test_dir)
+
     File.write!(
       day_test_module_path,
       """
@@ -70,5 +69,8 @@ defmodule Mix.Tasks.Day do
 
     puzzle_input = AocUtils.SiteUtils.get_puzzle_input(day, year)
     File.write!("#{day_test_dir}/input.txt", puzzle_input)
+
+    puzzle_desc = AocUtils.SiteUtils.get_puzzle_description_pt_1(day, year)
+    File.write!("#{day_test_dir}/part1.md", puzzle_desc)
   end
 end

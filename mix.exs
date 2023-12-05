@@ -8,7 +8,7 @@ defmodule AdventOfCodeEx.MixProject do
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      preferred_cli_env: ["test.aoc": :test, "test.aoc.grid": :test],
+      preferred_cli_env: ["test.aoc": :test, "test.aoc.grid": :test]
     ]
   end
 
@@ -27,6 +27,8 @@ defmodule AdventOfCodeEx.MixProject do
       {:benchee, "~> 1.1"},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
       {:httpoison, "~> 1.8"},
+      {:floki, "~> 0.35.0"},
+      {:pandex, "~> 0.2.0"}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]

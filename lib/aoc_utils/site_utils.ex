@@ -36,7 +36,8 @@ defmodule AocUtils.SiteUtils do
       [
         {"Cookie", "session=#{session_token}"}
       ]
-    ).body |> String.trim("\n")
+    ).body
+    |> String.trim("\n")
   end
 
   @doc """
@@ -48,19 +49,44 @@ defmodule AocUtils.SiteUtils do
   After inspecting the HTML, it looks like the way things work is an <article> tag with the "day-desc" class. The second one
   is not returned to the user until after they've successfully completed part 1.
   """
-  def get_puzzle_description(_day, _year) do
-  # just a stub for now
+  def get_puzzle_description_pt_1(day, year) do
+    session_token = load_session_token()
+
+    IO.puts(puzzle_url(4, 2023))
+
+    html =
+      HTTPoison.get!(
+        puzzle_url(day, year),
+        [
+          {"Cookie", "session=#{session_token}"}
+        ]
+      ).body
+
+    {:ok, doc} = Floki.parse_document(html)
+
+    article_html =
+      Floki.find(doc, "article")
+      |> Enum.at(0)
+      |> Floki.raw_html()
+
+    {:ok, md} = Pandex.html_to_gfm(article_html)
+
+    md
   end
 
   def submit_puzzle_solution(_day, _year, _solution) do
-  # just a stub for now
+    # just a stub for now
   end
 
   defp puzzle_input_url(day, year) do
     "#{@aoc_site_base_url}/#{year}/day/#{day}/input"
   end
 
-  defp load_session_token() do
+  defp puzzle_url(day, year) do
+    "#{@aoc_site_base_url}/#{year}/day/#{day}"
+  end
+
+  def load_session_token() do
     File.read!(@session_token_filename)
   end
 
@@ -68,5 +94,4 @@ defmodule AocUtils.SiteUtils do
     # this is necessary for calling httpoison funcs from a mix task
     Application.ensure_all_started(:httpoison)
   end
-
 end
