@@ -1,5 +1,13 @@
 ## notes - 2023
 
+## day 6
+
+alright, this one looks amenable to brute force, or at least part 1 does.
+
+yup, part 1 easy to brute force.
+
+part 2 is obviously less amenable to brute force, but it only has to run 35,696,887 iterations to simulate the race, and then the Enum.filter is also linear time against all 35 million. It finishes in about 15 seconds though. Good enough for now.
+
 ## day 5
 dammit, i should have known when i saw those giant numbers in the input that the "naive" approach wasn't going to work. since some of the range lengths given in the real input are in the hundreds of millions, i'm guessing that my current approach isn't going to work. although i am tempted to just run it and see how long it takes. for fun, i'm going to stick a timeout infinity on the test and just let it chooch. ns are huge, but i think processing each line is linear time, so i don't think we're looking at like... end of the universe kind of timelines here. but we'll see how long it takes. i think the real problem is we're going to be creating a bunch of maps with hundreds of millions of entries. Map access is O(log n) but with that amount of entries, that's still catastrophically slow. (edit: ran for at least 30 minutes, killing it.)
 
