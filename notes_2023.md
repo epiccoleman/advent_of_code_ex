@@ -15,7 +15,11 @@ determine them for each step. so basically check the input seeds against the ran
 
 skimming the code, i think that the process_input function and the part_1 logic are similar. but create_mapping has to be different, and probably get_destination changes as well to take advantage of that.
 
+---
+
 ok, got part 1. pretty happy with this solution. it may be slightly overly clever with creating a function to act as the "value" for each range as a key. you could probably just as easily find the correct range for the destination, and then use the source range start and end to figure out the answer. but this feels pretty neat, so works for me.
+
+---
 
 Part 2 - agh, wastl, you bastard.
 
@@ -25,7 +29,42 @@ So one thought I had is that we only really need to check the lowest number in e
 
 So I guess what we'd need to do is ... for each range of input source numbers, figure out which of the source ranges in the mapping it could cover. then the lowest number in any of those ranges would be the input to the next part? but the problem there is that you would lose information on each round. so i guess the input to each round has to be a set of ranges. and any given starting range may break down into multiple ranges, and also into single values. UGH
 
+---
 
+ok so i walked away and did some thinkin
+
+so what if instead of "get locations" we had a "get destination ranges"
+
+we pass a set of ranges into one of the mapping
+and out comes a set of ranges which can go into the next mapping.
+
+for each range we need to figure out the set of destination ranges
+
+so let's call range 1 a..b and range 2 x..y
+
+easy case - a >= x and b <= y. a is fully inside b - destintions = a..b
+
+but if a >= x and b >= y then only part of a is inside y - a..y
+same idea for the other "overlap", you get x..b
+
+so then once you get for example x..b of those you need to figure out the mapping for a..x. similar process.
+
+at the end you may be left with numbers outside any range, gotta think about what to do with those.
+
+---
+
+ok, it's done. the code is pretty gnarly, but i'm honestly not sure how it could be made
+less complicated - i think the problem is just complex! thank god for elixir's pattern matching
+and range handling, because the amount of manual labor that would have been added if not
+for those two things might have just made me give up.
+
+overall, despite being very and complicated, i'm happy with my solution. it runs really fast so that's cool. and I think the recursion in destination_ranges was probably the best way
+to solve the problem, even though the internals of the function are the most complicated part
+of the code. i also still like the clever "map a range to a function" solution for part 1.
+
+two things that would be interesting to try - see if there's a way to solve both parts with the part 2 input (which would reduce the amount of code pretty substantially). this feels like it might be more trouble than it's worth though. since you actually care about a specific value in a range for part 1, you'd have to maintain offsets through the whole pipeline to get it out the end.
+
+another interesting thing would be to run benchmarks with the initial naive solution and the "good" one. but honestly i've already spent way too much time on this problem, so on to the next one.
 
 ## day 4
 wooooooof. should have known with an easy part 1 that part 2 would be gnarly.
