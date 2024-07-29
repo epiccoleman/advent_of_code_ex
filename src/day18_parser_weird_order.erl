@@ -1,7 +1,7 @@
 -module(day18_parser_weird_order).
 -export([parse/1, parse_and_scan/1, format_error/1]).
 
--file("/Users/eric/.asdf/installs/erlang/24.2.1/lib/parsetools-2.3.2/include/yeccpre.hrl", 0).
+-file("/Users/eric/.asdf/installs/erlang/25.2/lib/parsetools-2.4.1/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
 %%
@@ -215,7 +215,7 @@ yeccpars2(Other, _, _, _, _, _, _) ->
 -compile({nowarn_unused_function,  yeccpars2_0/7}).
 yeccpars2_0(S, '(', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 4, Ss, Stack, T, Ts, Tzr);
-yeccpars2_0(S, number, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_0(S, 'number', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 5, Ss, Stack, T, Ts, Tzr);
 yeccpars2_0(_, _, _, _, T, _, _) ->
  yeccerror(T).

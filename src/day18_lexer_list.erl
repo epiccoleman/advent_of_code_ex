@@ -1,4 +1,4 @@
--file("/Users/eric/.asdf/installs/erlang/24.2.1/lib/parsetools-2.3.2/include/leexinc.hrl", 0).
+-file("/Users/eric/.asdf/installs/erlang/25.2/lib/parsetools-2.4.1/include/leexinc.hrl", 0).
 %% The source of this file is part of leex distribution, as such it
 %% has the same Copyright as the other files in the leex
 %% distribution. The Copyright is defined in the accompanying file
@@ -14,7 +14,7 @@
 %% User code. This is placed here to allow extra attributes.
 -file("src/day18_lexer_list.xrl", 11).
 
--file("/Users/eric/.asdf/installs/erlang/24.2.1/lib/parsetools-2.3.2/include/leexinc.hrl", 14).
+-file("/Users/eric/.asdf/installs/erlang/25.2/lib/parsetools-2.4.1/include/leexinc.hrl", 14).
 
 format_error({illegal,S}) -> ["illegal characters ",io_lib:write_string(S)];
 format_error({user,S}) -> S.
@@ -35,7 +35,7 @@ string(Ics0, L0, Tcs, Ts) ->
     case yystate(yystate(), Ics0, L0, 0, reject, 0) of
         {A,Alen,Ics1,L1} ->                  % Accepting end state
             string_cont(Ics1, L1, yyaction(A, Alen, Tcs, L0), Ts);
-        {A,Alen,Ics1,L1,_S1} ->              % Accepting transistion state
+        {A,Alen,Ics1,L1,_S1} ->              % Accepting transition state
             string_cont(Ics1, L1, yyaction(A, Alen, Tcs, L0), Ts);
         {reject,_Alen,Tlen,_Ics1,L1,_S1} ->  % After a non-accepting state
             {error,{L0,?MODULE,{illegal,yypre(Tcs, Tlen+1)}},L1};
@@ -392,4 +392,4 @@ yyaction_3(TokenLine) ->
 yyaction_4() ->
      skip_token .
 
--file("/Users/eric/.asdf/installs/erlang/24.2.1/lib/parsetools-2.3.2/include/leexinc.hrl", 313).
+-file("/Users/eric/.asdf/installs/erlang/25.2/lib/parsetools-2.4.1/include/leexinc.hrl", 313).

@@ -3,7 +3,7 @@
 -file("src/day18_parser_list.yrl", 15).
 
 extract_token({_Token, _Line, Value}) -> Value.
--file("/Users/eric/.asdf/installs/erlang/24.2.1/lib/parsetools-2.3.2/include/yeccpre.hrl", 0).
+-file("/Users/eric/.asdf/installs/erlang/25.2/lib/parsetools-2.4.1/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
 %%
@@ -231,9 +231,9 @@ yeccpars2_2(S, '(', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 2, Ss, Stack, T, Ts, Tzr);
 yeccpars2_2(S, ')', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 6, Ss, Stack, T, Ts, Tzr);
-yeccpars2_2(S, int, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_2(S, 'int', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 7, Ss, Stack, T, Ts, Tzr);
-yeccpars2_2(S, operator, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_2(S, 'operator', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 8, Ss, Stack, T, Ts, Tzr);
 yeccpars2_2(_, _, _, _, T, _, _) ->
  yeccerror(T).
@@ -255,9 +255,9 @@ yeccpars2_4(_, _, _, _, T, _, _) ->
 -compile({nowarn_unused_function,  yeccpars2_5/7}).
 yeccpars2_5(S, '(', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 2, Ss, Stack, T, Ts, Tzr);
-yeccpars2_5(S, int, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_5(S, 'int', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 7, Ss, Stack, T, Ts, Tzr);
-yeccpars2_5(S, operator, Ss, Stack, T, Ts, Tzr) ->
+yeccpars2_5(S, 'operator', Ss, Stack, T, Ts, Tzr) ->
  yeccpars1(S, 8, Ss, Stack, T, Ts, Tzr);
 yeccpars2_5(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_5_(Stack),
