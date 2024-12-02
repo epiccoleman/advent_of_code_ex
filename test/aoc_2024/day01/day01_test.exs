@@ -33,6 +33,6 @@ defmodule Aoc2024.Day01Test do
 
   test "Part 2" do
     input = get_file_as_strings("./test/aoc_2024/day01/input.txt")
-    assert part_2(input) == 0
+    assert part_2(input) == 19_437_052
   end
 end
