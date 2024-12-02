@@ -4,7 +4,7 @@ defmodule AocUtils.FileUtils do
   """
 
   @doc """
-  Reads an input file and returns its contents as a list of strings.
+  Reads an input file and returns its lines as a list of strings.
   """
   def get_file_as_strings(file_path) do
     File.read!(file_path)

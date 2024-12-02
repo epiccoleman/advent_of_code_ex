@@ -70,8 +70,12 @@ defmodule Mix.Tasks.Day do
     puzzle_input = AocUtils.SiteUtils.get_puzzle_input(day, year)
     File.write!("#{day_test_dir}/input.txt", puzzle_input)
 
-    puzzle_desc = AocUtils.SiteUtils.get_puzzle_description_pt_1(day, year)
-    File.write!("#{day_lib_dir}/part1.md", puzzle_desc)
+    # Removing this in favor of not fetching the description by default,
+    # since Eric Wastl has asked that puzzle repos don't reproduce the puzzle text.
+    # At some point I should go clean up the existing puzzle texts in this repo but ...
+
+    # puzzle_desc = AocUtils.SiteUtils.get_puzzle_description_pt_1(day, year)
+    # File.write!("#{day_lib_dir}/part1.md", puzzle_desc)
   end
 end
 
