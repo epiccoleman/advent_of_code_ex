@@ -9,6 +9,11 @@ This will create a module for that day's puzzle and an accompanying test module.
 
 Provide a valid session token in the root of the repo, in the `.session_token` file, to automatically download the puzzle input file!
 
+## Site Utils
+You can fetch the puzzle description (to the puzzle's implementation directory) using `mix day.desc $day $year`. This no longer happens by default when scaffolding a solution, because Eric Wastl requests that we don't include puzzle description texts in our repos. (I will go and clean up the existing ones someday, sorry fellow Eric).
+
+You can also submit a solution using `mix day.submit $day $year $part $answer`. If you steal any part of my code, please write your own User-Agent header string instead of stealing mine ;)
+
 ## Tests
 Run all the tests with `mix test`.
 
