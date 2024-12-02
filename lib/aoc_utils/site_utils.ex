@@ -19,6 +19,7 @@ defmodule AocUtils.SiteUtils do
 
   @session_token_filename "./.session_token"
   @aoc_site_base_url "https://adventofcode.com"
+  @user_agent "https://github.com/epiccoleman/advent_of_code_ex by eric@epiccoleman.com"
 
   @doc """
   Given a year and day, fetches the input text for that puzzle from adventofcode.com
@@ -93,16 +94,46 @@ defmodule AocUtils.SiteUtils do
     md
   end
 
-  def submit_puzzle_solution(_day, _year, _solution) do
-    # just a stub for now
+  @doc """
+  Submit an answer for Day / Year / Part
+  """
+  def submit_puzzle_solution(day, year, level, solution) do
+    init_httpoison()
+
+    url = puzzle_submit_url(day, year)
+    body = "level=#{level}&answer=#{solution}"
+    headers = [{"Content-Type", "application/x-www-form-urlencoded"} | headers()]
+
+    response = HTTPoison.post!(url, body, headers)
+
+    if response.status_code != 200 do
+      throw("Failed to submit with status: #{response.status_code}")
+    end
+
+    {:ok, doc} = Floki.parse_document(response.body)
+
+    Floki.find(doc, "article > p") |> Floki.text()
   end
 
   defp puzzle_input_url(day, year) do
     "#{@aoc_site_base_url}/#{year}/day/#{day}/input"
   end
 
+  defp puzzle_submit_url(day, year) do
+    "#{@aoc_site_base_url}/#{year}/day/#{day}/answer"
+  end
+
   defp puzzle_url(day, year) do
     "#{@aoc_site_base_url}/#{year}/day/#{day}"
+  end
+
+  defp headers() do
+    session_token = load_session_token()
+
+    [
+      {"User-Agent", @user_agent},
+      {"Cookie", "session=#{session_token}"}
+    ]
   end
 
   def load_session_token() do
