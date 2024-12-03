@@ -1,5 +1,11 @@
 ## notes - 2024
 
+## day 2
+Pretty straightforward. There's probably a more performant way to do this, but eh.
+
+Marry me, `Enum.chunk_every`. Our love can only stay secret for so long.
+
+
 ## day 1
 Alright, nice. Got CLI submission working, although frankly it's clunky enough that it's debatable whether it's better than just pasting into the input box. But it does work, which is fun.
 
