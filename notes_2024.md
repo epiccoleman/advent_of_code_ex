@@ -1,5 +1,14 @@
 ## notes - 2024
 
+## day 3
+That was a nice one! Good refresher on Regex for me. Once again Elixir std lib just makes things easy.
+
+I initially thought I would reduce over the list, and have a flag that kept track of whether we were in the do / don't state. But I had a nice realization which is that, with non-greedy matching, I could just strip out the sections of the string that shouldn't be multiplied (i.e. anything between a `don't()` and a `do()`). I also felt clever for realizing that approach might leave me with a trailing don't, and coded protection against that, but it didn't turn out to matter.
+
+One other important thing was using the `/s` at the end of my Regex (see also the `[:dotall]` option for many `Regex` functions in Elixir), which causes the dot character to match newlines and therefore lets the Regex span across the entire input (which for some reason is broken into 6 lines).
+
+So two good pieces of learning / reinforcement there on Regex. Good stuff.
+
 ## day 2
 Pretty straightforward. There's probably a more performant way to do this, but eh.
 
