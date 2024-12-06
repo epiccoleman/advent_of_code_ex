@@ -1,5 +1,12 @@
 ## notes - 2024
 
+## day 4
+Good ol' Grid2D got some fancy new functionality, and now has a general purpose "pattern detector". Really need to bust that out into a separate lib at some point, it's got a lot of cool stuff in it now.
+
+This one took longer than it strictly needed to because Grid2D is the one place in this repo where I try to, ya know, do things in a nice and maintainable way. But it did feel good when Part 2 was just detecting a different pattern and I didn't really have to do any new work.
+
+One other thing I might do for fun is to switch AOC2020 Day 20 over to use the new pattern stuff, just to further justify its existence. Overall, liked this one a lot, it's quite satisfying to keep extending Grid.
+
 ## day 3
 That was a nice one! Good refresher on Regex for me. Once again Elixir std lib just makes things easy.
 

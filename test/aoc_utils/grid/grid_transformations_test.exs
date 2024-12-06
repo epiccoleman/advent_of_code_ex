@@ -3,20 +3,23 @@ defmodule GridTransformationsTest do
 
   import AocUtils.Grid2D.Transformations
 
-  import AocUtils.Grid2D, only: [new: 1, update: 3, from_rows: 1, to_strs: 2, to_strs: 1, from_strs: 1]
+  import AocUtils.Grid2D,
+    only: [new: 1, update: 3, from_rows: 1, to_strs: 2, to_strs: 1, from_strs: 1, from_strs: 2]
 
   describe "transpose" do
     test "returns the grid transpose" do
-      grid = from_rows([
-        [1, 2, 3],
-        [4, 5, 6]
-      ])
+      grid =
+        from_rows([
+          [1, 2, 3],
+          [4, 5, 6]
+        ])
 
-      expected = from_rows([
-        [1, 4],
-        [2, 5],
-        [3, 6]
-      ])
+      expected =
+        from_rows([
+          [1, 4],
+          [2, 5],
+          [3, 6]
+        ])
 
       assert transpose(grid) == expected
     end
@@ -38,17 +41,17 @@ defmodule GridTransformationsTest do
         |> to_strs()
 
       assert flipped == [
-        "..#",
-        "##.",
-        "#.."
-      ]
+               "..#",
+               "##.",
+               "#.."
+             ]
     end
 
     test "works properly on grids with even number of columns" do
       strs = [
         "#...",
         ".#.#",
-        "..#.",
+        "..#."
       ]
 
       grid = from_strs(strs)
@@ -59,10 +62,10 @@ defmodule GridTransformationsTest do
         |> to_strs()
 
       assert flipped == [
-        "...#",
-        "#.#.",
-        ".#..",
-      ]
+               "...#",
+               "#.#.",
+               ".#.."
+             ]
     end
 
     test "works properly on sparse grids" do
@@ -82,9 +85,9 @@ defmodule GridTransformationsTest do
         |> to_strs("_")
 
       assert flipped == [
-        "__x",
-        "xx_",
-      ]
+               "__x",
+               "xx_"
+             ]
     end
 
     test "works on grids with negative indices" do
@@ -99,9 +102,9 @@ defmodule GridTransformationsTest do
         |> flip_horiz()
 
       assert to_strs(flipped, "_") == [
-        "__x",
-        "xx_",
-      ]
+               "__x",
+               "xx_"
+             ]
 
       assert flipped.x_min == -2
       assert flipped.x_max == 0
@@ -115,10 +118,13 @@ defmodule GridTransformationsTest do
   # ..#
   describe "flip_vert" do
     test "flips the grid vertically" do
-      grid = [
-        "##.",
-        ".#.",
-        "..#"] |> from_strs
+      grid =
+        [
+          "##.",
+          ".#.",
+          "..#"
+        ]
+        |> from_strs
 
       flipped =
         grid
@@ -126,10 +132,10 @@ defmodule GridTransformationsTest do
         |> to_strs()
 
       assert flipped == [
-        "..#",
-        ".#.",
-        "##."
-      ]
+               "..#",
+               ".#.",
+               "##."
+             ]
     end
 
     test "works properly on grids with even number of rows" do
@@ -148,11 +154,11 @@ defmodule GridTransformationsTest do
         |> to_strs()
 
       assert flipped == [
-        ".###",
-        "..#.",
-        ".#.#",
-        "#...",
-      ]
+               ".###",
+               "..#.",
+               ".#.#",
+               "#..."
+             ]
     end
 
     test "works properly on sparse grids" do
@@ -172,9 +178,9 @@ defmodule GridTransformationsTest do
         |> to_strs("_")
 
       assert flipped == [
-        "_xx",
-        "x__",
-      ]
+               "_xx",
+               "x__"
+             ]
     end
 
     test "works on grids with negative indices" do
@@ -197,10 +203,10 @@ defmodule GridTransformationsTest do
         |> flip_vert()
 
       assert to_strs(flipped, "_") == [
-        "x_x",
-        "_xx",
-        "x__",
-      ]
+               "x_x",
+               "_xx",
+               "x__"
+             ]
 
       assert flipped.x_min == -2
       assert flipped.x_max == 0
@@ -211,10 +217,12 @@ defmodule GridTransformationsTest do
 
   describe "rotations" do
     test "rotations" do
-      grid = [
-        "**",
-        ".."
-      ] |> from_strs()
+      grid =
+        [
+          "**",
+          ".."
+        ]
+        |> from_strs()
 
       rotated90 =
         grid
@@ -222,47 +230,46 @@ defmodule GridTransformationsTest do
         |> to_strs()
 
       assert rotated90 == [
-        ".*",
-        ".*"
-      ]
+               ".*",
+               ".*"
+             ]
 
       rotated180 =
         grid
-        |> rotate()
-        |> rotate()
+        |> rotate180()
         |> to_strs()
 
       assert rotated180 == [
-        "..",
-        "**"
-      ]
+               "..",
+               "**"
+             ]
 
       rotated270 =
         grid
-        |> rotate()
-        |> rotate()
-        |> rotate()
+        |> rotate270()
         |> to_strs()
 
       assert rotated270 == [
-        "*.",
-        "*."
-      ]
+               "*.",
+               "*."
+             ]
     end
 
     test "rotated bigger" do
-      grid = [
-        "##########",
-        ".........#",
-        ".........#",
-        ".........#",
-        ".........#",
-        ".........#",
-        ".........#",
-        ".........#",
-        ".........#",
-        ".........#",
-      ] |> from_strs()
+      grid =
+        [
+          "##########",
+          ".........#",
+          ".........#",
+          ".........#",
+          ".........#",
+          ".........#",
+          ".........#",
+          ".........#",
+          ".........#",
+          ".........#"
+        ]
+        |> from_strs()
 
       rotated90 =
         grid
@@ -270,60 +277,105 @@ defmodule GridTransformationsTest do
         |> to_strs()
 
       assert rotated90 == [
-        ".........#",
-        ".........#",
-        ".........#",
-        ".........#",
-        ".........#",
-        ".........#",
-        ".........#",
-        ".........#",
-        ".........#",
-        "##########",
+               ".........#",
+               ".........#",
+               ".........#",
+               ".........#",
+               ".........#",
+               ".........#",
+               ".........#",
+               ".........#",
+               ".........#",
+               "##########"
+             ]
+    end
+
+    test "rotations work on sparse grids" do
+      grid =
+        [
+          "**",
+          ".."
+        ]
+        |> from_strs(ignore: ".")
+
+      rotated90 = rotate(grid)
+
+      expected90 = [
+        "_*",
+        "_*"
       ]
+
+      rotated180 = rotate180(grid)
+
+      expected180 = [
+        "__",
+        "**"
+      ]
+
+      rotated270 = rotate270(grid)
+
+      expected270 = [
+        "*_",
+        "*_"
+      ]
+
+      rotated360 = rotate270(grid) |> rotate
+
+      expected360 = [
+        "**",
+        "__"
+      ]
+
+      assert to_strs(rotated90, "_") == expected90
+      assert to_strs(rotated180, "_") == expected180
+      assert to_strs(rotated270, "_") == expected270
+      assert to_strs(rotated360, "_") == expected360
     end
   end
 
   test "orient_edge_top" do
-    grid = [
-      "#.#.",
-      "#..#",
-      "#..#",
-      "#..#"
-    ] |> from_strs
+    grid =
+      [
+        "#.#.",
+        "#..#",
+        "#..#",
+        "#..#"
+      ]
+      |> from_strs
 
     reoriented =
       grid
-      |> orient_edge_top(["#","#","#","."])
+      |> orient_edge_top(["#", "#", "#", "."])
       |> to_strs()
 
     assert reoriented == [
-      "###.",
-      "...#",
-      "....",
-      "####"
-    ]
+             "###.",
+             "...#",
+             "....",
+             "####"
+           ]
   end
 
   test "orient_edge_to_direction" do
-    grid = [
-      "#.#.",
-      "#..#",
-      "#..#",
-      "#..#"
-    ] |> from_strs
+    grid =
+      [
+        "#.#.",
+        "#..#",
+        "#..#",
+        "#..#"
+      ]
+      |> from_strs
 
     reoriented =
       grid
-      |> orient_edge_to_direction(["#",".","#","."], :right)
+      |> orient_edge_to_direction(["#", ".", "#", "."], :right)
       |> to_strs()
 
     assert reoriented == [
-      "####",
-      "....",
-      "...#",
-      "###."
-    ]
+             "####",
+             "....",
+             "...#",
+             "###."
+           ]
   end
-
 end

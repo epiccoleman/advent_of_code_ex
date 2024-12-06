@@ -4,6 +4,7 @@ defmodule GridTest do
   import AocUtils.Grid2D
 
   require Integer
+  alias AocUtils.Grid2D
   alias AocUtils.Grid2D.GridAccessError
   alias AocUtils.Grid2D.InvalidGridDimensionsError
 
@@ -672,6 +673,59 @@ defmodule GridTest do
     end
   end
 
+  describe "from_list" do
+    test "creates a simple grid from a list of values" do
+      expected =
+        new(x_max: 2, y_max: 2)
+        |> update({0, 0}, "#")
+        |> update({1, 1}, "#")
+        |> update({2, 2}, "#")
+
+      actual =
+        [
+          {{0, 0}, "#"},
+          {{1, 1}, "#"},
+          {{2, 2}, "#"}
+        ]
+        |> from_list()
+
+      assert expected == actual
+    end
+
+    test "raises ArgumentError if input list is malformed" do
+      input_list = [
+        {1, 2},
+        {{2, 1}, 2}
+      ]
+
+      assert_raise(ArgumentError, fn -> from_list(input_list) end)
+    end
+
+    test "sets dimensions correctly" do
+      actual =
+        [
+          {{3, 4}, "F"},
+          {{37, 12}, "0"},
+          {{3, 19}, "F"}
+        ]
+        |> from_list()
+
+      expected = %Grid2D{
+        grid_map: %{
+          {3, 4} => "F",
+          {37, 12} => "0",
+          {3, 19} => "F"
+        },
+        x_min: 3,
+        x_max: 37,
+        y_min: 4,
+        y_max: 19
+      }
+
+      assert actual == expected
+    end
+  end
+
   describe "to_strs" do
     test "converts the grid to a list of row strings", state do
       grid = state.grid
@@ -1149,6 +1203,149 @@ defmodule GridTest do
 
       assert g_up == expected_g_up
       assert g_down == expected_g_down
+    end
+  end
+
+  describe "extract_piece" do
+    test "extracts rectangles from the grid, and translates it to default origin" do
+      source_grid =
+        from_rows([
+          [1, 2, 3, 4, 5, 6],
+          [7, 8, 9, 1, 2, 3],
+          [9, 0, 1, 2, 5, 8],
+          [2, 1, 1, 2, 0, 8]
+        ])
+
+      expected_1 =
+        from_rows([
+          [1, 2, 3],
+          [7, 8, 9]
+        ])
+
+      expected_2 =
+        from_rows([
+          [5, 8],
+          [0, 8]
+        ])
+
+      expected_3 =
+        from_rows([
+          [2, 1, 1, 2]
+        ])
+
+      expected_4 =
+        from_rows([
+          [6],
+          [3],
+          [8],
+          [8]
+        ])
+
+      actual_1 = extract_piece(source_grid, {0, 0}, {2, 1})
+      actual_2 = extract_piece(source_grid, {4, 2}, {5, 3})
+      actual_3 = extract_piece(source_grid, {0, 3}, {3, 3})
+      actual_4 = extract_piece(source_grid, {5, 0}, {5, 3})
+
+      assert actual_1 == expected_1
+      assert actual_2 == expected_2
+      assert actual_3 == expected_3
+      assert actual_4 == expected_4
+    end
+
+    test "preserves original coordinates when preserve_origin true" do
+      source_grid =
+        from_rows([
+          [1, 2, 3, 4, 5, 6],
+          [7, 8, 9, 1, 2, 3],
+          [9, 0, 1, 2, 5, 8],
+          [2, 1, 1, 2, 0, 8]
+        ])
+
+      expected_1 =
+        from_rows([
+          [5, 8],
+          [0, 8]
+        ])
+        |> translate({4, 2})
+
+      expected_2 =
+        from_rows([
+          [2, 1, 1, 2]
+        ])
+        |> translate({0, 3})
+
+      expected_3 =
+        from_rows([
+          [6],
+          [3],
+          [8],
+          [8]
+        ])
+        |> translate({5, 0})
+
+      actual_1 = extract_piece(source_grid, {4, 2}, {5, 3}, preserve_origin: true)
+      actual_2 = extract_piece(source_grid, {0, 3}, {3, 3}, preserve_origin: true)
+      actual_3 = extract_piece(source_grid, {5, 0}, {5, 3}, preserve_origin: true)
+
+      assert actual_1 == expected_1
+      assert actual_2 == expected_2
+      assert actual_3 == expected_3
+    end
+
+    test "raises GridAccessError if rectangle reaches outside the bounds of the grid" do
+      source_grid =
+        from_rows([
+          [1, 2, 3, 4, 5, 6],
+          [7, 8, 9, 1, 2, 3],
+          [9, 0, 1, 2, 5, 8],
+          [2, 1, 1, 2, 0, 8]
+        ])
+
+      assert_raise(GridAccessError, fn -> extract_piece(source_grid, {3, 2}, {6, 7}) end)
+    end
+  end
+
+  describe "grid size" do
+    test "x_size returns the horizontal size of the grid" do
+      test_grid =
+        from_rows([
+          [1, 2, 3, 4, 5, 6],
+          [7, 8, 9, 1, 2, 3],
+          [9, 0, 1, 2, 5, 8],
+          [2, 1, 1, 2, 0, 8]
+        ])
+
+      assert x_size(test_grid) == 6
+    end
+
+    test "y_size returns the vertical size of the grid" do
+      test_grid =
+        from_rows([
+          [1, 2, 3, 4, 5, 6],
+          [7, 8, 9, 1, 2, 3],
+          [9, 0, 1, 2, 5, 8],
+          [2, 1, 1, 2, 0, 8]
+        ])
+
+      assert y_size(test_grid) == 4
+    end
+
+    test "size works even if one side isn't 0" do
+      test_grid = new(x_min: 1, y_min: 1, x_max: 3, y_max: 3)
+      assert x_size(test_grid) == 3
+      assert y_size(test_grid) == 3
+    end
+
+    test "size works even with negatives" do
+      test_grid = new(x_min: -1, y_min: -1, x_max: 1, y_max: 1)
+      assert x_size(test_grid) == 3
+      assert y_size(test_grid) == 3
+    end
+
+    test "size works even if you do something dumb and weird" do
+      test_grid = new(x_min: -1, y_min: 1, x_max: 0, y_max: 12)
+      assert x_size(test_grid) == 2
+      assert y_size(test_grid) == 12
     end
   end
 end

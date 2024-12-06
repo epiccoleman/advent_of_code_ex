@@ -190,6 +190,36 @@ defmodule AocUtils.Grid2D do
   defdelegate from_cols(cols, ignore_value \\ nil), to: Grid2D, as: :from_columns
 
   @doc """
+  Creates a Grid from a list of key-value tuples, where keys are tuples of {x,y} coordinates, and the value is the value at that location.
+
+  Note that the new Grid's x_min, x_max, y_min, and y_max will be determined by the min/max points in the
+  given list.
+
+  Raises an ArgumentError if the given list is malformed.
+  """
+  def from_list(list) do
+    list_valid? =
+      Enum.all?(list, fn
+        {{_x, _y}, _v} -> true
+        _ -> false
+      end)
+
+    if not list_valid?,
+      do: raise(ArgumentError, "Failed to create Grid from list. Input list is malformed.")
+
+    {{{new_x_min, _}, _}, {{new_x_max, _}, _}} = Enum.min_max_by(list, fn {{x, _y}, _v} -> x end)
+    {{{_, new_y_min}, _}, {{_, new_y_max}, _}} = Enum.min_max_by(list, fn {{_x, y}, _v} -> y end)
+
+    %Grid2D{
+      grid_map: Enum.into(list, %{}),
+      x_min: new_x_min,
+      x_max: new_x_max,
+      y_min: new_y_min,
+      y_max: new_y_max
+    }
+  end
+
+  @doc """
   Converts a Grid to a list of strings, where each string is the concatentation of the
   values in a row of the Grid.
 
@@ -291,7 +321,7 @@ defmodule AocUtils.Grid2D do
   Accepts an optional `default` value, which will be returned if the given cell does not have a value. By default,
   `nil` will be returned for unoccupied cells.
   """
-  def at(grid, {x, y}, default \\ nil) do
+  def at(grid, {x, y} = _location, default \\ nil) do
     Map.get(grid.grid_map, {x, y}, default)
   end
 
@@ -300,7 +330,7 @@ defmodule AocUtils.Grid2D do
 
   If the position is outside the bounds of the Grid, the grid will be returned unmodified.
   """
-  def update(grid, {x, y}, _value)
+  def update(grid, {x, y} = _location, _value)
       when x < grid.x_min or
              x > grid.x_max or
              y < grid.y_min or
@@ -586,10 +616,14 @@ defmodule AocUtils.Grid2D do
 
   @doc """
   Prints as a Grid all mashed together - not particularly useful outside of Aoc 2020 Day 20 debugging.
+
+  Returns the grid, unmodified - like IO.inspect
   """
   def print(grid) do
     to_strs(grid)
     |> Enum.map(&IO.puts/1)
+
+    grid
   end
 
   @doc """
@@ -648,6 +682,74 @@ defmodule AocUtils.Grid2D do
       y_max: k + abs(grid.y_max - grid.y_min),
       grid_map: new_grid_map
     }
+  end
+
+  @doc """
+  Given a source grid, and two points specifying a rectangle within its bounds, extracts a rectangular
+  section of the grid and returns it as a section. The specified points are the corners of the rectangle
+  and the extraction is inclusive of the corner points.
+
+  The function will raise a GridAccessException if the specified rectangle extends
+  beyond the bounds of the source grid.
+
+  extract_piece receives the following parameters:
+  * `source_grid` - the grid from which to extract a piece
+  * `_top_left` - a tuple representing the top-left corner of the rectangle to extract
+  * `_bottom_right` - a tuple representing the bottom-right corner of the rectangle to extract
+  * `options` - a keyword list representing optional features. See "Options" section below.
+
+  ### Options
+  * :preserve_origin - by default, the extracted rectangle will be translated so that its origin
+  is at (0,0). Passing `preserve_origin: true` will cause the extracted rectangle to maintain its original
+  coordinates (i.e. `{x_min, y_min}` will be set to the given location for `top_left`, and `{x_max, y_max} will correspond to `bottom_right`)
+
+  """
+  def extract_piece(source_grid, {x1, y1} = _top_left, {x2, y2} = _bottom_right, options \\ []) do
+    %Grid2D{
+      grid_map: source_grid_map,
+      x_max: source_grid_x_max,
+      x_min: source_grid_x_min,
+      y_min: source_grid_y_min,
+      y_max: source_grid_y_max
+    } = source_grid
+
+    if x1 < source_grid_x_min or y1 < source_grid_y_min or x2 > source_grid_x_max or
+         y2 > source_grid_y_max do
+      raise(
+        Grid2D.GridAccessError,
+        "Rectangle passed to extract_piece extends beyond the bounds of source_grid"
+      )
+    end
+
+    new_grid =
+      for x <- x1..x2,
+          y <- y1..y2 do
+        {{x, y}, Map.get(source_grid_map, {x, y}, nil)}
+      end
+      |> Enum.reject(fn {_k, v} -> is_nil(v) end)
+      |> from_list()
+
+    preserve_origin? = Keyword.get(options, :preserve_origin, false)
+
+    if preserve_origin? do
+      new_grid
+    else
+      translate(new_grid, {0, 0})
+    end
+  end
+
+  @doc """
+  Returns a grid's vertical size (abs(y_max - y_min)).
+  """
+  def y_size(%{y_max: y_max, y_min: y_min} = %Grid2D{}) do
+    abs(y_max - y_min) + 1
+  end
+
+  @doc """
+  Returns a grid's horizontal size (abs(x_max - x_min)).
+  """
+  def x_size(%{x_max: x_max, x_min: x_min} = %Grid2D{}) do
+    abs(x_max - x_min) + 1
   end
 
   ## Edge access / manipulation
