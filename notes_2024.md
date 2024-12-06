@@ -1,5 +1,18 @@
 ## notes - 2024
 
+## day 5
+I guess I'll give myself a little bit of credit for noticing ahead of time that this was probably a graph problem of some kind. I couldn't quite suss out a good way to do it with a graph, so I did a sort of naive solution on Part 1 - but of course, as soon as Part 2 came up, I could tell I was going to have to change my approach a bit.
+
+I've been trying to avoid doing much searching or using help from AI this year - even going so far as to write the code in VSCode instead of Cursor (which has become my default editor). But I did get a pointer to the concept of a topological sort - which I only vaguely remember from my algs class - which does exactly what I need, by producing a sorted list from a graph such that all the dependencies are in order.
+
+Lucky for me, `libgraph` has a built in `topsort` which can be used to produce a topological sort of a directed graph. I decided to just use that instead of implementing it myself (I know, lazy). But I did have to solve the problem of taking an arbitrary update and rearranging it given a sort order. The way I went about that was just to iterate through the sort order and add each element to the 'rearranged' list if it existed in the update, which does effectively sort the update, although I bet there's a better algorithm for that - but it doesn't matter much given the relatively small sizes of the updates.
+
+Another issue was that the whole set of rules for the 'real' problem is not possible to topologically sort. The way to solve that is to simply remove all the irrelevant rules from the set before making the graph, which (at least for this problem) eliminated any cycles in the graphs.
+
+Really, the first part was harder, since I hadn't landed on a topsort implementation yet. I wonder if it would be any faster to use the topsort approach for Part 1, though I somewhat doubt it given the size of the data and the overhead of making the graph and performing the topsort. I'm not interested enough in that question to bother writing a benchmark, so I guess it'll remain a mystery.
+
+Good problem though, this year has been fun so far!
+
 ## day 4
 Good ol' Grid2D got some fancy new functionality, and now has a general purpose "pattern detector". Really need to bust that out into a separate lib at some point, it's got a lot of cool stuff in it now.
 
