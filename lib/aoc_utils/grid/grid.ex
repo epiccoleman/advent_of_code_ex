@@ -496,6 +496,23 @@ defmodule AocUtils.Grid2D do
   end
 
   @doc """
+  Deletes the grid entry at the given location. If the given location does not exist in the
+  grid, the grid is returned unmodified.
+
+  This does not update the boundaries of the grid, so x_min, x_max, y_min, and y_max will remain
+  unchanged.
+  """
+  def delete(%Grid2D{} = grid, loc) do
+    %Grid2D{
+      grid_map: Map.delete(grid.grid_map, loc),
+      x_min: grid.x_min,
+      x_max: grid.x_max,
+      y_min: grid.y_min,
+      y_max: grid.y_max
+    }
+  end
+
+  @doc """
   Returns a list of locations in the Grid for which the given function returns a truthy
   value.
 
@@ -750,6 +767,19 @@ defmodule AocUtils.Grid2D do
   """
   def x_size(%{x_max: x_max, x_min: x_min} = %Grid2D{}) do
     abs(x_max - x_min) + 1
+  end
+
+  @doc """
+  Returns true if the given point is within the boundaries of the grid.
+
+  Make note that this does not check whether the given point is set, or its value - just whether
+  the given location is within the boundaries of the grid.
+  """
+  def within_boundaries?(
+        %Grid2D{x_min: x_min, x_max: x_max, y_min: y_min, y_max: y_max} = _grid,
+        {x, y} = _loc
+      ) do
+    x_min <= x and x <= x_max and y_min <= y and y <= y_max
   end
 
   ## Edge access / manipulation
