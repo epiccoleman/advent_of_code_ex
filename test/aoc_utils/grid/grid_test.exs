@@ -437,6 +437,44 @@ defmodule GridTest do
     assert actual_grid_keys == grid_keys
   end
 
+  describe "delete" do
+    test "deletes the given location from the grid" do
+      grid =
+        from_rows([
+          [1, 2],
+          [3, 4]
+        ])
+
+      actual = delete(grid, {1, 1})
+
+      expected = %Grid2D{
+        grid_map: %{
+          {0, 0} => 1,
+          {1, 0} => 2,
+          {0, 1} => 3
+        },
+        x_min: 0,
+        x_max: 1,
+        y_min: 0,
+        y_max: 1
+      }
+
+      assert actual == expected
+    end
+
+    test "returns the grid unmodified if the given location does not exist" do
+      grid =
+        from_rows([
+          [1, 2],
+          [3, 4]
+        ])
+
+      actual = delete(grid, {21, 12})
+
+      assert actual == grid
+    end
+  end
+
   test "matching_locs" do
     grid =
       from_rows([
@@ -1347,5 +1385,23 @@ defmodule GridTest do
       assert x_size(test_grid) == 2
       assert y_size(test_grid) == 12
     end
+  end
+
+  test "within_boundaries?" do
+    test_grid =
+      from_rows([
+        [1, 2, 3, 4],
+        [7, 8, 9, 1],
+        [9, 0, 1, 2],
+        [2, 1, 1, 2]
+      ])
+
+    assert within_boundaries?(test_grid, {1, 1})
+    assert within_boundaries?(test_grid, {0, 0})
+    assert within_boundaries?(test_grid, {3, 3})
+    assert not within_boundaries?(test_grid, {-1, 0})
+    assert not within_boundaries?(test_grid, {5, 0})
+    assert not within_boundaries?(test_grid, {0, 7})
+    assert not within_boundaries?(test_grid, {19, 72})
   end
 end
