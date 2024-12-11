@@ -694,7 +694,7 @@ defmodule GridTest do
              }
     end
 
-    test "ignores the ignore_char if given" do
+    test "ignores a single ignore char if given" do
       expected =
         new(x_max: 2, y_max: 2)
         |> update({0, 0}, "#")
@@ -708,6 +708,48 @@ defmodule GridTest do
         )
 
       assert expected == actual
+    end
+
+    test "ignores a list of ignore chars if given" do
+      test_grid_strs = [
+        "..A",
+        ".B#",
+        "@C."
+      ]
+
+      expected =
+        new(x_max: 2, y_max: 2)
+        |> update({2, 0}, "A")
+        |> update({1, 1}, "B")
+        |> update({1, 2}, "C")
+
+      actual =
+        from_strs(
+          test_grid_strs,
+          ignore: [".", "#", "@"]
+        )
+
+      assert expected == actual
+    end
+
+    test "raises if the user passes nonsense for ignore" do
+      test_grid_strs = [
+        "..A",
+        ".B#",
+        "@C."
+      ]
+
+      assert_raise(ArgumentError, fn -> from_strs(test_grid_strs, ignore: %{hey: "you guys"}) end)
+    end
+
+    test "raises if the given strings are not all of the same length" do
+      test_grid_strs = [
+        "..#",
+        "..#",
+        ".."
+      ]
+
+      assert_raise(ArgumentError, fn -> from_strs(test_grid_strs) end)
     end
   end
 

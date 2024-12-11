@@ -96,13 +96,29 @@ defmodule AocUtils.Grid2D do
 
   This function assumes that the grid's x_min and y_min are zero. For a more configurable constructor, see Grid2D.new.
 
-  Accepts optional config argument :ignore. If you pass a single character binary with this option, that string will be
-  ignored in the input.
+  ## Options
+  * `:ignore` - accepts a string (a binary), number, or a list of values to ignore in the input strings. Any position that matches
+  will not be set in the output grid. Be careful that you use double quotes when specifying a string, as charlists are valid inputs, but
+  will likely behave in a way you don't expect.
 
   All strings given in the list must be of the same length.
   """
   def from_strs(strs, options \\ []) do
-    ignore_char = Keyword.get(options, :ignore)
+    ignore_option = Keyword.get(options, :ignore)
+
+    ignore_list =
+      cond do
+        ignore_option == nil -> []
+        is_list(ignore_option) -> ignore_option
+        is_binary(ignore_option) or is_number(ignore_option) -> [ignore_option]
+        true -> raise(ArgumentError, ":ignore must be a list, string, or number")
+      end
+
+    expected_str_length = String.length(hd(strs))
+
+    if not Enum.all?(strs, fn str -> String.length(str) == expected_str_length end) do
+      raise(ArgumentError, "All strings given in strs must be of the same length")
+    end
 
     grid_chars = strs |> Enum.map(&String.graphemes/1)
 
@@ -113,7 +129,7 @@ defmodule AocUtils.Grid2D do
       for x <- 0..x_max,
           y <- 0..y_max do
         state = grid_chars |> Enum.at(y) |> Enum.at(x)
-        if(state == ignore_char, do: nil, else: {{x, y}, state})
+        if(state in ignore_list, do: nil, else: {{x, y}, state})
       end
       |> Enum.reject(&is_nil/1)
       |> Enum.into(%{})
