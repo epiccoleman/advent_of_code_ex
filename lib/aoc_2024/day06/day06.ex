@@ -17,7 +17,7 @@ defmodule Aoc2024.Day06 do
   def process_input(input) do
     grid = Grid2D.from_strs(input, ignore: ".")
 
-    guard_loc = Grid2D.matching_locs(grid, fn {_loc, v} -> v == "^" end) |> hd()
+    guard_loc = Grid2D.find_locs(grid, fn {_loc, v} -> v == "^" end) |> hd()
 
     grid = Grid2D.delete(grid, guard_loc)
 

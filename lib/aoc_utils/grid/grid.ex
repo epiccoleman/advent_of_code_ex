@@ -535,14 +535,24 @@ defmodule AocUtils.Grid2D do
   The given function will be invoked with a tuple of {grid_location, cell_value}, and should return
   either a truthy or falsy value.
   """
-  def matching_locs(%Grid2D{} = grid, function) do
+  def find_locs(%Grid2D{} = grid, function) when is_function(function) do
     grid
     |> to_list()
     |> Enum.map(fn {position, value} ->
       {position, function.({position, value})}
     end)
     |> Enum.filter(fn {_, v} -> v end)
-    |> Enum.map(fn {pos, _} -> pos end)
+    |> Enum.map(fn {loc, _} -> loc end)
+  end
+
+  @doc """
+  Returns a list of locations in the grid where the value matches the given string or number.
+  """
+  def matching_locs(%Grid2D{} = grid, value) when is_number(value) or is_binary(value) do
+    grid
+    |> to_list
+    |> Enum.filter(fn {_, v} -> v == value end)
+    |> Enum.map(fn {loc, _} -> loc end)
   end
 
   @doc """

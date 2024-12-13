@@ -1,5 +1,28 @@
 ## notes - 2024
 
+## day 8
+argh. the worst thing that can happen is when your code works on the test input but not on the big one. because where do you start debugging?
+
+initial answer was 297. i then submitted 350 to see if i was way off (establish an upper bound). 297 is too low and 350 is too large, so i don't seem to be _wildly_ off. that's a range of 53 so ... i could just binary search for the answer with 6 guesses. which honestly, i might - just because it would be nice to know the exact number for the sake of tuning the code. am i missing ... one? several?
+
+idk if that even really helps me, though, tbh. because i still wouldn't know _which_ ones I'm missing.
+
+--- hours later
+
+holy shit, i just misread the problem. i _wasn't_ supposed to filter out locations that already had an antenna at them. god daimn.
+
+on to part 2.
+
+---
+
+ok, well at first i thought this was going to be hard, but i had two realizations that made it feel easier than part 1 - which is a nice consolation prize for the time spent debugging on part 1 only to realize i just didn't read the puzzle right.
+
+the first realization was that there's not really a need to worry about duplicate values or about the ordering of the pairs of points. in fact, it's easier to just do _permutations_ of points rather than combinations, because it eliminates the need to figure out the direction of the line between the two points. i guess i could go fix part 1 to use the same strategy, but i cbf. but anyway, the idea is that since we know we're going to see each pair of points in two arrangements (i.e. for some pair {{x_a, y_a}, {x_b, y_b}}, our function for finding antinodes will see both {a, b} and {b, a}) we can just get the offset between a and b and then the offset between b and a, and calculate the antinodes in the correct direction. that means we can just always get the next point by applying the offset between a and b. since we always start with {x1, y1}, we may wind up calculating the same antinode more than once - but who cares, `Enum.uniq`  exists.
+
+The other thing that I learned (and this is a good piece of knowledge to have, and therefore sufficient reward for the annoyance of part 1) is about `Stream.take_while`. Although funnily enough from a quick search through this repo I've used that several times already, so I guesss it's not new knowledge per se. But either way, it made the problem easy. I think technically in this case, it should be an Enum.take_while, which avoids having to call `Enum.into` or `Enum.to_list` to resolve the sequence. For a sequence of this size it probably don't mattah, so I'm going to leave it as originally written for the sake of having an example for future me.
+
+Woof. on to the next one.
+
 ## day 7
 
 ok, so this turned out to not be as bad as i thought. special thanks to elixir for making me learn recursion i guess?

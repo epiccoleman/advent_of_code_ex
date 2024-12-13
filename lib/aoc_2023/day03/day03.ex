@@ -93,7 +93,7 @@ defmodule Aoc2023.Day03 do
   Returns the locations of all the symbols in the grid.
   """
   def get_symbol_locations(grid) do
-    Grid.matching_locs(grid, fn {_, char_at_loc} ->
+    Grid.find_locs(grid, fn {_, char_at_loc} ->
       not (char_at_loc =~ ~r/(\d|\.)/)
     end)
   end
@@ -106,7 +106,7 @@ defmodule Aoc2023.Day03 do
   """
   def get_gear_ratios(grid) do
     grid
-    |> Grid.matching_locs(fn {_, char_at_loc} ->
+    |> Grid.find_locs(fn {_, char_at_loc} ->
       char_at_loc == "*"
     end)
     |> Enum.map(fn gear_loc ->

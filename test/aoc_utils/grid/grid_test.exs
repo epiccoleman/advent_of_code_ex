@@ -475,7 +475,7 @@ defmodule GridTest do
     end
   end
 
-  test "matching_locs" do
+  test "find_locs" do
     grid =
       from_rows([
         [1, 2, 3],
@@ -497,8 +497,31 @@ defmodule GridTest do
     even_fn = fn {_, v} -> Integer.is_even(v) end
     odd_fn = fn {_, v} -> Integer.is_odd(v) end
 
-    assert matching_locs(grid, even_fn) == expected_locs_even
-    assert matching_locs(grid, odd_fn) == expected_locs_odd
+    assert find_locs(grid, even_fn) == expected_locs_even
+    assert find_locs(grid, odd_fn) == expected_locs_odd
+  end
+
+  test "matching_locs" do
+    grid =
+      from_rows([
+        [2, 1, 2],
+        [1, 2, 1]
+      ])
+
+    expected_locs_one = [
+      {0, 1},
+      {1, 0},
+      {2, 1}
+    ]
+
+    expected_locs_two = [
+      {0, 0},
+      {1, 1},
+      {2, 0}
+    ]
+
+    assert matching_locs(grid, 1) == expected_locs_one
+    assert matching_locs(grid, 2) == expected_locs_two
   end
 
   test "all?" do
