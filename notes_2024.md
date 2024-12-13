@@ -1,5 +1,19 @@
 ## notes - 2024
 
+## day 7
+
+ok, so this turned out to not be as bad as i thought. special thanks to elixir for making me learn recursion i guess?
+
+i let this one kinda stop me on the AOC path for a while and I turned out to solve it pretty quickly
+
+I will give myself some "cleverness credit" for noticing what part 2 would be in the sample input.
+
+because of that I ran a quick test on the input (which I think is a good idea for future reference) where I counted the number of operations it would take. For a digit string with n digits, the number of "attempts" you need to make is 2^n. The longest string of digits in the input has 11 digits, so to brute force it we need to try 2048 combinations of operators. (Side note - I could probably write the recursion in a more clever way that causes it to kick early if a set of operators goes over the limit, cutting some fat off the checking.)
+
+Anyway, for 3 operators (add, mul, and concat), the number of attempts is 3^n, which of course increases faster. But even still, 3^11 is only 177,147. Totaling up all the "line tests" for the given input gave me 268,872 for part 1 and 16,361,982 for part 2. So I think brute force will be viable enough here.
+
+Yup, its fine. No need to get fancy. Onward!
+
 ## day 6
 looks like grid's back on the menu, boys
 
