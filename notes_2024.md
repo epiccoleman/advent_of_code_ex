@@ -1,5 +1,12 @@
 ## notes - 2024
 
+## day 9
+man. i never ever would have guessed how hard i'd find this one.
+
+nothing in the finished code seems that hard when you look at it, but this just took me ages and ages to get right. lots of debugging and fiddly stuff. i wanted to work with ranges because it felt like just trying to use a list was going to be tough, but i might have overthought it. idc. don't care anymore, its done.
+
+my part 2 solution is a little slow but still finishes in a few seconds, so i'm moving on. this one cost me a few days of headbanging. hope the next one is not as bad. i leave a million lines of logging code commented out as a memorial to my wasted time.
+
 ## day 8
 argh. the worst thing that can happen is when your code works on the test input but not on the big one. because where do you start debugging?
 
