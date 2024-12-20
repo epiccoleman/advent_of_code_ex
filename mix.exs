@@ -8,7 +8,8 @@ defmodule AdventOfCodeEx.MixProject do
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      preferred_cli_env: ["test.aoc": :test, "test.aoc.grid": :test]
+      preferred_cli_env: ["test.aoc": :test, "test.aoc.grid": :test],
+      compilers: [:yecc, :leex] ++ Mix.compilers()
     ]
   end
 

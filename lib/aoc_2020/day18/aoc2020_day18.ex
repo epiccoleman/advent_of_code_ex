@@ -56,10 +56,10 @@ defmodule Day18 do
     b_eval = if is_list(b) do evaluate(b) else b end
 
     operation = case op do
-      '+' -> &+/2
-      '-' -> &-/2
-      '*' -> &*/2
-      '/' -> &//2
+      ~c"+" -> &+/2
+      ~c"-" -> &-/2
+      ~c"*" -> &*/2
+      ~c"/" -> &//2
     end
 
     evaluate([operation.(a_eval, b_eval)] ++ rest)

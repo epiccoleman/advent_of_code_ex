@@ -134,7 +134,7 @@ defmodule Aoc2023.Day05 do
   Given a single seed range, and a set of range mappings, returns a list
   of destination ranges for the seed range.
   """
-  def destination_ranges(range_mappings, _seed_start.._seed_end = seed_range) do
+  def destination_ranges(range_mappings, _seed_start.._seed_end//_ = seed_range) do
     initial_state = {[seed_range], []}
     destination_ranges(range_mappings, initial_state)
   end
@@ -145,7 +145,7 @@ defmodule Aoc2023.Day05 do
   end
 
   def destination_ranges(range_mappings, {[seed_range | seed_rest], destinations}) do
-    a..b = seed_range
+    a..b//_ = seed_range
 
     mapping_containing_a = Enum.find(range_mappings, fn {s_r, _} -> a in s_r end)
     mapping_containing_b = Enum.find(range_mappings, fn {s_r, _} -> b in s_r end)
@@ -162,7 +162,7 @@ defmodule Aoc2023.Day05 do
           # mapping, and we return the sub-range of the destination_range from that mapping.
           # but we need to know how far into the destination range our seed range starts, so we
           # calculate an offset.
-          {source_a.._source_b, dest_a.._dest_b} = mapping_containing_a
+          {source_a.._source_b//_, dest_a.._dest_b//_} = mapping_containing_a
           offset = a - source_a
           dest_range = (dest_a + offset)..(dest_a + offset + Range.size(seed_range) - 1)
           {[], [dest_range]}
@@ -173,7 +173,7 @@ defmodule Aoc2023.Day05 do
           # then a..n is mapped, and we can generate the range and add it to new_destinations.
           # n+1..b gets added to new_seeds to be checked in the next round
 
-          {source_a..source_b, dest_a..dest_b} = mapping_containing_a
+          {source_a..source_b//_, dest_a..dest_b//_} = mapping_containing_a
           offset = a - source_a
           mapped_portion = (dest_a + offset)..dest_b
           unmapped_portion = (source_b + 1)..b
@@ -181,7 +181,7 @@ defmodule Aoc2023.Day05 do
 
         mapping_containing_a == nil and mapping_containing_b != nil ->
           # same logic as above, basically, but flipped
-          {source_a.._source_b, dest_a.._dest_b} = mapping_containing_b
+          {source_a.._source_b//_, dest_a.._dest_b//_} = mapping_containing_b
           offset = b - source_a
           mapped_portion = dest_a..(dest_a + offset)
           unmapped_portion = a..(source_a - 1)
@@ -195,8 +195,8 @@ defmodule Aoc2023.Day05 do
           # which we're not sure about yet, so it goes back into the lists of ranges to test.
 
           # also, i'm not even sure if this can happen.
-          {a_source_a..a_source_b, a_dest_a..a_dest_b} = mapping_containing_a
-          {b_source_a.._b_source_b, b_dest_a.._b_dest_b} = mapping_containing_b
+          {a_source_a..a_source_b//_, a_dest_a..a_dest_b//_} = mapping_containing_a
+          {b_source_a.._b_source_b//_, b_dest_a.._b_dest_b//_} = mapping_containing_b
 
           a_offset = a - a_source_a
           a_mapped_portion = (a_dest_a + a_offset)..a_dest_b
@@ -207,7 +207,8 @@ defmodule Aoc2023.Day05 do
           # there is not necessarily an unmapped portion - if a > b then
           # it produced a junk range. this is a bit of a hack, not sure if it will
           # stand up to real input. (it does stand up to the real input)
-          unmapped_a..unmapped_b = (a_source_b + 1)..(b_source_a - 1)
+          # unmapped_a..unmapped_b = (a_source_b + 1)..(b_source_a - 1)
+          unmapped_a..unmapped_b//_ = Range.new((a_source_b + 1),(b_source_a - 1), -1)
 
           unmapped_portion =
             if unmapped_a < unmapped_b do
@@ -237,7 +238,7 @@ defmodule Aoc2023.Day05 do
   """
   def min_value_in_ranges(ranges) do
     ranges
-    |> Enum.map(fn a.._b -> a end)
+    |> Enum.map(fn a.._b//_ -> a end)
     |> Enum.min()
   end
 

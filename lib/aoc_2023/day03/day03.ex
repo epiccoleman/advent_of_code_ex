@@ -15,7 +15,7 @@ defmodule Aoc2023.Day03 do
   """
   def get_part_number_at_location(grid, {x, y}) do
     left =
-      Enum.reduce_while((x - 1)..grid.x_min, %{n_str: "", locs: []}, fn i, acc ->
+      Enum.reduce_while(Range.new((x - 1),grid.x_min, -1), %{n_str: "", locs: []}, fn i, acc ->
         grid_val = Grid.at(grid, {i, y})
 
         if grid_val != nil and grid_val =~ ~r/\d/ do

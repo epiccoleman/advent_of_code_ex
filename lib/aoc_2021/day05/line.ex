@@ -39,7 +39,7 @@ defmodule Aoc2021.Day05.Line do
       [{1, 1}, {1, 2}, {1, 3}]
 
       iex> enumerate_points(%Line{x1: 1, x2: -2, y1: 1, y2: 1})
-      [{1, 1}, {0, 1}, {-1, 1}, {-2, 1}]
+      [{-2, 1}, {-1, 1}, {0, 1}, {1, 1}]
 
       iex> enumerate_points(%Line{x1: 1, x2: 3, y1: 1, y2: 3})
       [{1, 1}, {2, 2}, {3, 3}]
@@ -51,11 +51,11 @@ defmodule Aoc2021.Day05.Line do
     def enumerate_points(%Line{x1: x1, x2: x2, y1: y1, y2: y2} = line) do
       cond do
         is_horizontal?(line) ->
-          for x <- x1..x2 do
+          for x <- min(x1, x2)..max(x1, x2) do
             {x, y1}
           end
         is_vertical?(line) ->
-          for y <- y1..y2 do
+          for y <- min(y1,y2)..max(y1, y2) do
             {x1, y}
           end
         true ->

@@ -30,6 +30,7 @@ defmodule Aoc2024.Day04 do
   def count_xmas_vert(grid = %Grid2D{}) do
     grid
     |> Grid2D.rotate()
+    # ha!
     |> count_xmas_horiz()
   end
 
