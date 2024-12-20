@@ -1,5 +1,17 @@
 ## notes - 2024
 
+## day 10
+
+MFING GRID AGAIN BAYBEEEEEEE
+
+alright, this one really raised my spirits, because i think i did this in about 30 minutes total.
+
+Grid coming in clutch as always, meaning the only thing I really had to think about was how to do the recursion. I have to credit probably 98% of my ability to do recursion to doing these puzzles in Elixir.
+
+Another good trick that idk if I'd thought of before was to flatten at each step, which eliminates the big nasty mess of nesting at the end.
+
+part 2 was literally trivial, because the way I solved part 1 already solved it. All i had to do was _not_ uniqify the output of `walk_trailhead` and there you go.
+
 ## day 9
 man. i never ever would have guessed how hard i'd find this one.
 
