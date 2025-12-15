@@ -9,10 +9,14 @@ This will create a module for that day's puzzle and an accompanying test module.
 
 Provide a valid session token in the root of the repo, in the `.session_token` file, to automatically download the puzzle input file!
 
+2025 - Note: This is currently broken and I cbf to fix it right now, maybe if I get caught up I'll play with it.
+
 ## Site Utils
 You can fetch the puzzle description (to the puzzle's implementation directory) using `mix day.desc $day $year`. This no longer happens by default when scaffolding a solution, because Eric Wastl requests that we don't include puzzle description texts in our repos. (I will go and clean up the existing ones someday, sorry fellow Eric).
 
 You can also submit a solution using `mix day.submit $day $year $part $answer`. If you steal any part of my code, please write your own User-Agent header string instead of stealing mine ;)
+
+2025 - Note: These currently return 500s and I cbf to fix it right now.
 
 ## Tests
 Run all the tests with `mix test`.
@@ -22,6 +26,11 @@ You can add a tag above a long-running test so that it doesn't get run by defaul
 Run all the tests, including ones that take a long time, with `mix test --include slow`. Currently this takes about 5 minutes.
 
 Also included is a `mix` task which provides a convenient shortcut for running the tests for a particular day's puzzle. You can run it like this: `mix test.aoc $day $year` (e.g. `mix test.aoc 10 2021`). You can also run `mix test.aoc.watch` to start `mix test.watch` for the given day and year.
+
+## REPL Help
+Elixir 1.18 introduced the lovely `auto_reload` config option, which causes the REPL to live-reload changes `IEx.configure(auto_reload: true)`. `iex.exs` has this config set, but you additionally need to run `fswatch -o lib/ | xargs -n1 -I{} mix compile` in the root to start a watcher. This is really nice, though a little clunky in certain cases - but certainly better than having to manually `c` or `r` the files you're working on 100% of the time.
+
+There are also a number of utilities in [aoc_utils](/lib/aoc_utils/) - the [repl_utils](/lib/aoc_utils/repl_utils.ex) and [file_utils](/lib/aoc_utils/file_utils.ex) are automatically imported into new REPLs. Of particular use
 
 ## Benchmarks
 Benchmarks using benchee exist in the test dirs for some days. You run those like `mix run test/aoc_2015/day05/day05_benchmarks.exs`. Benchmarking is cool!
