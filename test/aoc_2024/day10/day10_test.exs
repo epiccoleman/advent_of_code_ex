@@ -29,6 +29,6 @@ defmodule Aoc2024.Day10Test do
 
   test "Part 2" do
    input = get_file_as_strings("./test/aoc_2024/day10/input.txt")
-   assert part_2(input) == 0
+   assert part_2(input) == 1497
   end
 end

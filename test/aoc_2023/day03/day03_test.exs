@@ -66,7 +66,7 @@ defmodule Aoc2023.Day03Test do
     input = get_file_as_strings("./test/aoc_2023/day03/input_small.txt")
     grid = Grid.from_strs(input, ignore: ".")
 
-    expected_gear_ratio = [16345, 451_490]
+    expected_gear_ratio = [451_490, 16345]
 
     assert get_gear_ratios(grid) == expected_gear_ratio
   end
